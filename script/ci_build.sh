@@ -40,6 +40,10 @@ xcodebuild -project NUPStudio.xcodeproj -scheme NUPStudio \
 [[ -d "$APP_BUNDLE" ]]
 [[ "$(lipo -archs "$APP_BUNDLE/Contents/MacOS/NUP Studio")" == "arm64" ]]
 codesign --verify --deep --strict "$APP_BUNDLE"
+[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_BUNDLE/Contents/Info.plist")" == "$GITHUB_RUN_NUMBER" ]]
+if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_BUNDLE/Contents/Info.plist")" == "${GITHUB_REF_NAME#v}" ]]
+fi
 [[ ! -d "$APP_BUNDLE/Contents/PlugIns/NUPStudioTests.xctest" ]]
 mkdir -p "$DIST_DIR"
 ditto -c -k --sequesterRsrc --keepParent "$APP_BUNDLE" "$DIST_DIR/$ZIP_NAME"

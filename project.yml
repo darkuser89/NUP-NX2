@@ -57,6 +57,8 @@ targets:
     info:
       path: Sources/Support/Info.plist
       properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         CFBundleDocumentTypes:
           - CFBundleTypeName: NUP Container
             CFBundleTypeRole: Editor
