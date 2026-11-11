@@ -1,0 +1,1093 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B6237EF39F64202F5878B7B /* fse_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = D550B3F316F6E6F5DD342D07 /* fse_compress.c */; };
+		0BB28F77938912DD7ED7752A /* MetadataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA58C20EB1CE6B6C4E147BD5 /* MetadataTransaction.swift */; };
+		0E5E45A95925257E090B9A8E /* threading.c in Sources */ = {isa = PBXBuildFile; fileRef = 69D71BD04F6306DC44E08C75 /* threading.c */; };
+		0EE0FF3BC486D99EAEB92ED3 /* ArchiveContentJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */; };
+		0FEC92219D91D15310CBF6DE /* zstd_ddict.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 26493BABFDC90215045A0F52 /* zstd_ddict.h */; };
+		109827C7680F1AE1D7B11E04 /* zstd_preSplit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2B53979E1B2D1307D4885D3 /* zstd_preSplit.h */; };
+		10D776BDC771D6CCDB5D1B29 /* hist.c in Sources */ = {isa = PBXBuildFile; fileRef = BF99334A9EFDE2DD80C3CFA2 /* hist.c */; };
+		1233A5D7581306D1CFFC25B7 /* zstd_double_fast.c in Sources */ = {isa = PBXBuildFile; fileRef = AB2A296AAF0BA84271BAD23B /* zstd_double_fast.c */; };
+		179F3E4144CC5E1754D396D6 /* zstd_opt.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DAC2A81DE8C4CD039DD848 /* zstd_opt.h */; };
+		1AB9E1387CF7E4E2ADC50D0B /* threading.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6B18D79592BA1FC563B7532F /* threading.h */; };
+		1B33F4A7B2FAADA2926DA8ED /* huf_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2005D7EC55970C2D26ABAF /* huf_compress.c */; };
+		1DD28A86E6F6949E05AF0EE6 /* entropy_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C3BFDC869ADB6D516E6DBFA /* entropy_common.c */; };
+		1F0EABFC112595A193A89BDD /* NUPModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D200D5356A156BE38BAF6559 /* NUPModels.swift */; };
+		23EF857D1CDDD85FEE4FC369 /* zstd_compress_literals.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D549CDD3AFD87DDE58399437 /* zstd_compress_literals.h */; };
+		2893F82E43E99637579026EB /* libZstandard.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D28DA3E28015315A65547455 /* libZstandard.a */; };
+		2994D652EE395A6B5D9BDAC4 /* LibraryScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566B9217C62A878DA3FE1784 /* LibraryScanner.swift */; };
+		2A68A5D88D5954B4FE30CBC3 /* hist.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 966D0B60ECDA4FF832D8A7D7 /* hist.h */; };
+		2C5F16E35AABB55D20681452 /* huf_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B1039FA2CE1901792EE724C /* huf_decompress.c */; };
+		30A740673821CADF55EBCAE9 /* LibraryCoverSaveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */; };
+		3185E3553B724664F83D409B /* bitstream.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA301C5E169E25AD3EC134E6 /* bitstream.h */; };
+		31B0046FB3EAD5F3723C2F0B /* NUPWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E12691CBAF5DD070D72F317 /* NUPWriter.swift */; };
+		350ED5FCC93BEB3FAD7FAF31 /* zstd_compress_sequences.c in Sources */ = {isa = PBXBuildFile; fileRef = 799C49AAB27CC3272CDEE044 /* zstd_compress_sequences.c */; };
+		36AB0DDC7FD3181DB4BD4F4E /* zstd_compress_superblock.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 70C13DACE934D130625179E3 /* zstd_compress_superblock.h */; };
+		3A435F4A1BF4908ABF562FDA /* ArchiveFilePlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F05EB4ECD605210272E5AE /* ArchiveFilePlan.swift */; };
+		3A65EC85DFBCBF6766710FD6 /* PackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C1711D9E936EE51AA56E6A /* PackView.swift */; };
+		3CE2B76B5279D0BC485315CD /* zstd_preSplit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7147499061B8F524DE0170FF /* zstd_preSplit.c */; };
+		4331685DE3E999816D945CA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 780EBEEE409EADE92BAE8A7E /* Assets.xcassets */; };
+		43DA0D0ACEC57843CC8D4228 /* Zstandard-BSD.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9F2FCA8E7A069AC59858B280 /* Zstandard-BSD.txt */; };
+		43E06BAC68593D87A2AE883B /* zstd_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AE75EE7BF774CF4B93E7FDE /* zstd_decompress.c */; };
+		451C3FDBCE46C8E4689456F5 /* NUPCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11E96EE0F10122DF1F1C548 /* NUPCoreTests.swift */; };
+		45EEF38EF372E84565267234 /* pool.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5B80222A5DE008372F01EF4B /* pool.h */; };
+		4879CF096F1863A60F22EAED /* ArchiveOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48215A9B6AF7C4E14C842FC8 /* ArchiveOperations.swift */; };
+		4A1CA062A515FBC6848D3F00 /* mem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 94F24F28DD38E3509A1E8EC7 /* mem.h */; };
+		51BF599AC2B2C52F8EFC5663 /* LibraryRestoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7035262385A88CE415CC74 /* LibraryRestoreTests.swift */; };
+		5380182FB00E5F7B0C521BCF /* xxhash.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C492EE2D787C2A66E127606 /* xxhash.h */; };
+		547DD81D98A6BCBCAA951EBD /* LibraryGameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E1CD1244687E66551B67BB /* LibraryGameRow.swift */; };
+		55B0F156148417194EBA1769 /* FileDropTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED0512B376D96A74406FB13 /* FileDropTests.swift */; };
+		60BB283FC14DBE60F4D8C00A /* zstd_compress_sequences.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C25DF5F87DA4C49142AF2F8 /* zstd_compress_sequences.h */; };
+		615C5DAFEB11A83B2FE56DAE /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F829189BCF633DD629664D /* LibraryView.swift */; };
+		615E67097E13C40A373E6AC6 /* zstd_internal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60CC54566324FA5178601401 /* zstd_internal.h */; };
+		61A4546E93737A10A3CEB090 /* WorkspaceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B134F49E5CA228D4F2F474 /* WorkspaceStore.swift */; };
+		64A8E575089B3728A87E350D /* NUPStudioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743DD097DEBC4816A1C9C1A9 /* NUPStudioApp.swift */; };
+		65B39327F246D1BE7B6067CA /* Binary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F84AE0B014EA9A772393A /* Binary.swift */; };
+		660DA86CB8C2AAF3DF964B1B /* ArchiveFileEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */; };
+		6DC09C60D3EB628F07E8F5B0 /* LibraryCoverEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7689C0D45E5720491C76DA5C /* LibraryCoverEditor.swift */; };
+		7483CF48CB55361E780493FB /* zstd_errors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D8DA381802FA03E833371C7F /* zstd_errors.h */; };
+		75281F1051325826CB6528BC /* zstd_compress_literals.c in Sources */ = {isa = PBXBuildFile; fileRef = 698EA7FC63902473FE410DD1 /* zstd_compress_literals.c */; };
+		78AF7CA992839A0A419867C3 /* zstdmt_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E82002E88267CFDEBCB4F /* zstdmt_compress.c */; };
+		7AD0F28265D0D675E7E92B5E /* fse_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 858D52AF4BC26C54F72E29FD /* fse_decompress.c */; };
+		7C9EE63DD9831FB741B51CDD /* zstd_double_fast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19978E5D8C297040381B3029 /* zstd_double_fast.h */; };
+		7D0E665650866FD0A1A74B67 /* LocalizationEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2420CF784AB92B6D93CD6E /* LocalizationEditor.swift */; };
+		7E9124AB2274B70022A6A61F /* zstd_decompress_block.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 499AD86EDF91E6349E2D8953 /* zstd_decompress_block.h */; };
+		807706DCE6DE391AFFA4814F /* LibraryCoverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8242BEC243C88AE4A01FC2 /* LibraryCoverService.swift */; };
+		82CA3AF03A15764342363DE5 /* FileDropReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC6FC5BA34CA5171EA87268 /* FileDropReader.swift */; };
+		832683254CB37DEEE0F2ECA3 /* portability_macros.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 25BBA7BA192D9E48D512B92D /* portability_macros.h */; };
+		8EC096F1A32F4B731C72E012 /* MetadataTransactionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE6F9E9587AA68CB437D102 /* MetadataTransactionTests.swift */; };
+		925D3A232EC6E255E36F688A /* zstd_ddict.c in Sources */ = {isa = PBXBuildFile; fileRef = A0F840B70BDD658FFA2880A2 /* zstd_ddict.c */; };
+		9454FC08BC63F82B2F808FCB /* LibraryMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED871BE27D5B1AC7358E1F3 /* LibraryMetadataTests.swift */; };
+		95A56A3CA37A1DA9D44E138D /* NUPArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CADA007CF7F1F9236DEE1C /* NUPArchive.swift */; };
+		96B3994698E0FF2B3B2AB0BE /* zstd_decompress_block.c in Sources */ = {isa = PBXBuildFile; fileRef = 6CEC1293C4876EDCCCEB1C08 /* zstd_decompress_block.c */; };
+		96E32C24F8D76098D8C9FBFE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F2C4BB5D9098C164C0D8E7 /* ContentView.swift */; };
+		9792CAE7422E818B8B9FC185 /* debug.c in Sources */ = {isa = PBXBuildFile; fileRef = 824D65F13688D73B0F3B0B53 /* debug.c */; };
+		9A014AE6CF9B3EA1D8FF892D /* zstd_opt.c in Sources */ = {isa = PBXBuildFile; fileRef = 6BD2000A8C34746C4C434C5D /* zstd_opt.c */; };
+		9D1518DB785EA4B122E5FAF3 /* zstd_deps.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3FAC2FBA7449BFEEFDF90D8 /* zstd_deps.h */; };
+		A23358A49172EB99E7585EC1 /* zstd_trace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = ED249B0DF293DBD1961AA227 /* zstd_trace.h */; };
+		A35888F2A87DA8494AF590DB /* clevels.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF481D4FF94277610913762C /* clevels.h */; };
+		A6C1CEBCBFC9028E29A1C124 /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D9673C7272941149F127A /* pool.c */; };
+		A8598F20EB5BCC46D7126E63 /* zstd_ldm.c in Sources */ = {isa = PBXBuildFile; fileRef = 90768CB734279CD495BFB6B4 /* zstd_ldm.c */; };
+		A85A0953BA82B991906EB259 /* error_private.c in Sources */ = {isa = PBXBuildFile; fileRef = 23978259D308D9BBF73F3A81 /* error_private.c */; };
+		ADDD3D4B9957D3764A078E02 /* FilePanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D1228FA44B8895E551447 /* FilePanels.swift */; };
+		ADFBC9D2A246440C94BC19EF /* zstd_ldm.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 17CCD20F6B024686F7007515 /* zstd_ldm.h */; };
+		AE0588F1E3D143D3C44CEFF8 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9A3A0F9CC5E3DC889E68EE /* ArchiveView.swift */; };
+		AFB74914A7C0330B5917EBE0 /* cpu.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 321E94024D948ED56CC95C0A /* cpu.h */; };
+		B0B74F1CFF5FECA926C81591 /* allocations.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2D773323574AF117FA3096F2 /* allocations.h */; };
+		B142E1DBF7F2864B5A261186 /* fse.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E69AB300F182660B58ADDDEB /* fse.h */; };
+		B15D78F2F52B0907DE959CFA /* zstd_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 126560BC2766558C671E33B7 /* zstd_common.c */; };
+		B2D4107D9EB9B95BB176AD1D /* BrowserTreeCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD710E5D66F3162F8BF31DA /* BrowserTreeCache.swift */; };
+		B469D545E90116C37550BE37 /* zstd_lazy.c in Sources */ = {isa = PBXBuildFile; fileRef = A5802E4002B728FAA0410C3F /* zstd_lazy.c */; };
+		B70B6A6C4B68F384438E1372 /* LibraryCoverDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0D2F4E091E268290FA4147 /* LibraryCoverDraft.swift */; };
+		BDD09363D0FA585DBBE10068 /* LibraryMetadataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9F8F320DF369EAC751197D /* LibraryMetadataStore.swift */; };
+		BFCB87565ABB1AE66B788D4A /* xxhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 8430719BB768849A01B8F4A7 /* xxhash.c */; };
+		BFF00C9152F9E208F319D98C /* error_private.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2DA1586FB9951284E4873F74 /* error_private.h */; };
+		C0A22BC5AC9C54984F46BB28 /* DumpDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764EDCAAE8679E6C244423EB /* DumpDiscovery.swift */; };
+		CC8DE19ECFBE4BD508CAD221 /* huf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D2DB43492BE24C5094996E9 /* huf.h */; };
+		CD62B6CD5B7E8142A27FE58A /* zstd_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = A88F1055B34A90B18522157A /* zstd_compress.c */; };
+		CF0017537037AA5A40F23482 /* zstd_ldm_geartab.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2B9951989105C698052D0F3A /* zstd_ldm_geartab.h */; };
+		D3596AA252B9A3322782449D /* zstd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B4E740E41372961E705F37D4 /* zstd.h */; };
+		D3D27E53CBFAE88B3B01C6FB /* bits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D9C370134ADDE9C1268A79F /* bits.h */; };
+		D41078D3BFBB902E3432BC11 /* debug.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 611ECF0AB0D7A4D30A0E215F /* debug.h */; };
+		D58B76F6D319F1FCD0790E60 /* zstd_cwksp.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 78BDA3ED62A4BDD5ABD4A52B /* zstd_cwksp.h */; };
+		D6BF3E993CAAC7073B18FDEF /* SpecificationWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB122A8CF98DEBD3A8E1C017 /* SpecificationWorkflowTests.swift */; };
+		D7FC0D868D84CD8B0A643D22 /* LibraryMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BCDB04AF714D4261D75790 /* LibraryMetadata.swift */; };
+		D847EAF3838AB62D6989303D /* ArchiveFileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB48BAED37E0FC540412067F /* ArchiveFileEditor.swift */; };
+		D86E53AAAF7292972D7E43C1 /* MetadataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D132F865B9EA07400973F45F /* MetadataView.swift */; };
+		DA022812602302A9821A10A5 /* compiler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A8457A00380F2E183F8B8A4 /* compiler.h */; };
+		DD7ABD9BB882DC22335490D1 /* zstd_lazy.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0DC9FB77080FE28677BD446 /* zstd_lazy.h */; };
+		DF26ECAC8AAF6F05C23EFA24 /* LibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F754E204FD682F6B3CF248DC /* LibraryTests.swift */; };
+		DF3FC3D67BF9AB7F29F570DA /* zstd_compress_internal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11A03D8793B34D4C6B68C5B3 /* zstd_compress_internal.h */; };
+		E10524A0990DFE067D0C354D /* zstdmt_compress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 011914EF8C4CF22A56E3081F /* zstdmt_compress.h */; };
+		E51B057B9B10DF3FD0274A0B /* NUP-MIT.txt in Resources */ = {isa = PBXBuildFile; fileRef = 69426466EF00D7AE93032C6C /* NUP-MIT.txt */; };
+		E8CEA9C4D70AFB2B3ECF1E8E /* zstd_decompress_internal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3602F8D6C930AAAF74AD506F /* zstd_decompress_internal.h */; };
+		E8E8954E2A10731BFC7604A1 /* zstd_fast.c in Sources */ = {isa = PBXBuildFile; fileRef = 27B0D8B8FAE64B316C8AC04F /* zstd_fast.c */; };
+		E9084EED838A5C2299EF43D7 /* ReferenceFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAB0DB3D96CA345628D14E /* ReferenceFixtures.swift */; };
+		F02CEBF7C67D91E40DC245AF /* LibraryMetadataReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B6297AA6455E59A6C151A1 /* LibraryMetadataReader.swift */; };
+		F16ED93DFD21942B599FD474 /* zstd_fast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D141D48CEDCA1CCE51384B2 /* zstd_fast.h */; };
+		F2AA7014E957F2AE1EA2CB45 /* LibrarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C879B34E452A40012A0E5 /* LibrarySnapshot.swift */; };
+		F5B60F4D5899BAE429FA3DEB /* zstd_compress_superblock.c in Sources */ = {isa = PBXBuildFile; fileRef = 80B7BC0D8EF9D33DAE5BB95A /* zstd_compress_superblock.c */; };
+		FE8CFE681267742408CCA113 /* StreamCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B8F5A1A3A0E70E7F8DEC79 /* StreamCodec.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1CC846B77A51F84406F9B465 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A61ED5F09F8B0B6247DC82C6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 84F05E095F86A2B2037CB41B;
+			remoteInfo = NUPStudio;
+		};
+		2CC93F9CF86C7DB71942A34D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A61ED5F09F8B0B6247DC82C6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 508981B5BF25B80B1AEBDD79;
+			remoteInfo = Zstandard;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0B6DBADFFB72D70DCB9FCD6F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				B0B74F1CFF5FECA926C81591 /* allocations.h in CopyFiles */,
+				D3D27E53CBFAE88B3B01C6FB /* bits.h in CopyFiles */,
+				3185E3553B724664F83D409B /* bitstream.h in CopyFiles */,
+				A35888F2A87DA8494AF590DB /* clevels.h in CopyFiles */,
+				DA022812602302A9821A10A5 /* compiler.h in CopyFiles */,
+				AFB74914A7C0330B5917EBE0 /* cpu.h in CopyFiles */,
+				D41078D3BFBB902E3432BC11 /* debug.h in CopyFiles */,
+				BFF00C9152F9E208F319D98C /* error_private.h in CopyFiles */,
+				B142E1DBF7F2864B5A261186 /* fse.h in CopyFiles */,
+				2A68A5D88D5954B4FE30CBC3 /* hist.h in CopyFiles */,
+				CC8DE19ECFBE4BD508CAD221 /* huf.h in CopyFiles */,
+				4A1CA062A515FBC6848D3F00 /* mem.h in CopyFiles */,
+				45EEF38EF372E84565267234 /* pool.h in CopyFiles */,
+				832683254CB37DEEE0F2ECA3 /* portability_macros.h in CopyFiles */,
+				1AB9E1387CF7E4E2ADC50D0B /* threading.h in CopyFiles */,
+				5380182FB00E5F7B0C521BCF /* xxhash.h in CopyFiles */,
+				D3596AA252B9A3322782449D /* zstd.h in CopyFiles */,
+				DF3FC3D67BF9AB7F29F570DA /* zstd_compress_internal.h in CopyFiles */,
+				23EF857D1CDDD85FEE4FC369 /* zstd_compress_literals.h in CopyFiles */,
+				60BB283FC14DBE60F4D8C00A /* zstd_compress_sequences.h in CopyFiles */,
+				36AB0DDC7FD3181DB4BD4F4E /* zstd_compress_superblock.h in CopyFiles */,
+				D58B76F6D319F1FCD0790E60 /* zstd_cwksp.h in CopyFiles */,
+				0FEC92219D91D15310CBF6DE /* zstd_ddict.h in CopyFiles */,
+				7E9124AB2274B70022A6A61F /* zstd_decompress_block.h in CopyFiles */,
+				E8CEA9C4D70AFB2B3ECF1E8E /* zstd_decompress_internal.h in CopyFiles */,
+				9D1518DB785EA4B122E5FAF3 /* zstd_deps.h in CopyFiles */,
+				7C9EE63DD9831FB741B51CDD /* zstd_double_fast.h in CopyFiles */,
+				7483CF48CB55361E780493FB /* zstd_errors.h in CopyFiles */,
+				F16ED93DFD21942B599FD474 /* zstd_fast.h in CopyFiles */,
+				615E67097E13C40A373E6AC6 /* zstd_internal.h in CopyFiles */,
+				DD7ABD9BB882DC22335490D1 /* zstd_lazy.h in CopyFiles */,
+				ADFBC9D2A246440C94BC19EF /* zstd_ldm.h in CopyFiles */,
+				CF0017537037AA5A40F23482 /* zstd_ldm_geartab.h in CopyFiles */,
+				179F3E4144CC5E1754D396D6 /* zstd_opt.h in CopyFiles */,
+				109827C7680F1AE1D7B11E04 /* zstd_preSplit.h in CopyFiles */,
+				A23358A49172EB99E7585EC1 /* zstd_trace.h in CopyFiles */,
+				E10524A0990DFE067D0C354D /* zstdmt_compress.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		011914EF8C4CF22A56E3081F /* zstdmt_compress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstdmt_compress.h; sourceTree = "<group>"; };
+		01E6A84DD10A3CBC57776781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		03F05EB4ECD605210272E5AE /* ArchiveFilePlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFilePlan.swift; sourceTree = "<group>"; };
+		0D2005D7EC55970C2D26ABAF /* huf_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_compress.c; sourceTree = "<group>"; };
+		11A03D8793B34D4C6B68C5B3 /* zstd_compress_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_internal.h; sourceTree = "<group>"; };
+		126560BC2766558C671E33B7 /* zstd_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_common.c; sourceTree = "<group>"; };
+		17CCD20F6B024686F7007515 /* zstd_ldm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_ldm.h; sourceTree = "<group>"; };
+		19978E5D8C297040381B3029 /* zstd_double_fast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_double_fast.h; sourceTree = "<group>"; };
+		1B1039FA2CE1901792EE724C /* huf_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_decompress.c; sourceTree = "<group>"; };
+		1DD710E5D66F3162F8BF31DA /* BrowserTreeCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTreeCache.swift; sourceTree = "<group>"; };
+		1FC6FC5BA34CA5171EA87268 /* FileDropReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDropReader.swift; sourceTree = "<group>"; };
+		23978259D308D9BBF73F3A81 /* error_private.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = error_private.c; sourceTree = "<group>"; };
+		247D1228FA44B8895E551447 /* FilePanels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePanels.swift; sourceTree = "<group>"; };
+		25BBA7BA192D9E48D512B92D /* portability_macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portability_macros.h; sourceTree = "<group>"; };
+		26493BABFDC90215045A0F52 /* zstd_ddict.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_ddict.h; sourceTree = "<group>"; };
+		27B0D8B8FAE64B316C8AC04F /* zstd_fast.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_fast.c; sourceTree = "<group>"; };
+		2AAAB0DB3D96CA345628D14E /* ReferenceFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceFixtures.swift; sourceTree = "<group>"; };
+		2B9951989105C698052D0F3A /* zstd_ldm_geartab.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_ldm_geartab.h; sourceTree = "<group>"; };
+		2C492EE2D787C2A66E127606 /* xxhash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xxhash.h; sourceTree = "<group>"; };
+		2D773323574AF117FA3096F2 /* allocations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = allocations.h; sourceTree = "<group>"; };
+		2DA1586FB9951284E4873F74 /* error_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = error_private.h; sourceTree = "<group>"; };
+		30916ABDF99D00360EB678CB /* NUPStudioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUPStudioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveContentJournal.swift; sourceTree = "<group>"; };
+		321E94024D948ED56CC95C0A /* cpu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
+		3602F8D6C930AAAF74AD506F /* zstd_decompress_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_decompress_internal.h; sourceTree = "<group>"; };
+		3775F88275839F2E42E8E3AF /* NUPStudio-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NUPStudio-Bridging-Header.h"; sourceTree = "<group>"; };
+		3ED871BE27D5B1AC7358E1F3 /* LibraryMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryMetadataTests.swift; sourceTree = "<group>"; };
+		48215A9B6AF7C4E14C842FC8 /* ArchiveOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveOperations.swift; sourceTree = "<group>"; };
+		499AD86EDF91E6349E2D8953 /* zstd_decompress_block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_decompress_block.h; sourceTree = "<group>"; };
+		4C3BFDC869ADB6D516E6DBFA /* entropy_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = entropy_common.c; sourceTree = "<group>"; };
+		4D141D48CEDCA1CCE51384B2 /* zstd_fast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_fast.h; sourceTree = "<group>"; };
+		51BCDB04AF714D4261D75790 /* LibraryMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryMetadata.swift; sourceTree = "<group>"; };
+		53B8F5A1A3A0E70E7F8DEC79 /* StreamCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamCodec.swift; sourceTree = "<group>"; };
+		566B9217C62A878DA3FE1784 /* LibraryScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScanner.swift; sourceTree = "<group>"; };
+		594C879B34E452A40012A0E5 /* LibrarySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySnapshot.swift; sourceTree = "<group>"; };
+		5B1F84AE0B014EA9A772393A /* Binary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binary.swift; sourceTree = "<group>"; };
+		5B80222A5DE008372F01EF4B /* pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pool.h; sourceTree = "<group>"; };
+		5E12691CBAF5DD070D72F317 /* NUPWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPWriter.swift; sourceTree = "<group>"; };
+		5ED0512B376D96A74406FB13 /* FileDropTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDropTests.swift; sourceTree = "<group>"; };
+		60CC54566324FA5178601401 /* zstd_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_internal.h; sourceTree = "<group>"; };
+		611ECF0AB0D7A4D30A0E215F /* debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryCoverSaveTests.swift; sourceTree = "<group>"; };
+		69426466EF00D7AE93032C6C /* NUP-MIT.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "NUP-MIT.txt"; sourceTree = "<group>"; };
+		698EA7FC63902473FE410DD1 /* zstd_compress_literals.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress_literals.c; sourceTree = "<group>"; };
+		69D71BD04F6306DC44E08C75 /* threading.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = threading.c; sourceTree = "<group>"; };
+		6B18D79592BA1FC563B7532F /* threading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = threading.h; sourceTree = "<group>"; };
+		6B6E82002E88267CFDEBCB4F /* zstdmt_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstdmt_compress.c; sourceTree = "<group>"; };
+		6BD2000A8C34746C4C434C5D /* zstd_opt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_opt.c; sourceTree = "<group>"; };
+		6CEC1293C4876EDCCCEB1C08 /* zstd_decompress_block.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_decompress_block.c; sourceTree = "<group>"; };
+		6D0D9673C7272941149F127A /* pool.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pool.c; sourceTree = "<group>"; };
+		70C13DACE934D130625179E3 /* zstd_compress_superblock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_superblock.h; sourceTree = "<group>"; };
+		7147499061B8F524DE0170FF /* zstd_preSplit.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_preSplit.c; sourceTree = "<group>"; };
+		743DD097DEBC4816A1C9C1A9 /* NUPStudioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPStudioApp.swift; sourceTree = "<group>"; };
+		74E1CD1244687E66551B67BB /* LibraryGameRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryGameRow.swift; sourceTree = "<group>"; };
+		764EDCAAE8679E6C244423EB /* DumpDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DumpDiscovery.swift; sourceTree = "<group>"; };
+		7689C0D45E5720491C76DA5C /* LibraryCoverEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryCoverEditor.swift; sourceTree = "<group>"; };
+		780EBEEE409EADE92BAE8A7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		78BDA3ED62A4BDD5ABD4A52B /* zstd_cwksp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_cwksp.h; sourceTree = "<group>"; };
+		78C1711D9E936EE51AA56E6A /* PackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackView.swift; sourceTree = "<group>"; };
+		799C49AAB27CC3272CDEE044 /* zstd_compress_sequences.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress_sequences.c; sourceTree = "<group>"; };
+		7AE75EE7BF774CF4B93E7FDE /* zstd_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_decompress.c; sourceTree = "<group>"; };
+		7D9C370134ADDE9C1268A79F /* bits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bits.h; sourceTree = "<group>"; };
+		80B7BC0D8EF9D33DAE5BB95A /* zstd_compress_superblock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress_superblock.c; sourceTree = "<group>"; };
+		824D65F13688D73B0F3B0B53 /* debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = debug.c; sourceTree = "<group>"; };
+		8430719BB768849A01B8F4A7 /* xxhash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xxhash.c; sourceTree = "<group>"; };
+		858D52AF4BC26C54F72E29FD /* fse_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_decompress.c; sourceTree = "<group>"; };
+		8A8457A00380F2E183F8B8A4 /* compiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
+		8D2DB43492BE24C5094996E9 /* huf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = huf.h; sourceTree = "<group>"; };
+		90768CB734279CD495BFB6B4 /* zstd_ldm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_ldm.c; sourceTree = "<group>"; };
+		92DAC2A81DE8C4CD039DD848 /* zstd_opt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_opt.h; sourceTree = "<group>"; };
+		94F24F28DD38E3509A1E8EC7 /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
+		966D0B60ECDA4FF832D8A7D7 /* hist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hist.h; sourceTree = "<group>"; };
+		9C25DF5F87DA4C49142AF2F8 /* zstd_compress_sequences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_sequences.h; sourceTree = "<group>"; };
+		9F2FCA8E7A069AC59858B280 /* Zstandard-BSD.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Zstandard-BSD.txt"; sourceTree = "<group>"; };
+		A0F840B70BDD658FFA2880A2 /* zstd_ddict.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_ddict.c; sourceTree = "<group>"; };
+		A5802E4002B728FAA0410C3F /* zstd_lazy.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_lazy.c; sourceTree = "<group>"; };
+		A88F1055B34A90B18522157A /* zstd_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress.c; sourceTree = "<group>"; };
+		AA7035262385A88CE415CC74 /* LibraryRestoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryRestoreTests.swift; sourceTree = "<group>"; };
+		AB122A8CF98DEBD3A8E1C017 /* SpecificationWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecificationWorkflowTests.swift; sourceTree = "<group>"; };
+		AB2A296AAF0BA84271BAD23B /* zstd_double_fast.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_double_fast.c; sourceTree = "<group>"; };
+		AD8242BEC243C88AE4A01FC2 /* LibraryCoverService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryCoverService.swift; sourceTree = "<group>"; };
+		B3F2C4BB5D9098C164C0D8E7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B4E740E41372961E705F37D4 /* zstd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd.h; sourceTree = "<group>"; };
+		BA58C20EB1CE6B6C4E147BD5 /* MetadataTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataTransaction.swift; sourceTree = "<group>"; };
+		BC9F8F320DF369EAC751197D /* LibraryMetadataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryMetadataStore.swift; sourceTree = "<group>"; };
+		BF481D4FF94277610913762C /* clevels.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = clevels.h; sourceTree = "<group>"; };
+		BF99334A9EFDE2DD80C3CFA2 /* hist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hist.c; sourceTree = "<group>"; };
+		C0DC9FB77080FE28677BD446 /* zstd_lazy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_lazy.h; sourceTree = "<group>"; };
+		C11E96EE0F10122DF1F1C548 /* NUPCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPCoreTests.swift; sourceTree = "<group>"; };
+		CB48BAED37E0FC540412067F /* ArchiveFileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFileEditor.swift; sourceTree = "<group>"; };
+		CC9A3A0F9CC5E3DC889E68EE /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
+		CD0D2F4E091E268290FA4147 /* LibraryCoverDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryCoverDraft.swift; sourceTree = "<group>"; };
+		CE2420CF784AB92B6D93CD6E /* LocalizationEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationEditor.swift; sourceTree = "<group>"; };
+		CE508EC49B796B51CC7D45DF /* NUPStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NUPStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D132F865B9EA07400973F45F /* MetadataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataView.swift; sourceTree = "<group>"; };
+		D200D5356A156BE38BAF6559 /* NUPModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPModels.swift; sourceTree = "<group>"; };
+		D28DA3E28015315A65547455 /* libZstandard.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libZstandard.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2B53979E1B2D1307D4885D3 /* zstd_preSplit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_preSplit.h; sourceTree = "<group>"; };
+		D549CDD3AFD87DDE58399437 /* zstd_compress_literals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_literals.h; sourceTree = "<group>"; };
+		D550B3F316F6E6F5DD342D07 /* fse_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_compress.c; sourceTree = "<group>"; };
+		D5CADA007CF7F1F9236DEE1C /* NUPArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPArchive.swift; sourceTree = "<group>"; };
+		D8DA381802FA03E833371C7F /* zstd_errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_errors.h; sourceTree = "<group>"; };
+		D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFileEditingTests.swift; sourceTree = "<group>"; };
+		E2F829189BCF633DD629664D /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		E3FAC2FBA7449BFEEFDF90D8 /* zstd_deps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_deps.h; sourceTree = "<group>"; };
+		E69AB300F182660B58ADDDEB /* fse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fse.h; sourceTree = "<group>"; };
+		E7B6297AA6455E59A6C151A1 /* LibraryMetadataReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryMetadataReader.swift; sourceTree = "<group>"; };
+		ECE6F9E9587AA68CB437D102 /* MetadataTransactionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataTransactionTests.swift; sourceTree = "<group>"; };
+		ED249B0DF293DBD1961AA227 /* zstd_trace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_trace.h; sourceTree = "<group>"; };
+		F6B134F49E5CA228D4F2F474 /* WorkspaceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceStore.swift; sourceTree = "<group>"; };
+		F754E204FD682F6B3CF248DC /* LibraryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTests.swift; sourceTree = "<group>"; };
+		FA301C5E169E25AD3EC134E6 /* bitstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitstream.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C36D40B33566A2BCE8BA774F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2893F82E43E99637579026EB /* libZstandard.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0110F0D2E7DC37697DE2E6F3 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				2D773323574AF117FA3096F2 /* allocations.h */,
+				7D9C370134ADDE9C1268A79F /* bits.h */,
+				FA301C5E169E25AD3EC134E6 /* bitstream.h */,
+				8A8457A00380F2E183F8B8A4 /* compiler.h */,
+				321E94024D948ED56CC95C0A /* cpu.h */,
+				824D65F13688D73B0F3B0B53 /* debug.c */,
+				611ECF0AB0D7A4D30A0E215F /* debug.h */,
+				4C3BFDC869ADB6D516E6DBFA /* entropy_common.c */,
+				23978259D308D9BBF73F3A81 /* error_private.c */,
+				2DA1586FB9951284E4873F74 /* error_private.h */,
+				858D52AF4BC26C54F72E29FD /* fse_decompress.c */,
+				E69AB300F182660B58ADDDEB /* fse.h */,
+				8D2DB43492BE24C5094996E9 /* huf.h */,
+				94F24F28DD38E3509A1E8EC7 /* mem.h */,
+				6D0D9673C7272941149F127A /* pool.c */,
+				5B80222A5DE008372F01EF4B /* pool.h */,
+				25BBA7BA192D9E48D512B92D /* portability_macros.h */,
+				69D71BD04F6306DC44E08C75 /* threading.c */,
+				6B18D79592BA1FC563B7532F /* threading.h */,
+				8430719BB768849A01B8F4A7 /* xxhash.c */,
+				2C492EE2D787C2A66E127606 /* xxhash.h */,
+				126560BC2766558C671E33B7 /* zstd_common.c */,
+				E3FAC2FBA7449BFEEFDF90D8 /* zstd_deps.h */,
+				60CC54566324FA5178601401 /* zstd_internal.h */,
+				ED249B0DF293DBD1961AA227 /* zstd_trace.h */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		063B34255D1CA62372E21806 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				01E6A84DD10A3CBC57776781 /* Info.plist */,
+				3775F88275839F2E42E8E3AF /* NUPStudio-Bridging-Header.h */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		0E695A69567A7A48B30F6C97 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1FC6FC5BA34CA5171EA87268 /* FileDropReader.swift */,
+				247D1228FA44B8895E551447 /* FilePanels.swift */,
+				AD8242BEC243C88AE4A01FC2 /* LibraryCoverService.swift */,
+				E7B6297AA6455E59A6C151A1 /* LibraryMetadataReader.swift */,
+				566B9217C62A878DA3FE1784 /* LibraryScanner.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		32D05E20F05B81AB399E4F28 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				BC9F8F320DF369EAC751197D /* LibraryMetadataStore.swift */,
+				F6B134F49E5CA228D4F2F474 /* WorkspaceStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		3454C3E5DAE386F258D58A74 /* compress */ = {
+			isa = PBXGroup;
+			children = (
+				BF481D4FF94277610913762C /* clevels.h */,
+				D550B3F316F6E6F5DD342D07 /* fse_compress.c */,
+				BF99334A9EFDE2DD80C3CFA2 /* hist.c */,
+				966D0B60ECDA4FF832D8A7D7 /* hist.h */,
+				0D2005D7EC55970C2D26ABAF /* huf_compress.c */,
+				11A03D8793B34D4C6B68C5B3 /* zstd_compress_internal.h */,
+				698EA7FC63902473FE410DD1 /* zstd_compress_literals.c */,
+				D549CDD3AFD87DDE58399437 /* zstd_compress_literals.h */,
+				799C49AAB27CC3272CDEE044 /* zstd_compress_sequences.c */,
+				9C25DF5F87DA4C49142AF2F8 /* zstd_compress_sequences.h */,
+				80B7BC0D8EF9D33DAE5BB95A /* zstd_compress_superblock.c */,
+				70C13DACE934D130625179E3 /* zstd_compress_superblock.h */,
+				A88F1055B34A90B18522157A /* zstd_compress.c */,
+				78BDA3ED62A4BDD5ABD4A52B /* zstd_cwksp.h */,
+				AB2A296AAF0BA84271BAD23B /* zstd_double_fast.c */,
+				19978E5D8C297040381B3029 /* zstd_double_fast.h */,
+				27B0D8B8FAE64B316C8AC04F /* zstd_fast.c */,
+				4D141D48CEDCA1CCE51384B2 /* zstd_fast.h */,
+				A5802E4002B728FAA0410C3F /* zstd_lazy.c */,
+				C0DC9FB77080FE28677BD446 /* zstd_lazy.h */,
+				2B9951989105C698052D0F3A /* zstd_ldm_geartab.h */,
+				90768CB734279CD495BFB6B4 /* zstd_ldm.c */,
+				17CCD20F6B024686F7007515 /* zstd_ldm.h */,
+				6BD2000A8C34746C4C434C5D /* zstd_opt.c */,
+				92DAC2A81DE8C4CD039DD848 /* zstd_opt.h */,
+				7147499061B8F524DE0170FF /* zstd_preSplit.c */,
+				D2B53979E1B2D1307D4885D3 /* zstd_preSplit.h */,
+				6B6E82002E88267CFDEBCB4F /* zstdmt_compress.c */,
+				011914EF8C4CF22A56E3081F /* zstdmt_compress.h */,
+			);
+			path = compress;
+			sourceTree = "<group>";
+		};
+		411B7E4E4ED07B92C1A3D201 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */,
+				5ED0512B376D96A74406FB13 /* FileDropTests.swift */,
+				64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */,
+				3ED871BE27D5B1AC7358E1F3 /* LibraryMetadataTests.swift */,
+				AA7035262385A88CE415CC74 /* LibraryRestoreTests.swift */,
+				F754E204FD682F6B3CF248DC /* LibraryTests.swift */,
+				ECE6F9E9587AA68CB437D102 /* MetadataTransactionTests.swift */,
+				C11E96EE0F10122DF1F1C548 /* NUPCoreTests.swift */,
+				2AAAB0DB3D96CA345628D14E /* ReferenceFixtures.swift */,
+				AB122A8CF98DEBD3A8E1C017 /* SpecificationWorkflowTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		437CAB11C035E2E115A596E5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CC9A3A0F9CC5E3DC889E68EE /* ArchiveView.swift */,
+				B3F2C4BB5D9098C164C0D8E7 /* ContentView.swift */,
+				7689C0D45E5720491C76DA5C /* LibraryCoverEditor.swift */,
+				74E1CD1244687E66551B67BB /* LibraryGameRow.swift */,
+				E2F829189BCF633DD629664D /* LibraryView.swift */,
+				CE2420CF784AB92B6D93CD6E /* LocalizationEditor.swift */,
+				D132F865B9EA07400973F45F /* MetadataView.swift */,
+				78C1711D9E936EE51AA56E6A /* PackView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		46A75F638EEA156A2C74D86F /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */,
+				CB48BAED37E0FC540412067F /* ArchiveFileEditor.swift */,
+				03F05EB4ECD605210272E5AE /* ArchiveFilePlan.swift */,
+				48215A9B6AF7C4E14C842FC8 /* ArchiveOperations.swift */,
+				5B1F84AE0B014EA9A772393A /* Binary.swift */,
+				1DD710E5D66F3162F8BF31DA /* BrowserTreeCache.swift */,
+				764EDCAAE8679E6C244423EB /* DumpDiscovery.swift */,
+				BA58C20EB1CE6B6C4E147BD5 /* MetadataTransaction.swift */,
+				D5CADA007CF7F1F9236DEE1C /* NUPArchive.swift */,
+				5E12691CBAF5DD070D72F317 /* NUPWriter.swift */,
+				53B8F5A1A3A0E70E7F8DEC79 /* StreamCodec.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		59FE5CE4CA73AA0F36FC6055 /* Licenses */ = {
+			isa = PBXGroup;
+			children = (
+				69426466EF00D7AE93032C6C /* NUP-MIT.txt */,
+				9F2FCA8E7A069AC59858B280 /* Zstandard-BSD.txt */,
+			);
+			path = Licenses;
+			sourceTree = "<group>";
+		};
+		5A22FA0BD39ED96DEF1DADD4 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				C8066FAD75A26A421C90A946 /* App */,
+				46A75F638EEA156A2C74D86F /* Core */,
+				63094E12B4CEBD27EBEBD503 /* Models */,
+				0E695A69567A7A48B30F6C97 /* Services */,
+				32D05E20F05B81AB399E4F28 /* Stores */,
+				063B34255D1CA62372E21806 /* Support */,
+				437CAB11C035E2E115A596E5 /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		5A647874F5D19B7A772C3720 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D28DA3E28015315A65547455 /* libZstandard.a */,
+				CE508EC49B796B51CC7D45DF /* NUPStudio.app */,
+				30916ABDF99D00360EB678CB /* NUPStudioTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		63094E12B4CEBD27EBEBD503 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CD0D2F4E091E268290FA4147 /* LibraryCoverDraft.swift */,
+				51BCDB04AF714D4261D75790 /* LibraryMetadata.swift */,
+				594C879B34E452A40012A0E5 /* LibrarySnapshot.swift */,
+				D200D5356A156BE38BAF6559 /* NUPModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		80BBB35C8DB10BB838B3C1EC = {
+			isa = PBXGroup;
+			children = (
+				780EBEEE409EADE92BAE8A7E /* Assets.xcassets */,
+				59FE5CE4CA73AA0F36FC6055 /* Licenses */,
+				5A22FA0BD39ED96DEF1DADD4 /* Sources */,
+				411B7E4E4ED07B92C1A3D201 /* Tests */,
+				AC88445A5EA664B02E3A3A7F /* Vendor */,
+				5A647874F5D19B7A772C3720 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AC88445A5EA664B02E3A3A7F /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				EB96A488BA0968F0733CDC07 /* zstd */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		B2C0785D1AC41588B47C5C00 /* decompress */ = {
+			isa = PBXGroup;
+			children = (
+				1B1039FA2CE1901792EE724C /* huf_decompress.c */,
+				A0F840B70BDD658FFA2880A2 /* zstd_ddict.c */,
+				26493BABFDC90215045A0F52 /* zstd_ddict.h */,
+				6CEC1293C4876EDCCCEB1C08 /* zstd_decompress_block.c */,
+				499AD86EDF91E6349E2D8953 /* zstd_decompress_block.h */,
+				3602F8D6C930AAAF74AD506F /* zstd_decompress_internal.h */,
+				7AE75EE7BF774CF4B93E7FDE /* zstd_decompress.c */,
+			);
+			path = decompress;
+			sourceTree = "<group>";
+		};
+		C8066FAD75A26A421C90A946 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				743DD097DEBC4816A1C9C1A9 /* NUPStudioApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		EB96A488BA0968F0733CDC07 /* zstd */ = {
+			isa = PBXGroup;
+			children = (
+				D8DA381802FA03E833371C7F /* zstd_errors.h */,
+				B4E740E41372961E705F37D4 /* zstd.h */,
+				0110F0D2E7DC37697DE2E6F3 /* common */,
+				3454C3E5DAE386F258D58A74 /* compress */,
+				B2C0785D1AC41588B47C5C00 /* decompress */,
+			);
+			path = zstd;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		508981B5BF25B80B1AEBDD79 /* Zstandard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54E7E1E24A8813A0611FA149 /* Build configuration list for PBXNativeTarget "Zstandard" */;
+			buildPhases = (
+				0B6DBADFFB72D70DCB9FCD6F /* CopyFiles */,
+				2E42FB9B079ADD4FEB6731B1 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Zstandard;
+			packageProductDependencies = (
+			);
+			productName = Zstandard;
+			productReference = D28DA3E28015315A65547455 /* libZstandard.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5B2F8001397F6C9FBB00A9F9 /* NUPStudioTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C2055B577F4FFC9B2816B77 /* Build configuration list for PBXNativeTarget "NUPStudioTests" */;
+			buildPhases = (
+				230F9D165A0657E9E6B21A8F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC2F714CCCF551C676B6C452 /* PBXTargetDependency */,
+			);
+			name = NUPStudioTests;
+			packageProductDependencies = (
+			);
+			productName = NUPStudioTests;
+			productReference = 30916ABDF99D00360EB678CB /* NUPStudioTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		84F05E095F86A2B2037CB41B /* NUPStudio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3ED50854201D725AED9C3BAF /* Build configuration list for PBXNativeTarget "NUPStudio" */;
+			buildPhases = (
+				41C6224665D08E3408616902 /* Sources */,
+				A541322ED8D3A879BB30D608 /* Resources */,
+				C36D40B33566A2BCE8BA774F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A2B464A30A03EA14973E9991 /* PBXTargetDependency */,
+			);
+			name = NUPStudio;
+			packageProductDependencies = (
+			);
+			productName = NUPStudio;
+			productReference = CE508EC49B796B51CC7D45DF /* NUPStudio.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A61ED5F09F8B0B6247DC82C6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					508981B5BF25B80B1AEBDD79 = {
+						ProvisioningStyle = Manual;
+					};
+					5B2F8001397F6C9FBB00A9F9 = {
+						ProvisioningStyle = Manual;
+					};
+					84F05E095F86A2B2037CB41B = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 7E03DD1BB2D4CB0B7F7DF9EB /* Build configuration list for PBXProject "NUPStudio" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 80BBB35C8DB10BB838B3C1EC;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5A647874F5D19B7A772C3720 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				508981B5BF25B80B1AEBDD79 /* Zstandard */,
+				84F05E095F86A2B2037CB41B /* NUPStudio */,
+				5B2F8001397F6C9FBB00A9F9 /* NUPStudioTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A541322ED8D3A879BB30D608 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4331685DE3E999816D945CA2 /* Assets.xcassets in Resources */,
+				E51B057B9B10DF3FD0274A0B /* NUP-MIT.txt in Resources */,
+				43DA0D0ACEC57843CC8D4228 /* Zstandard-BSD.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		230F9D165A0657E9E6B21A8F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				660DA86CB8C2AAF3DF964B1B /* ArchiveFileEditingTests.swift in Sources */,
+				55B0F156148417194EBA1769 /* FileDropTests.swift in Sources */,
+				30A740673821CADF55EBCAE9 /* LibraryCoverSaveTests.swift in Sources */,
+				9454FC08BC63F82B2F808FCB /* LibraryMetadataTests.swift in Sources */,
+				51BF599AC2B2C52F8EFC5663 /* LibraryRestoreTests.swift in Sources */,
+				DF26ECAC8AAF6F05C23EFA24 /* LibraryTests.swift in Sources */,
+				8EC096F1A32F4B731C72E012 /* MetadataTransactionTests.swift in Sources */,
+				451C3FDBCE46C8E4689456F5 /* NUPCoreTests.swift in Sources */,
+				E9084EED838A5C2299EF43D7 /* ReferenceFixtures.swift in Sources */,
+				D6BF3E993CAAC7073B18FDEF /* SpecificationWorkflowTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E42FB9B079ADD4FEB6731B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9792CAE7422E818B8B9FC185 /* debug.c in Sources */,
+				1DD28A86E6F6949E05AF0EE6 /* entropy_common.c in Sources */,
+				A85A0953BA82B991906EB259 /* error_private.c in Sources */,
+				0B6237EF39F64202F5878B7B /* fse_compress.c in Sources */,
+				7AD0F28265D0D675E7E92B5E /* fse_decompress.c in Sources */,
+				10D776BDC771D6CCDB5D1B29 /* hist.c in Sources */,
+				1B33F4A7B2FAADA2926DA8ED /* huf_compress.c in Sources */,
+				2C5F16E35AABB55D20681452 /* huf_decompress.c in Sources */,
+				A6C1CEBCBFC9028E29A1C124 /* pool.c in Sources */,
+				0E5E45A95925257E090B9A8E /* threading.c in Sources */,
+				BFCB87565ABB1AE66B788D4A /* xxhash.c in Sources */,
+				B15D78F2F52B0907DE959CFA /* zstd_common.c in Sources */,
+				CD62B6CD5B7E8142A27FE58A /* zstd_compress.c in Sources */,
+				75281F1051325826CB6528BC /* zstd_compress_literals.c in Sources */,
+				350ED5FCC93BEB3FAD7FAF31 /* zstd_compress_sequences.c in Sources */,
+				F5B60F4D5899BAE429FA3DEB /* zstd_compress_superblock.c in Sources */,
+				925D3A232EC6E255E36F688A /* zstd_ddict.c in Sources */,
+				43E06BAC68593D87A2AE883B /* zstd_decompress.c in Sources */,
+				96B3994698E0FF2B3B2AB0BE /* zstd_decompress_block.c in Sources */,
+				1233A5D7581306D1CFFC25B7 /* zstd_double_fast.c in Sources */,
+				E8E8954E2A10731BFC7604A1 /* zstd_fast.c in Sources */,
+				B469D545E90116C37550BE37 /* zstd_lazy.c in Sources */,
+				A8598F20EB5BCC46D7126E63 /* zstd_ldm.c in Sources */,
+				9A014AE6CF9B3EA1D8FF892D /* zstd_opt.c in Sources */,
+				3CE2B76B5279D0BC485315CD /* zstd_preSplit.c in Sources */,
+				78AF7CA992839A0A419867C3 /* zstdmt_compress.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		41C6224665D08E3408616902 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0EE0FF3BC486D99EAEB92ED3 /* ArchiveContentJournal.swift in Sources */,
+				D847EAF3838AB62D6989303D /* ArchiveFileEditor.swift in Sources */,
+				3A435F4A1BF4908ABF562FDA /* ArchiveFilePlan.swift in Sources */,
+				4879CF096F1863A60F22EAED /* ArchiveOperations.swift in Sources */,
+				AE0588F1E3D143D3C44CEFF8 /* ArchiveView.swift in Sources */,
+				65B39327F246D1BE7B6067CA /* Binary.swift in Sources */,
+				B2D4107D9EB9B95BB176AD1D /* BrowserTreeCache.swift in Sources */,
+				96E32C24F8D76098D8C9FBFE /* ContentView.swift in Sources */,
+				C0A22BC5AC9C54984F46BB28 /* DumpDiscovery.swift in Sources */,
+				82CA3AF03A15764342363DE5 /* FileDropReader.swift in Sources */,
+				ADDD3D4B9957D3764A078E02 /* FilePanels.swift in Sources */,
+				B70B6A6C4B68F384438E1372 /* LibraryCoverDraft.swift in Sources */,
+				6DC09C60D3EB628F07E8F5B0 /* LibraryCoverEditor.swift in Sources */,
+				807706DCE6DE391AFFA4814F /* LibraryCoverService.swift in Sources */,
+				547DD81D98A6BCBCAA951EBD /* LibraryGameRow.swift in Sources */,
+				D7FC0D868D84CD8B0A643D22 /* LibraryMetadata.swift in Sources */,
+				F02CEBF7C67D91E40DC245AF /* LibraryMetadataReader.swift in Sources */,
+				BDD09363D0FA585DBBE10068 /* LibraryMetadataStore.swift in Sources */,
+				2994D652EE395A6B5D9BDAC4 /* LibraryScanner.swift in Sources */,
+				F2AA7014E957F2AE1EA2CB45 /* LibrarySnapshot.swift in Sources */,
+				615C5DAFEB11A83B2FE56DAE /* LibraryView.swift in Sources */,
+				7D0E665650866FD0A1A74B67 /* LocalizationEditor.swift in Sources */,
+				0BB28F77938912DD7ED7752A /* MetadataTransaction.swift in Sources */,
+				D86E53AAAF7292972D7E43C1 /* MetadataView.swift in Sources */,
+				95A56A3CA37A1DA9D44E138D /* NUPArchive.swift in Sources */,
+				1F0EABFC112595A193A89BDD /* NUPModels.swift in Sources */,
+				64A8E575089B3728A87E350D /* NUPStudioApp.swift in Sources */,
+				31B0046FB3EAD5F3723C2F0B /* NUPWriter.swift in Sources */,
+				3A65EC85DFBCBF6766710FD6 /* PackView.swift in Sources */,
+				FE8CFE681267742408CCA113 /* StreamCodec.swift in Sources */,
+				61A4546E93737A10A3CEB090 /* WorkspaceStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A2B464A30A03EA14973E9991 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 508981B5BF25B80B1AEBDD79 /* Zstandard */;
+			targetProxy = 2CC93F9CF86C7DB71942A34D /* PBXContainerItemProxy */;
+		};
+		CC2F714CCCF551C676B6C452 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 84F05E095F86A2B2037CB41B /* NUPStudio */;
+			targetProxy = 1CC846B77A51F84406F9B465 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		359C63A310892848F6E4F23E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Vendor/zstd",
+				);
+				INFOPLIST_FILE = Sources/Support/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "NUP Studio";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "NUP Studio · NUP format © 2026 a55uka";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.local.nupstudio;
+				PRODUCT_MODULE_NAME = NUPStudio;
+				PRODUCT_NAME = "NUP Studio";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Sources/Support/NUPStudio-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		4F905FCD8DF02FB8718DFA3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		66F0C27C3FB8860066BA086F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.local.nupstudio.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NUP Studio.app/Contents/MacOS/NUP Studio";
+			};
+			name = Debug;
+		};
+		7ABB59D4BF5B1A3B2D25CA8C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Vendor/zstd",
+				);
+				INFOPLIST_FILE = Sources/Support/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "NUP Studio";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "NUP Studio · NUP format © 2026 a55uka";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.local.nupstudio;
+				PRODUCT_MODULE_NAME = NUPStudio;
+				PRODUCT_NAME = "NUP Studio";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Sources/Support/NUPStudio-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		8A294D4E5706D4CBB65D541E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"ZSTD_DISABLE_ASM=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Vendor/zstd",
+					"$(SRCROOT)/Vendor/zstd/common",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.local.Zstandard;
+				PRODUCT_NAME = Zstandard;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9D22845BB6A4B11F5D28D30B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.local.nupstudio.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NUP Studio.app/Contents/MacOS/NUP Studio";
+			};
+			name = Release;
+		};
+		A19881FFF459C05C7FF936B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = arm64;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F97D1F90F4D2F94DC883B6F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"ZSTD_DISABLE_ASM=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Vendor/zstd",
+					"$(SRCROOT)/Vendor/zstd/common",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.local.Zstandard;
+				PRODUCT_NAME = Zstandard;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2C2055B577F4FFC9B2816B77 /* Build configuration list for PBXNativeTarget "NUPStudioTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66F0C27C3FB8860066BA086F /* Debug */,
+				9D22845BB6A4B11F5D28D30B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3ED50854201D725AED9C3BAF /* Build configuration list for PBXNativeTarget "NUPStudio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7ABB59D4BF5B1A3B2D25CA8C /* Debug */,
+				359C63A310892848F6E4F23E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		54E7E1E24A8813A0611FA149 /* Build configuration list for PBXNativeTarget "Zstandard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A294D4E5706D4CBB65D541E /* Debug */,
+				F97D1F90F4D2F94DC883B6F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7E03DD1BB2D4CB0B7F7DF9EB /* Build configuration list for PBXProject "NUPStudio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A19881FFF459C05C7FF936B9 /* Debug */,
+				4F905FCD8DF02FB8718DFA3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A61ED5F09F8B0B6247DC82C6 /* Project object */;
+}

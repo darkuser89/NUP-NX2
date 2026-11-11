@@ -1,0 +1,132 @@
+name: macOS Build und Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: macos-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: ARM64 testen und bauen
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Quellcode auschecken
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Tests, Release-Build und ZIP
+        id: package
+        run: bash script/ci_build.sh
+      - name: App und Prüfsumme aufbewahren
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: NUP-Studio-macOS-arm64
+          path: ${{ steps.package.outputs.distribution }}/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - name: Fehlernachweise aufbewahren
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: NUP-Studio-Fehlernachweis
+          path: |
+            ${{ runner.temp }}/NUPStudio-test.log
+            ${{ runner.temp }}/NUPStudio-build.log
+            ${{ runner.temp }}/NUPStudio-tests.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
+
+  release:
+    name: GitHub-Release veröffentlichen
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Von GitHub gebaute App laden
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: NUP-Studio-macOS-arm64
+          path: distribution
+      - name: Prüfen, Release anlegen und veröffentlichen
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require('node:fs');
+            const crypto = require('node:crypto');
+            const tag = context.ref.replace('refs/tags/', '');
+            if (!/^v\d+\.\d+\.\d+$/.test(tag)) throw new Error('Ungültiges Versions-Tag.');
+            const name = `NUP-Studio-${tag}-macOS-arm64.zip`;
+            const checksumName = `${name}.sha256`;
+            const zip = fs.readFileSync(`distribution/${name}`);
+            const checksum = fs.readFileSync(`distribution/${checksumName}`);
+            const digest = crypto.createHash('sha256').update(zip).digest('hex');
+            if (checksum.toString().trim() !== `${digest}  ${name}`) {
+              throw new Error('Die SHA-256-Prüfsumme stimmt nicht.');
+            }
+            const repo = context.repo;
+            const marker = `Commit: ${context.sha}`;
+            const body = [
+              'Native SwiftUI-App für Apple-Silicon-Macs (arm64), ab macOS 14.',
+              '',
+              '- NUP öffnen, prüfen, entpacken und erstellen.',
+              '- Lokale Bibliothek mit Spielnamen und Covern.',
+              '- Metadaten und Cover direkt aktualisieren.',
+              '- Dateien hinzufügen und entfernen, ohne vorhandene Inhalte neu zu komprimieren.',
+              '',
+              'ZIP entpacken und „NUP Studio.app“ in Programme kopieren.',
+              'Die App ist lokal ad-hoc signiert, ohne Apple-Notarisierung oder Developer-ID-Signatur.',
+              '',
+              'Dieser Download wurde ausschließlich von GitHub Actions getestet, gebaut und veröffentlicht.',
+              marker,
+              `Build: ${context.serverUrl}/${repo.owner}/${repo.repo}/actions/runs/${context.runId}`
+            ].join('\n');
+            let release;
+            try {
+              release = (await github.rest.repos.getReleaseByTag({...repo, tag})).data;
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            if (release && !release.draft) {
+              const names = release.assets.filter(a => a.state === 'uploaded').map(a => a.name);
+              if (release.body?.includes(marker) && names.includes(name) && names.includes(checksumName)) {
+                core.notice(`Bereits veröffentlicht: ${release.html_url}`);
+                return;
+              }
+              throw new Error('Ein bestehendes veröffentlichtes Release wird nicht überschrieben. Neues Versions-Tag verwenden.');
+            }
+            if (!release) {
+              release = (await github.rest.repos.createRelease({
+                ...repo, tag_name: tag, target_commitish: context.sha,
+                name: `NUP Studio ${tag}`, body, draft: true, prerelease: false
+              })).data;
+            }
+            for (const [filename, data, type] of [
+              [name, zip, 'application/zip'],
+              [checksumName, checksum, 'text/plain']
+            ]) {
+              const previous = release.assets.find(a => a.name === filename);
+              if (previous) await github.rest.repos.deleteReleaseAsset({...repo, asset_id: previous.id});
+              await github.rest.repos.uploadReleaseAsset({
+                ...repo, release_id: release.id, name: filename, data,
+                headers: {'content-type': type, 'content-length': data.length}
+              });
+            }
+            const published = await github.rest.repos.updateRelease({
+              ...repo, release_id: release.id, body, draft: false, make_latest: 'true'
+            });
+            core.notice(`Veröffentlicht: ${published.data.html_url}`);

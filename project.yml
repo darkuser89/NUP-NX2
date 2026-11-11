@@ -1,0 +1,100 @@
+name: NUPStudio
+options:
+  bundleIdPrefix: de.local
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    ARCHS: arm64
+    ONLY_ACTIVE_ARCH: NO
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Manual
+    ENABLE_HARDENED_RUNTIME: YES
+    CLANG_ENABLE_MODULES: YES
+    GCC_C_LANGUAGE_STANDARD: c99
+targets:
+  Zstandard:
+    type: library.static
+    platform: macOS
+    sources:
+      - path: Vendor/zstd
+        excludes: ["**/*.S"]
+    settings:
+      base:
+        PRODUCT_NAME: Zstandard
+        GCC_PREPROCESSOR_DEFINITIONS: ["$(inherited)", "ZSTD_DISABLE_ASM=1"]
+        HEADER_SEARCH_PATHS: ["$(SRCROOT)/Vendor/zstd", "$(SRCROOT)/Vendor/zstd/common"]
+        SKIP_INSTALL: YES
+  NUPStudio:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+      - path: Licenses
+        buildPhase: resources
+      - path: Assets.xcassets
+    dependencies:
+      - target: Zstandard
+    settings:
+      base:
+        PRODUCT_NAME: NUP Studio
+        PRODUCT_MODULE_NAME: NUPStudio
+        PRODUCT_BUNDLE_IDENTIFIER: de.local.nupstudio
+        SWIFT_OBJC_BRIDGING_HEADER: Sources/Support/NUPStudio-Bridging-Header.h
+        HEADER_SEARCH_PATHS: ["$(SRCROOT)/Vendor/zstd"]
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_CFBundleDisplayName: NUP Studio
+        INFOPLIST_KEY_LSMinimumSystemVersion: "14.0"
+        INFOPLIST_KEY_NSHumanReadableCopyright: "NUP Studio · NUP format © 2026 a55uka"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ENABLE_APP_SANDBOX: NO
+    info:
+      path: Sources/Support/Info.plist
+      properties:
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: NUP Container
+            CFBundleTypeRole: Editor
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [de.local.nup-container]
+          - CFBundleTypeName: NUP-Bibliotheksordner
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [public.folder]
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: de.local.nup-container
+            UTTypeDescription: NUP Container
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [nup]
+  NUPStudioTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources: [Tests]
+    dependencies:
+      - target: NUPStudio
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.local.nupstudio.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/NUP Studio.app/Contents/MacOS/NUP Studio"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+schemes:
+  NUPStudio:
+    build:
+      targets:
+        NUPStudio: all
+        NUPStudioTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets: [NUPStudioTests]
+      gatherCoverageData: false
+    archive:
+      config: Release
