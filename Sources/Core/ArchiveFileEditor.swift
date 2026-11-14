@@ -70,6 +70,9 @@ extension ArchiveFilePlan {
             try context.report(0.65, "Füge neue Dateien hinzu …")
             _ = try copy(stage, offset: 0, count: stageSize, destination: stageOffset)
         }
+        for block in metadataWrites {
+            try context.check(); try output.seek(toOffset: block.offset); try output.write(contentsOf: block.data)
+        }
         try output.truncate(atOffset: header.uint(64, 8)); try output.synchronize()
         return copied
     }
@@ -84,23 +87,53 @@ extension ArchiveFilePlan {
 extension NUPArchive {
     func editFiles(package: Int, directory: Int, adding urls: [URL] = [], removing: Set<Int> = [],
                    context: JobContext = JobContext()) throws -> NUPArchive {
-        try context.report(0, "Bereite Dateiänderung vor …")
+        do {
+            return try applyEdits(ArchiveEditRequest(files: [ArchiveFileMutation(package: package, directory: directory,
+                additions: urls, removing: removing)]), context: context)
+        } catch let failure as ArchiveEditFailure { throw failure.underlying }
+    }
+
+    func applyEdits(_ request: ArchiveEditRequest, context: JobContext = JobContext()) throws -> NUPArchive {
+        try require(permitsEditing, "Ein Diagnose-Snapshot darf nicht zur normalen Bearbeitung verwendet werden.")
+        try context.report(0, "Bereite Änderungen vor …")
         let output = try regularFile(url, writable: true)
         defer { try? output.close() }
         try MetadataTransaction.lock(output)
         try ArchiveContentJournal.requireNoPendingChanges(at: url)
         try revision.requireCurrent(at: url)
-        // Validate names, ownership and removals before compressing input files.
-        let placeholders = try urls.map { source -> NUPFile in
-            try require(source.isFileURL, "Nur lokale Dateien können hinzugefügt werden.")
-            return NUPFile(name: source.lastPathComponent.precomposedStringWithCanonicalMapping)
+        for (url, revision) in request.sourceRevisions { try revision.requireCurrent(at: url) }
+        try request.validateImages(in: self)
+        let metadata = request.metadata.filter { packages.indices.contains($0.key) && $0.value != packages[$0.key].metadata }
+        try require(request.metadata.keys.allSatisfy { packages.indices.contains($0) }, "Metadaten-Paket existiert nicht.")
+        try require(request.files.flatMap(\.additions).allSatisfy(\.isFileURL), "Nur lokale Dateien können hinzugefügt werden.")
+        let mutations = request.files.filter { !$0.additions.isEmpty || !$0.removing.isEmpty }
+        if mutations.isEmpty && metadata.isEmpty { return self }
+        // Keep the existing small bounded metadata transaction for a single package.
+        if mutations.isEmpty && metadata.count == 1, let entry = metadata.first {
+            try output.close() // the metadata transaction takes its own exclusive lock
+            var recovered: NUPArchive?
+            do { try MetadataTransaction.update(archive: self, package: entry.key, metadata: entry.value, context: context, didRollback: { recovered = $0 }) }
+            catch {
+                if let recovered { throw ArchiveEditFailure(underlying: error, recovered: recovered) }
+                throw error
+            }
+            return try NUPArchive(url: url, context: context, recoverPendingMetadata: false)
         }
-        _ = try ArchiveFilePlan(archive: self, package: package, directory: directory,
-                               additions: placeholders, stageSize: 0, removing: removing)
-        if urls.isEmpty && removing.isEmpty { return self }
-        let stage = try ArchiveFileStage(archive: self, urls: urls, context: context)
-        let plan = try ArchiveFilePlan(archive: self, package: package, directory: directory,
-                                      additions: stage.files, stageSize: stage.size, removing: removing)
+        let placeholders = mutations.map { mutation in
+            ArchiveFilePlanGroup(package: mutation.package, directory: mutation.directory,
+                additions: mutation.additions.map { NUPFile(name: $0.lastPathComponent.precomposedStringWithCanonicalMapping) }, removing: mutation.removing)
+        }
+        _ = try ArchiveFilePlan(archive: self, groups: placeholders, stageSize: 0, metadata: metadata)
+        let stage = try ArchiveFileStage(archive: self, urls: mutations.flatMap(\.additions), context: context)
+        for (url, revision) in request.sourceRevisions { try revision.requireCurrent(at: url) }
+        var cursor = 0
+        let groups = mutations.map { mutation -> ArchiveFilePlanGroup in
+            let end = cursor + mutation.additions.count
+            defer { cursor = end }
+            return ArchiveFilePlanGroup(package: mutation.package, directory: mutation.directory,
+                additions: Array(stage.files[cursor..<end]), removing: mutation.removing)
+        }
+        let plan = try ArchiveFilePlan(archive: self, groups: groups, stageSize: stage.size, metadata: metadata)
         let journal = ArchiveContentJournal(archive: self, plan: plan)
         let input = try regularFile(url)
         defer { try? input.close() }
@@ -129,6 +162,10 @@ extension NUPArchive {
                 try require(Data(hash.finalize()) == extent.digest, "Ein verschobener Datenblock stimmt nicht überein.")
             }
             for index in plan.addedIndices { try StreamCodec.consume(updated.files[index], input: input, context: context) }
+            for block in plan.metadataWrites {
+                try require(try readRange(input, offset: block.offset, count: block.data.count) == block.data, "Gespeicherte Metadaten stimmen nicht überein.")
+            }
+            for (index, values) in metadata { try require(updated.packages[index].metadata == values, "Paket-Metadaten stimmen nicht überein.") }
             try FileRevision(handle: output).requireCurrent(at: url)
             try context.check(); try ArchiveContentJournal.markCommitted(url: url)
             committed = true
@@ -137,14 +174,19 @@ extension NUPArchive {
             try? context.report(1, "Dateien direkt aktualisiert.")
             return updated
         } catch {
+            var recovered: NUPArchive?
             if !committed {
                 do {
-                    if mutated { try ArchiveContentJournal.rollback(url: url, file: output) }
+                    if mutated {
+                        try ArchiveContentJournal.rollback(url: url, file: output)
+                        recovered = try NUPArchive(url: url, recoverPendingMetadata: false)
+                    }
                     else { try FileManager.default.removeItem(at: paths.pending) }
                 } catch {
                     throw NUPError("Dateiänderung unterbrochen. Das Wiederherstellungsprotokoll bleibt neben der NUP. Bitte erneut öffnen: \(error.localizedDescription)")
                 }
             }
+            if let recovered { throw ArchiveEditFailure(underlying: error, recovered: recovered) }
             throw error
         }
     }

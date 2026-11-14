@@ -9,15 +9,20 @@ struct ArchiveView: View {
     @State private var selection = Set<Int>()
     @State private var confirmRemoval = false
     @State private var pendingRemoval = Set<Int>()
+    @State private var pendingNewRemoval = Set<Int>()
 
     private struct Query: Equatable {
         let archive: UUID
         let package: Int
         let text: String
+        let files: UUID?
     }
 
     private var package: NUPPackage { archive.packages[min(store.packageIndex, archive.packages.count - 1)] }
     private var destination: ArchiveFileLocation {
+        if selection.count == 1, let id = selection.first,
+           let pending = store.editDraft?.additions.first(where: { $0.nodeID == id }),
+           let location = archive.fileLocation(node: pending.directory, package: package.id) { return location }
         if selection.count == 1, let id = selection.first,
            let location = archive.fileLocation(node: id, package: package.id) { return location }
         let id = package.romfs ?? package.exefs ?? package.root
@@ -50,25 +55,25 @@ struct ArchiveView: View {
                     .id("\(archive.url.path):\(package.id):\(store.profile.rawValue)")
             }
         }
-        .task(id: Query(archive: archive.snapshotID, package: package.id, text: search)) {
-            let index = package.id, query = search, snapshot = archive
+        .task(id: Query(archive: archive.snapshotID, package: package.id, text: search, files: store.editDraft?.fileRevision)) {
+            let index = package.id, query = search, snapshot = archive, draft = store.editDraft
             if !query.isEmpty { try? await Task.sleep(for: .milliseconds(140)) }
             guard !Task.isCancelled else { return }
             let filtered = await Task.detached(priority: .userInitiated) {
-                BrowserTreeSearch.matching(snapshot.browserNodes(package: index), query: query)
+                draft?.nodes(package: index, query: query) ?? BrowserTreeSearch.matching(snapshot.browserNodes(package: index), query: query)
             }.value
             guard !Task.isCancelled else { return }
             nodes = filtered
         }
         .onChange(of: store.packageIndex) { _, _ in selection.removeAll() }
         .onChange(of: archive.snapshotID) { _, _ in selection.removeAll() }
-        .confirmationDialog("\(pendingRemoval.count) Datei(en) aus der NUP entfernen?", isPresented: $confirmRemoval) {
-            Button("Dateien entfernen", role: .destructive) {
-                store.editFiles(directory: package.root, removing: pendingRemoval)
+        .confirmationDialog("\(pendingRemoval.count + pendingNewRemoval.count) Datei(en) zum Entfernen vormerken?", isPresented: $confirmRemoval) {
+            Button("Entfernen vormerken", role: .destructive) {
+                if !pendingRemoval.isEmpty { store.editFiles(directory: package.root, removing: pendingRemoval) }
+                store.removeStagedFiles(pendingNewRemoval)
             }
         } message: {
-            let names = pendingRemoval.sorted().prefix(5).map { String(archive.files[$0].name.prefix(100)) }.joined(separator: "\n")
-            Text("\(names)\n\nDie Dateien werden aus dem Paket entfernt. Ihre bisherigen Datenblöcke können in der NUP verbleiben; die Dateigröße wird dabei nicht verkleinert.")
+            Text("Erst Übernehmen entfernt vorhandene Dateien aus dem Paket. Vorgemerkte neue Dateien werden nur aus dem Entwurf genommen. Bisherige Datenblöcke können in der NUP verbleiben; die NUP wird nicht verkleinert.")
         }
     }
     private var header: some View {
@@ -79,12 +84,12 @@ struct ArchiveView: View {
             }
             HStack(alignment: .top, spacing: 14) {
                 Group {
-                    if let data = package.metadata[store.profile.type(3)], let image = NSImage(data: data) {
+                    if let data = store.editDraft?.packages[package.id].icon, let image = NSImage(data: data) {
                         Image(nsImage: image).resizable().scaledToFit()
                     } else { Image(systemName: "shippingbox.fill").resizable().scaledToFit().padding(12).foregroundStyle(.tint) }
                 }.frame(width: 64, height: 64).background(.quaternary, in: RoundedRectangle(cornerRadius: 13)).clipShape(RoundedRectangle(cornerRadius: 13))
                 VStack(alignment: .leading, spacing: 5) {
-                    let name = package.text(5, profile: store.profile)
+                    let name = store.editDraft?.packages[package.id].name ?? package.text(5, profile: store.profile)
                     Text(name.isEmpty ? archive.url.deletingPathExtension().lastPathComponent : name)
                         .font(.system(size: 25, weight: .semibold)).lineLimit(1).textSelection(.enabled)
                     Text(archive.url.lastPathComponent).font(.subheadline).foregroundStyle(.secondary).textSelection(.enabled)
@@ -118,9 +123,16 @@ struct ArchiveView: View {
                 Button { store.addFiles(directory: destination.directory) } label: {
                     Label("Dateien hinzufügen …", systemImage: "plus")
                 }
-                Button { pendingRemoval = selectedFiles; confirmRemoval = true } label: {
+                Button {
+                    pendingRemoval = selectedFiles.subtracting(store.editDraft?.removals ?? [])
+                    pendingNewRemoval = Set(selection.filter { $0 < 0 })
+                    confirmRemoval = true
+                } label: {
                     Label("Dateien entfernen …", systemImage: "trash")
-                }.disabled(selectedFiles.isEmpty)
+                }.disabled(selectedFiles.subtracting(store.editDraft?.removals ?? []).isEmpty && !selection.contains(where: { $0 < 0 }))
+                if !selectedFiles.intersection(store.editDraft?.removals ?? []).isEmpty {
+                    Button("Entfernen zurücknehmen") { store.restoreStagedFiles(selectedFiles) }
+                }
                 Spacer()
                 Text("Ziel: \(destination.path)").font(.caption).foregroundStyle(.secondary).lineLimit(1)
                     .help("Ordner in der Liste auswählen, um das Ziel für neue Dateien festzulegen.")
@@ -132,6 +144,11 @@ struct ArchiveView: View {
                             .foregroundStyle(node.isDirectory ? Color.accentColor : Color.secondary)
                             .frame(width: 18)
                         Text(node.name).lineLimit(1)
+                            .strikethrough(node.id >= archive.directories.count && store.editDraft?.removals.contains(node.id - archive.directories.count) == true)
+                        if node.id < 0 { Image(systemName: "plus.circle.fill").foregroundStyle(.green).help("Hinzufügen vorgemerkt") }
+                        else if node.id >= archive.directories.count && store.editDraft?.removals.contains(node.id - archive.directories.count) == true {
+                            Image(systemName: "minus.circle.fill").foregroundStyle(.orange).help("Entfernen vorgemerkt")
+                        }
                     }.padding(.vertical, 3)
                 }.width(min: 180, ideal: 360)
                 TableColumn("Größe") { node in
@@ -141,7 +158,7 @@ struct ArchiveView: View {
                     Text(size(node.storedSize)).monospacedDigit().frame(maxWidth: .infinity, alignment: .trailing)
                 }.width(100)
                 TableColumn("Codec") { node in
-                    Text(node.codec.map { $0 == 0 ? "RAW" : "ZSTD" } ?? "—")
+                    Text(node.id < 0 ? "Neu" : (node.codec.map { $0 == 0 ? "RAW" : "ZSTD" } ?? "—"))
                         .font(.system(size: 10, design: .monospaced))
                 }.width(54)
             }.padding(.horizontal, 16)
@@ -150,7 +167,7 @@ struct ArchiveView: View {
                 Text(search.isEmpty ? "Dieses Paket ist leer." : "Keine passenden Dateien.")
                     .foregroundStyle(.secondary).padding()
             }
-            Text("Ordner auswählen, um dort Dateien hinzuzufügen. Vorhandene Dateien werden nicht neu komprimiert.")
+            Text("Dateiänderungen werden vorgemerkt. Erst Übernehmen speichert sie gemeinsam mit den Metadaten; vorhandene Dateien werden nicht neu komprimiert.")
                 .font(.caption).foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 24).padding(.vertical, 10)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -51,6 +51,9 @@ struct LibraryView: View {
                     .contextMenu(forSelectionType: URL.self) { selected in
                         Button("Öffnen") { open(selected) }.disabled(selected.count != 1 || store.busy)
                         Button("Cover hinzufügen / ändern …") { editCover(selected) }.disabled(selected.count != 1 || store.busy)
+                        Button("Diagnostizieren / reparieren …") {
+                            if let url = selected.first { store.diagnose(url) }
+                        }.disabled(selected.count != 1 || store.busy)
                     } primaryAction: { selected in
                         open(selected)
                     }

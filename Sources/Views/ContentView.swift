@@ -39,6 +39,7 @@ struct ContentView: View {
                     else { WelcomeView(store: store) }
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
                 Divider()
+                ArchiveEditBar(store: store)
                 StatusBar(store: store)
             }
         }
@@ -46,6 +47,7 @@ struct ContentView: View {
             ToolbarItemGroup {
                 Button(action: store.openPanel) { Label("Öffnen", systemImage: "folder") }.disabled(store.busy)
                 Button(action: store.chooseLibrary) { Label("NUP-Ordner", systemImage: "folder.badge.plus") }.disabled(store.busy)
+                Button(action: store.diagnosePanel) { Label("Diagnose / Reparatur", systemImage: "wrench.and.screwdriver") }.disabled(store.busy)
                 if store.archive != nil && store.section == .archive {
                     Button { store.verify(deep: true) } label: { Label("Prüfen", systemImage: "checkmark.shield") }
                         .disabled(store.busy)
@@ -74,12 +76,21 @@ struct ContentView: View {
                 .allowsHitTesting(false)
             }
         }
+        .background(WorkspaceWindowGuard(store: store))
         .onDrop(of: [UTType.fileURL], isTargeted: $targeted, perform: store.receiveDrop)
         .alert("Vorgang fehlgeschlagen", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
             Button("OK") { store.error = nil }
         } message: { Text(store.error ?? "") }
+        .confirmationDialog("Nicht übernommene Änderungen", isPresented: Binding(get: { store.pendingNavigation != nil }, set: { if !$0 { store.pendingNavigation = nil } }), titleVisibility: .visible) {
+            Button("Übernehmen und fortfahren", action: store.applyAndContinue).disabled(!store.canApplyEdits)
+            Button("Verwerfen und fortfahren", role: .destructive, action: store.discardAndContinue)
+            Button("Abbrechen", role: .cancel) { store.pendingNavigation = nil }
+        } message: { Text("Metadaten und Dateiänderungen sind noch nicht gespeichert. Dein Entwurf bleibt bis zur Auswahl erhalten.") }
         .sheet(item: $store.libraryCoverDraft) { draft in
             LibraryCoverEditor(store: store, draft: draft)
+        }
+        .sheet(item: $store.repairReport) { report in
+            ArchiveRepairView(store: store, report: report)
         }
     }
 }

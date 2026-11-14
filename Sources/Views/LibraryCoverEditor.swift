@@ -19,7 +19,7 @@ struct LibraryCoverEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text("Cover in NUP speichern").font(.title2.bold())
+            Text("Cover vormerken").font(.title2.bold())
             Text(draft.archive.url.lastPathComponent).foregroundStyle(.secondary).lineLimit(2).textSelection(.enabled)
             HStack(alignment: .top, spacing: 22) {
                 Group {
@@ -38,7 +38,7 @@ struct LibraryCoverEditor: View {
                     if imageLoading { ProgressView().controlSize(.small) }
                 }.disabled(store.busy || imageLoading)
             }
-            Text("Gespeichert wird direkt in der ausgewählten NUP. Nur Cover-Metadaten und Verwaltungsdaten werden aktualisiert; die Spielinhalte werden nicht kopiert. Ein Wiederherstellungsprotokoll wird nach erfolgreichem Abschluss entfernt.")
+            Text("Das Cover wird im gemeinsamen Entwurf vorgemerkt. Erst Übernehmen speichert Cover, Metadaten und Dateiänderungen gemeinsam in der NUP.")
                 .font(.caption).foregroundStyle(.secondary)
             if let error = imageError ?? store.libraryCoverError { Text(error).font(.caption).foregroundStyle(.red).textSelection(.enabled) }
             HStack {
@@ -48,7 +48,7 @@ struct LibraryCoverEditor: View {
                     if store.busy { store.cancel() }
                     else { store.libraryCoverDraft = nil }
                 }.disabled(imageLoading)
-                Button("Cover speichern") {
+                Button("Cover vormerken") {
                     guard let chosen else { return }
                     store.saveLibraryCover(draft, package: packageIndex, cover: chosen.data)
                 }.buttonStyle(.borderedProminent).disabled(chosen == nil || store.busy || imageLoading)

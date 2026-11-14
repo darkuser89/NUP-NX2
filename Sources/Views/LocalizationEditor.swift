@@ -1,12 +1,5 @@
 import SwiftUI
 
-struct LocalizedEntry: Identifiable {
-    let id = UUID()
-    var language = ""
-    var title = ""
-    var icon: Data?
-}
-
 struct LocalizationEditor: View {
     @Binding var entries: [LocalizedEntry]
     @State private var error: String?

@@ -2,12 +2,14 @@ import SwiftUI
 
 @main
 struct NUPStudioApp: App {
+    @NSApplicationDelegateAdaptor(WorkspaceApplicationDelegate.self) private var appDelegate
     @StateObject private var store = WorkspaceStore()
 
     var body: some Scene {
         Window("NUP Studio", id: "main") {
             ContentView(store: store)
                 .frame(minWidth: 980, minHeight: 680)
+                .onAppear { appDelegate.store = store }
                 .task { store.restoreLibraryIfNeeded() }
                 .onOpenURL { store.receiveFileURLs([$0]) }
         }
@@ -21,7 +23,20 @@ struct NUPStudioApp: App {
                 Button("Container erstellen …") { store.section = .pack }
                     .keyboardShortcut("n").disabled(store.busy)
             }
+            CommandGroup(replacing: .saveItem) {
+                Button("Übernehmen") { store.applyEdits() }.keyboardShortcut("s").disabled(!store.canApplyEdits)
+                Button("Speichern unter …", action: store.saveDraftAs).keyboardShortcut("s", modifiers: [.command, .shift])
+                    .disabled(store.archive == nil || store.busy || store.editDraft?.validationError != nil)
+            }
+            CommandGroup(after: .saveItem) {
+                Button("Fenster schließen") { store.requestWindowClose() }.keyboardShortcut("w")
+            }
+            CommandGroup(replacing: .appTermination) {
+                Button("NUP Studio beenden", action: store.requestQuit).keyboardShortcut("q")
+            }
             CommandMenu("Container") {
+                Button("NUP diagnostizieren / reparieren …", action: store.diagnosePanel)
+                    .keyboardShortcut("d", modifiers: [.command, .shift]).disabled(store.busy)
                 Button("Vollständig prüfen") { store.verify(deep: true) }
                     .keyboardShortcut("r", modifiers: [.command, .shift])
                     .disabled(store.archive == nil || store.busy)

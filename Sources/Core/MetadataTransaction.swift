@@ -36,7 +36,8 @@ struct MetadataTransaction {
         try require(newBlock.count <= Self.metadataLimit, "Metadaten überschreiten das Paketlimit.")
         // Reuse an active metadata block at EOF. Other blocks remain at their
         // existing offsets; the first edit of an interior block appends it.
-        if package.metaSize > 0 && package.metaOffset + UInt64(package.metaSize) == originalSize {
+        if package.metaSize > 0 && package.metaOffset >= archive.blobOffset &&
+            package.metaOffset + UInt64(package.metaSize) == originalSize {
             writeOffset = package.metaOffset
             oldTail = try readRange(input, offset: writeOffset, count: package.metaSize)
         } else {
@@ -237,11 +238,13 @@ struct MetadataTransaction {
                     "Diese NUP wird bereits von einem anderen Vorgang bearbeitet.")
     }
 
-    static func update(archive: NUPArchive, package index: Int, metadata: [UInt16: Data], context: JobContext) throws {
+    static func update(archive: NUPArchive, package index: Int, metadata: [UInt16: Data], context: JobContext, didRollback: ((NUPArchive) -> Void)? = nil) throws {
+        try require(archive.permitsEditing, "Ein Diagnose-Snapshot darf nur über die bestätigte Reparatur geschrieben werden.")
         try context.report(0, "Bereite Metadaten-Aktualisierung vor …")
         let file = try regularFile(archive.url, writable: true)
         defer { try? file.close() }
         try lock(file)
+        try ArchiveRepairJournal.requireAbsent(at: archive.url)
         try ArchiveContentJournal.requireAbsent(at: archive.url)
         try archive.revision.requireCurrent(at: archive.url)
         if metadata == archive.packages[index].metadata { return }
@@ -259,6 +262,7 @@ struct MetadataTransaction {
             try context.check()
             try transaction.writeRecord(to: file)
             try transaction.writeHeader(to: file)
+            try context.report(0.85, "Prüfe Metadatenänderung …", force: true)
             _ = try NUPArchive(url: archive.url, context: context, recoverPendingMetadata: false)
             let storedBlock = try readRange(file, offset: transaction.writeOffset, count: transaction.newBlock.count)
             try require(storedBlock == transaction.newBlock, "Die gespeicherten Metadaten stimmen nicht mit der Änderung überein.")
@@ -271,7 +275,10 @@ struct MetadataTransaction {
         } catch {
             if !committed {
                 do {
-                    if mutated { try transaction.restore(url: archive.url, file: file) }
+                    if mutated {
+                        try transaction.restore(url: archive.url, file: file)
+                        didRollback?(try NUPArchive(url: archive.url, recoverPendingMetadata: false))
+                    }
                     try FileManager.default.removeItem(at: paths.pending)
                     syncDirectory(archive.url.deletingLastPathComponent())
                 } catch {

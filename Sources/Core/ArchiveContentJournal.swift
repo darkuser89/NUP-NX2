@@ -39,6 +39,7 @@ struct ArchiveContentJournal {
                     "Eine frühere Metadatenänderung muss zuerst wiederhergestellt werden.")
     }
     static func requireNoPendingChanges(at url: URL) throws {
+        try ArchiveRepairJournal.requireAbsent(at: url)
         try requireAbsent(at: url); try requireNoMetadataJournal(at: url)
     }
 

@@ -21,17 +21,25 @@ struct JobResult: Sendable {
     var reveal: URL? = nil
     var library: LibrarySnapshot? = nil
     var coverDraft: LibraryCoverDraft? = nil
-    var updatedLibraryArchive: NUPArchive? = nil
+    var repairReport: ArchiveRepairReport? = nil
+    var repaired = false
+    var editDraft: ArchiveEditDraft? = nil
+    var preferLibrary = false
 }
 
 @MainActor
 final class WorkspaceStore: ObservableObject {
     @Published var section: WorkspaceSection? = .archive
     @Published var archive: NUPArchive?
+    @Published var editDraft: ArchiveEditDraft?
+    @Published var pendingNavigation: EditorNavigation?
+    var afterApply: EditorNavigation?
     @Published var library: LibrarySnapshot?
     let libraryMetadata: LibraryMetadataStore
     @Published var libraryCoverDraft: LibraryCoverDraft?
     @Published var libraryCoverError: String?
+    @Published var repairReport: ArchiveRepairReport?
+    @Published var repairError: String?
     @Published private(set) var rememberedLibraryFolder: URL?
     @Published private(set) var libraryUnavailableMessage: String?
     @Published var packageIndex = 0
@@ -73,7 +81,7 @@ final class WorkspaceStore: ObservableObject {
         open(url)
     }
 
-    var canReceiveFiles: Bool { !busy || restoringLibrary }
+    var canReceiveFiles: Bool { pendingNavigation == nil && repairReport == nil && (!busy || restoringLibrary) }
 
     @discardableResult
     func receiveFileURLs(_ urls: [URL]) -> Bool {
@@ -115,10 +123,39 @@ final class WorkspaceStore: ObservableObject {
         }
         guard !busy else { return }
         if DumpDiscovery.isDirectory(url) { scanLibrary(url); return }
+        if deferNavigation(.open(url)) { return }
         section = .archive
         perform("Container öffnen") { context in
-            let archive = try NUPArchive(url: url, context: context)
-            return JobResult(message: "\(archive.packages.count) Pakete · Struktur und TOC-Hash geprüft", archive: archive)
+            do {
+                let archive = try NUPArchive(url: url, context: context)
+                return JobResult(message: "\(archive.packages.count) Pakete · Struktur und TOC-Hash geprüft", archive: archive)
+            } catch is CancellationError { throw CancellationError() }
+            catch {
+                let report = try ArchiveDiagnosis.inspect(url, originalError: error.localizedDescription, context: context)
+                return JobResult(message: "Öffnen fehlgeschlagen · Diagnose liegt vor · Datei unverändert.", repairReport: report)
+            }
+        }
+    }
+    func diagnosePanel() {
+        guard !busy, let url = FilePanels.archive() else { return }
+        diagnose(url)
+    }
+    func diagnose(_ url: URL) {
+        guard !busy else { return }
+        if deferNavigation(.diagnose(url)) { return }
+        repairError = nil
+        perform("NUP diagnostizieren") { context in
+            let report = try ArchiveDiagnosis.inspect(url, context: context)
+            return JobResult(message: "Diagnose abgeschlossen · Datei unverändert.", repairReport: report)
+        }
+    }
+    func repair(_ report: ArchiveRepairReport) {
+        guard !busy, repairReport?.id == report.id, report.canRepair else { return }
+        repairError = nil
+        perform("NUP direkt reparieren", reportFailure: { [weak self] in self?.repairError = $0 }) { context in
+            let archive = try ArchiveRepair.apply(report, context: context)
+            return JobResult(message: "NUP direkt repariert · Struktur, TOC-Hash und UUID geprüft. Spieldaten unverändert.",
+                             archive: archive, reveal: archive.url, repaired: true)
         }
     }
     func chooseLibrary() {
@@ -154,12 +191,15 @@ final class WorkspaceStore: ObservableObject {
         }
     }
     func pack() {
-        guard !busy, let source = sourceFolder,
+        guard !busy else { return }
+        if deferNavigation(.create) { return }
+        guard let source = sourceFolder,
               let target = FilePanels.save(name: source.lastPathComponent + ".nup", title: "NUP-Container erstellen") else { return }
         var settings = options
         settings.profile = .specification
+        let capturedSettings = settings
         perform("Container erstellen") { context in
-            try NUPWriter.pack(source: source, destination: target, options: settings, context: context)
+            try NUPWriter.pack(source: source, destination: target, options: capturedSettings, context: context)
             return JobResult(message: "Container erstellt; Struktur geprüft.", archive: try NUPArchive(url: target), reveal: target)
         }
     }
@@ -178,14 +218,11 @@ final class WorkspaceStore: ObservableObject {
         editFiles(directory: directory, adding: urls)
     }
     func editFiles(directory: Int, adding: [URL] = [], removing: Set<Int> = []) {
-        guard !busy, let archive, !adding.isEmpty || !removing.isEmpty else { return }
-        let index = packageIndex
-        perform(adding.isEmpty ? "Dateien entfernen" : "Dateien hinzufügen") { context in
-            let updated = try archive.editFiles(package: index, directory: directory,
-                                                adding: adding, removing: removing, context: context)
-            let message = "\(adding.count) hinzugefügt · \(removing.count) entfernt · vorhandene Dateien nicht neu komprimiert."
-            return JobResult(message: message, archive: updated, reveal: updated.url)
-        }
+        guard !busy, var draft = editDraft, !adding.isEmpty || !removing.isEmpty else { return }
+        do {
+            try draft.stageFiles(package: packageIndex, directory: directory, urls: adding, removing: removing)
+            editDraft = draft; status = draft.summary
+        } catch { self.error = error.localizedDescription }
     }
     func extract(subtree: String? = nil) {
         guard !busy, let archive, archive.packages.indices.contains(packageIndex) else { return }
@@ -197,47 +234,46 @@ final class WorkspaceStore: ObservableObject {
             return JobResult(message: "Paket entpackt und alle geschriebenen Dateien per SHA-256 geprüft.", reveal: target)
         }
     }
+    // Kept as a form API: replacingOriginal now stages changes for the shared Apply action.
     func save(changes: MetadataEdit, replacingOriginal: Bool = false) {
-        guard !busy, let archive else { return }
-        let index = packageIndex
-        let selectedProfile = profile
-        let target: URL
-        if replacingOriginal { target = archive.url }
-        else {
-            guard let chosen = FilePanels.save(name: archive.url.deletingPathExtension().lastPathComponent + "-bearbeitet.nup", title: "Bearbeiteten Container speichern") else { return }
-            target = chosen
+        guard !busy, var draft = editDraft, draft.packages.indices.contains(packageIndex) else { return }
+        var package = draft.packages[packageIndex]
+        package.name = changes.name; package.publisher = changes.publisher; package.displayVersion = changes.displayVersion
+        if changes.removeIcon { package.icon = nil } else if let icon = changes.icon { package.icon = icon }
+        package.localized = Set(changes.localizedTitles.keys).union(changes.localizedIcons.keys).sorted().map {
+            LocalizedEntry(language: $0, title: changes.localizedTitles[$0] ?? "", icon: changes.localizedIcons[$0])
         }
-        perform(replacingOriginal ? "Metadaten aktualisieren" : "Metadaten speichern") { context in
-            try archive.saveMetadata(package: index, changes: changes, profile: selectedProfile,
-                                     destination: target, replacingOriginal: replacingOriginal, context: context)
-            let message = replacingOriginal ? "Metadaten direkt aktualisiert; Struktur geprüft." : "Metadaten als neue Datei gespeichert; Struktur geprüft."
-            return JobResult(message: message, archive: try NUPArchive(url: target), reveal: target)
-        }
+        draft.packages[packageIndex] = package; editDraft = draft; status = draft.summary
+        if !replacingOriginal { saveDraftAs() }
     }
     func requestLibraryCover(_ url: URL) {
         guard !busy else { return }
+        if archive?.url.standardizedFileURL != url.standardizedFileURL && deferNavigation(.cover(url)) { return }
         libraryCoverError = nil
+        if let archive, archive.url.standardizedFileURL == url.standardizedFileURL {
+            libraryCoverDraft = LibraryCoverDraft(archive: archive, packageIndex: archive.packages.first(where: { $0.kind == 0 })?.id ?? 0)
+            return
+        }
+        let stayInLibrary = section == .library
         perform("Cover-Metadaten laden") { context in
             let current = try NUPArchive(url: url, context: context)
             let index = current.packages.first(where: { $0.kind == 0 })?.id ?? 0
-            return JobResult(message: "Bild für das ausgewählte Paket auswählen.",
-                coverDraft: LibraryCoverDraft(archive: current, packageIndex: index))
+            return JobResult(message: "Cover auswählen und vormerken; Übernehmen speichert den gesamten Entwurf.",
+                archive: current, coverDraft: LibraryCoverDraft(archive: current, packageIndex: index), preferLibrary: stayInLibrary)
         }
     }
-
-    func saveLibraryCover(_ draft: LibraryCoverDraft, package: Int, cover: Data) {
-        guard !busy else { return }
-        libraryCoverError = nil
-        perform("Cover direkt speichern", reportFailure: { [weak self] in self?.libraryCoverError = $0 }) { context in
-            let updated = try LibraryCoverService.save(cover, in: draft.archive, package: package, profile: .specification, context: context)
-            return JobResult(message: "Cover direkt in der NUP gespeichert · Spielinhalte nicht kopiert.", updatedLibraryArchive: updated)
-        }
+    func saveLibraryCover(_ coverDraft: LibraryCoverDraft, package: Int, cover: Data) {
+        guard !busy, var draft = editDraft, draft.archive.snapshotID == coverDraft.archive.snapshotID,
+              draft.packages.indices.contains(package) else { return }
+        draft.packages[package].icon = cover
+        editDraft = draft; libraryCoverDraft = nil; libraryCoverError = nil
+        status = "Cover vorgemerkt · Mit Übernehmen gemeinsam speichern."
     }
 
     func cancel() { context?.cancel(); status = "Wird abgebrochen …" }
     func reveal() { if let lastOutput { NSWorkspace.shared.activateFileViewerSelecting([lastOutput]) } }
 
-    private func perform(_ title: String, reportFailure: ((String) -> Void)? = nil,
+    func perform(_ title: String, reportFailure: ((String) -> Void)? = nil,
                          operation: @escaping @Sendable (JobContext) throws -> JobResult) {
         guard !busy else { return }
         busy = true; fraction = 0; status = title
@@ -251,11 +287,15 @@ final class WorkspaceStore: ObservableObject {
         }
         context = job
         Task {
+            var completedNavigation: EditorNavigation?
             do {
                 let result = try await Task.detached(priority: .userInitiated) {
-                    let result = try operation(job)
+                    var result = try operation(job)
                     // Prepare the first immutable tree off the main thread; later view updates reuse it.
-                    if let opened = result.archive { _ = opened.browserNodes(package: 0) }
+                    if let opened = result.archive {
+                        _ = opened.browserNodes(package: 0)
+                        result.editDraft = ArchiveEditDraft(archive: opened)
+                    }
                     return result
                 }.value
                 if let scanned = result.library {
@@ -266,15 +306,12 @@ final class WorkspaceStore: ObservableObject {
                     libraryMetadata.load(scanned)
                 }
                 if let draft = result.coverDraft { libraryCoverDraft = draft }
-                if let updated = result.updatedLibraryArchive {
-                    libraryCoverDraft = nil; libraryCoverError = nil
-                    library = library?.updatingFile(updated)
-                    libraryMetadata.update(updated)
-                    if archive?.url == updated.url { archive = updated }
-                }
+                if let report = result.repairReport { self.error = nil; repairError = nil; repairReport = report }
+                if result.repaired { repairReport = nil; repairError = nil }
                 if let opened = result.archive {
                     let sameFile = archive?.url.standardizedFileURL == opened.url.standardizedFileURL
                     archive = opened
+                    editDraft = result.editDraft ?? ArchiveEditDraft(archive: opened)
                     library = library?.updatingFile(opened)
                     packageIndex = sameFile ? min(packageIndex, opened.packages.count - 1) : 0
                     section = .archive
@@ -284,13 +321,29 @@ final class WorkspaceStore: ObservableObject {
                     recent = Array(recent.prefix(8))
                     defaults.set(recent, forKey: "recentNUPFiles")
                 }
+                if result.preferLibrary { section = .library }
                 if let url = result.reveal { lastOutput = url }
                 status = result.message; fraction = 1
                 activity.insert(result.message, at: 0)
+                if let action = afterApply { afterApply = nil; completedNavigation = action }
+            } catch let failure as ArchiveEditFailure {
+                afterApply = nil
+                if var draft = editDraft, (try? draft.rebase(on: failure.recovered)) != nil {
+                    archive = failure.recovered; editDraft = draft
+                }
+                if failure.underlying is CancellationError { status = "Abgebrochen · Entwurf bleibt zum Bearbeiten erhalten." }
+                else {
+                    if let reportFailure { reportFailure(failure.localizedDescription) }
+                    else { self.error = failure.localizedDescription }
+                    status = "Speichern fehlgeschlagen · Entwurf bleibt erhalten."
+                }
+                activity.insert(status, at: 0)
             } catch is CancellationError {
+                afterApply = nil
                 status = "Abgebrochen. Temporäre Ausgaben wurden entfernt."
                 activity.insert(status, at: 0)
             } catch {
+                afterApply = nil
                 if let reportFailure { reportFailure(error.localizedDescription) }
                 else { self.error = error.localizedDescription }
                 status = "Vorgang fehlgeschlagen"
@@ -299,6 +352,7 @@ final class WorkspaceStore: ObservableObject {
             activity = Array(activity.prefix(20))
             busy = false; context = nil; jobID = nil
             restoringLibrary = false
+            if let action = completedNavigation { continueNavigation(action) }
             if let url = pendingOpenURL {
                 pendingOpenURL = nil
                 open(url)

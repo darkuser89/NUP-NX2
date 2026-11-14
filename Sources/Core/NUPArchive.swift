@@ -13,12 +13,18 @@ struct NUPArchive: Sendable {
     let header: Data
     let toc: Data
     let revision: FileRevision
+    let permitsEditing: Bool
+    let romfsRepairs: [ArchiveROMFSRepair]
     private var nodeParents: [Int] = []
     private var nodePackages: [Int] = []
 
-    init(url: URL, context: JobContext = JobContext(), recoverPendingMetadata: Bool = true) throws {
+    init(url: URL, context: JobContext = JobContext(), recoverPendingMetadata: Bool = true,
+         validation: ArchiveValidation = .strict, repairLayout: ArchiveRepairLayout? = nil) throws {
         self.url = url
+        permitsEditing = validation == .strict && repairLayout == nil
+        try require(repairLayout == nil || !recoverPendingMetadata, "Eine Reparaturvorschau darf keine Wiederherstellung auslösen.")
         if recoverPendingMetadata {
+            try ArchiveRepairJournal.recoverIfNeeded(url: url)
             try ArchiveContentJournal.recoverIfNeeded(url: url)
             try MetadataTransaction.recoverIfNeeded(url: url)
         }
@@ -27,7 +33,8 @@ struct NUPArchive: Sendable {
         revision = try FileRevision(handle: input)
         fileSize = try input.seekToEnd()
         try input.seek(toOffset: 0)
-        header = try readExactly(input, 128)
+        header = try repairLayout?.header ?? readExactly(input, 128)
+        try require(header.count == 128, "Ungültige Headergröße.")
         try require(try header.bytes(0, 4) == Data([78, 85, 80, 1]), "Keine unterstützte NUP-v1-Datei.")
         let headerSize = try header.uint(4, 2)
         try require(headerSize >= 128 && header.uint(6, 2) >= 1, "Ungültiger NUP-Header.")
@@ -43,7 +50,8 @@ struct NUPArchive: Sendable {
         try require(blobOffset % 16 == 0 && blobOffset >= tocOffset + tocSize && blobOffset <= fileSize,
                     "Ungültiger Blob-Bereich.")
         try context.check()
-        toc = try readRange(input, offset: tocOffset, count: integer(tocSize))
+        toc = try repairLayout?.toc ?? readRange(input, offset: tocOffset, count: integer(tocSize))
+        try require(UInt64(toc.count) == tocSize, "TOC-Größe stimmt nicht überein.")
         try require(try toc.sha256 == header.bytes(24, 32), "TOC-SHA-256 stimmt nicht überein.")
         try require(try toc.bytes(0, 4) == Data([84, 79, 67, 1]), "Ungültiges Inhaltsverzeichnis.")
         let packageCount = try integer(toc.uint(4, 4))
@@ -103,7 +111,9 @@ struct NUPArchive: Sendable {
                         "Metadaten überschreiten das Speicherlimit.")
             metadataBytes += package.metaSize
             if package.metaSize > 0 {
-                try require(package.metaOffset >= blobOffset, "Metadaten überlappen den Header oder die TOC.")
+                // SPEC §3.1/§5 gives metadata an absolute offset, independently
+                // of the file-extents blob. It may occupy the post-TOC gap.
+                try require(package.metaOffset >= tocOffset + tocSize, "Metadaten überlappen den Header oder die TOC.")
                 try bounded(package.metaOffset, UInt64(package.metaSize), by: fileSize)
                 package.metadata = try MetadataCodec.parse(readRange(input, offset: package.metaOffset, count: package.metaSize))
             } else {
@@ -129,7 +139,13 @@ struct NUPArchive: Sendable {
             parsedDirectories.append(NUPDirectory(name: try name(at: position), children: Array(children[first..<(first + count)])))
             position += 24
         }
-        try require(usedSlots.count == children.count, "Unbenutzte Kindknotenplätze.")
+        if usedSlots.count != children.count && validation == .packageDiagnosis {
+            romfsRepairs = try ArchiveROMFSRecovery.inspect(toc: toc, packages: parsedPackages,
+                directories: &parsedDirectories, children: children, used: usedSlots, context: context)
+        } else {
+            try require(usedSlots.count == children.count, "Unbenutzte Kindknotenplätze.")
+            romfsRepairs = []
+        }
         var parsedFiles: [NUPFile] = []
         parsedFiles.reserveCapacity(fileCount)
         for _ in 0..<fileCount {
@@ -155,7 +171,7 @@ struct NUPArchive: Sendable {
         directories = parsedDirectories
         files = parsedFiles
         uuid = try header.bytes(80, 16)
-        try validateGraph(context: context)
+        try validateGraph(context: context, validation: validation)
         try validateRegions(context: context)
         var identity = Data()
         for package in packages {
@@ -163,17 +179,21 @@ struct NUPArchive: Sendable {
             identity.appendLE(UInt64(package.version), width: 4)
             identity.append(package.kind)
         }
-        try require(Data(identity.sha256.prefix(16)) == uuid, "Paket-UUID stimmt nicht überein.")
+        if validation == .strict {
+            try require(Data(identity.sha256.prefix(16)) == uuid, "Paket-UUID stimmt nicht überein.")
+        }
     }
 
-    private mutating func validateGraph(context: JobContext) throws {
-        try require(packages.filter { $0.kind == 0 }.count <= 1, "Mehrere Basispakete sind nicht zulässig.")
+    private mutating func validateGraph(context: JobContext, validation: ArchiveValidation) throws {
+        if validation == .strict {
+            try require(packages.filter { $0.kind == 0 }.count <= 1, "Mehrere Basispakete sind nicht zulässig.")
+        }
         let hasBase = packages.contains { $0.kind == 0 }
         nodeParents = Array(repeating: -1, count: directories.count + files.count)
         nodePackages = Array(repeating: -1, count: nodeParents.count)
         var visitedCount = 0
         for package in packages {
-            if package.kind == 1 {
+            if package.kind == 1 && validation == .strict {
                 try require(hasBase || package.flags & 1 == 1, "Update ohne Basis benötigt das Standalone-Flag.")
             }
             var stack: [(Int, Int)] = [(package.root, 0)]

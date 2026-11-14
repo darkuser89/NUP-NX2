@@ -9,17 +9,22 @@
 /* Begin PBXBuildFile section */
 		0B6237EF39F64202F5878B7B /* fse_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = D550B3F316F6E6F5DD342D07 /* fse_compress.c */; };
 		0BB28F77938912DD7ED7752A /* MetadataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA58C20EB1CE6B6C4E147BD5 /* MetadataTransaction.swift */; };
+		0C03DC8F921E487103806C02 /* ArchiveDiagnosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E00D5E50C28C8C173BF6B2C /* ArchiveDiagnosis.swift */; };
 		0E5E45A95925257E090B9A8E /* threading.c in Sources */ = {isa = PBXBuildFile; fileRef = 69D71BD04F6306DC44E08C75 /* threading.c */; };
 		0EE0FF3BC486D99EAEB92ED3 /* ArchiveContentJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */; };
+		0F25CF3FB0C9BD5465C0372F /* ArchiveEditRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71BCE695AC9B1401A3803D0 /* ArchiveEditRequest.swift */; };
 		0FEC92219D91D15310CBF6DE /* zstd_ddict.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 26493BABFDC90215045A0F52 /* zstd_ddict.h */; };
 		109827C7680F1AE1D7B11E04 /* zstd_preSplit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2B53979E1B2D1307D4885D3 /* zstd_preSplit.h */; };
 		10D776BDC771D6CCDB5D1B29 /* hist.c in Sources */ = {isa = PBXBuildFile; fileRef = BF99334A9EFDE2DD80C3CFA2 /* hist.c */; };
 		1233A5D7581306D1CFFC25B7 /* zstd_double_fast.c in Sources */ = {isa = PBXBuildFile; fileRef = AB2A296AAF0BA84271BAD23B /* zstd_double_fast.c */; };
+		143BAC01CD3EFA2B13E398A5 /* WorkspaceWindowGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F50CBB329BDF611BA122EA /* WorkspaceWindowGuard.swift */; };
 		179F3E4144CC5E1754D396D6 /* zstd_opt.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 92DAC2A81DE8C4CD039DD848 /* zstd_opt.h */; };
 		1AB9E1387CF7E4E2ADC50D0B /* threading.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6B18D79592BA1FC563B7532F /* threading.h */; };
 		1B33F4A7B2FAADA2926DA8ED /* huf_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D2005D7EC55970C2D26ABAF /* huf_compress.c */; };
 		1DD28A86E6F6949E05AF0EE6 /* entropy_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C3BFDC869ADB6D516E6DBFA /* entropy_common.c */; };
+		1E3C91D3D8C34CD5F8407146 /* ArchivePackageEvidence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F979F4A7F793AB1F0891102 /* ArchivePackageEvidence.swift */; };
 		1F0EABFC112595A193A89BDD /* NUPModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D200D5356A156BE38BAF6559 /* NUPModels.swift */; };
+		239ED9F04DF26F95052917C5 /* ArchiveEditDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39203EF67B711D06E3C8BD0 /* ArchiveEditDraft.swift */; };
 		23EF857D1CDDD85FEE4FC369 /* zstd_compress_literals.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D549CDD3AFD87DDE58399437 /* zstd_compress_literals.h */; };
 		2893F82E43E99637579026EB /* libZstandard.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D28DA3E28015315A65547455 /* libZstandard.a */; };
 		2994D652EE395A6B5D9BDAC4 /* LibraryScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566B9217C62A878DA3FE1784 /* LibraryScanner.swift */; };
@@ -29,7 +34,9 @@
 		3185E3553B724664F83D409B /* bitstream.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA301C5E169E25AD3EC134E6 /* bitstream.h */; };
 		31B0046FB3EAD5F3723C2F0B /* NUPWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E12691CBAF5DD070D72F317 /* NUPWriter.swift */; };
 		350ED5FCC93BEB3FAD7FAF31 /* zstd_compress_sequences.c in Sources */ = {isa = PBXBuildFile; fileRef = 799C49AAB27CC3272CDEE044 /* zstd_compress_sequences.c */; };
+		3512B4FA46D7A3FF13C09EF8 /* ArchivePackageDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA71F31D65BF5482CCF077 /* ArchivePackageDraft.swift */; };
 		36AB0DDC7FD3181DB4BD4F4E /* zstd_compress_superblock.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 70C13DACE934D130625179E3 /* zstd_compress_superblock.h */; };
+		36B54D36143D2AFF14505096 /* ArchiveEditBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8006D9F5C25CC0CE4F76B80 /* ArchiveEditBar.swift */; };
 		3A435F4A1BF4908ABF562FDA /* ArchiveFilePlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F05EB4ECD605210272E5AE /* ArchiveFilePlan.swift */; };
 		3A65EC85DFBCBF6766710FD6 /* PackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C1711D9E936EE51AA56E6A /* PackView.swift */; };
 		3CE2B76B5279D0BC485315CD /* zstd_preSplit.c in Sources */ = {isa = PBXBuildFile; fileRef = 7147499061B8F524DE0170FF /* zstd_preSplit.c */; };
@@ -41,9 +48,12 @@
 		4879CF096F1863A60F22EAED /* ArchiveOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48215A9B6AF7C4E14C842FC8 /* ArchiveOperations.swift */; };
 		4A1CA062A515FBC6848D3F00 /* mem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 94F24F28DD38E3509A1E8EC7 /* mem.h */; };
 		51BF599AC2B2C52F8EFC5663 /* LibraryRestoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7035262385A88CE415CC74 /* LibraryRestoreTests.swift */; };
+		5279F0C84B7AE024A2D7A46C /* ArchiveROMFSRepairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9659004163758B6F094178A3 /* ArchiveROMFSRepairTests.swift */; };
 		5380182FB00E5F7B0C521BCF /* xxhash.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C492EE2D787C2A66E127606 /* xxhash.h */; };
+		5454BAF6F73B6210A1E986CB /* ArchiveROMFSRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC822B418620BD66975876E /* ArchiveROMFSRecovery.swift */; };
 		547DD81D98A6BCBCAA951EBD /* LibraryGameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E1CD1244687E66551B67BB /* LibraryGameRow.swift */; };
 		55B0F156148417194EBA1769 /* FileDropTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED0512B376D96A74406FB13 /* FileDropTests.swift */; };
+		58C09447C159F3BB17BE7E53 /* ArchiveRepair.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F046F8E47F85A4200CE2A /* ArchiveRepair.swift */; };
 		60BB283FC14DBE60F4D8C00A /* zstd_compress_sequences.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9C25DF5F87DA4C49142AF2F8 /* zstd_compress_sequences.h */; };
 		615C5DAFEB11A83B2FE56DAE /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F829189BCF633DD629664D /* LibraryView.swift */; };
 		615E67097E13C40A373E6AC6 /* zstd_internal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 60CC54566324FA5178601401 /* zstd_internal.h */; };
@@ -56,9 +66,12 @@
 		7483CF48CB55361E780493FB /* zstd_errors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D8DA381802FA03E833371C7F /* zstd_errors.h */; };
 		75281F1051325826CB6528BC /* zstd_compress_literals.c in Sources */ = {isa = PBXBuildFile; fileRef = 698EA7FC63902473FE410DD1 /* zstd_compress_literals.c */; };
 		78AF7CA992839A0A419867C3 /* zstdmt_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E82002E88267CFDEBCB4F /* zstdmt_compress.c */; };
+		7AD066E086C15505226A9FA3 /* PreBlobMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F3DC582E5EAD78FD8F75C6 /* PreBlobMetadataTests.swift */; };
 		7AD0F28265D0D675E7E92B5E /* fse_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 858D52AF4BC26C54F72E29FD /* fse_decompress.c */; };
+		7C64FEBEAF238F4D2DBCA73C /* ArchiveRepairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AFA3F2BC049A8E3B21E6AE9 /* ArchiveRepairTests.swift */; };
 		7C9EE63DD9831FB741B51CDD /* zstd_double_fast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 19978E5D8C297040381B3029 /* zstd_double_fast.h */; };
 		7D0E665650866FD0A1A74B67 /* LocalizationEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2420CF784AB92B6D93CD6E /* LocalizationEditor.swift */; };
+		7DB0281EC37A7797111A9840 /* WorkspaceEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4D2FCB9E7018F98A928A2F /* WorkspaceEditing.swift */; };
 		7E9124AB2274B70022A6A61F /* zstd_decompress_block.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 499AD86EDF91E6349E2D8953 /* zstd_decompress_block.h */; };
 		807706DCE6DE391AFFA4814F /* LibraryCoverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8242BEC243C88AE4A01FC2 /* LibraryCoverService.swift */; };
 		82CA3AF03A15764342363DE5 /* FileDropReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC6FC5BA34CA5171EA87268 /* FileDropReader.swift */; };
@@ -74,10 +87,12 @@
 		9D1518DB785EA4B122E5FAF3 /* zstd_deps.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3FAC2FBA7449BFEEFDF90D8 /* zstd_deps.h */; };
 		A23358A49172EB99E7585EC1 /* zstd_trace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = ED249B0DF293DBD1961AA227 /* zstd_trace.h */; };
 		A35888F2A87DA8494AF590DB /* clevels.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF481D4FF94277610913762C /* clevels.h */; };
+		A3A223F814EE6FAF7463168C /* ArchiveEditDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EED01D22BC48C3352868508 /* ArchiveEditDraftTests.swift */; };
 		A6C1CEBCBFC9028E29A1C124 /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D9673C7272941149F127A /* pool.c */; };
 		A8598F20EB5BCC46D7126E63 /* zstd_ldm.c in Sources */ = {isa = PBXBuildFile; fileRef = 90768CB734279CD495BFB6B4 /* zstd_ldm.c */; };
 		A85A0953BA82B991906EB259 /* error_private.c in Sources */ = {isa = PBXBuildFile; fileRef = 23978259D308D9BBF73F3A81 /* error_private.c */; };
 		ADDD3D4B9957D3764A078E02 /* FilePanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D1228FA44B8895E551447 /* FilePanels.swift */; };
+		ADF6D464A13A59C24AC35D68 /* ArchiveRepairView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193FC9A45C49C980F224D0E0 /* ArchiveRepairView.swift */; };
 		ADFBC9D2A246440C94BC19EF /* zstd_ldm.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 17CCD20F6B024686F7007515 /* zstd_ldm.h */; };
 		AE0588F1E3D143D3C44CEFF8 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9A3A0F9CC5E3DC889E68EE /* ArchiveView.swift */; };
 		AFB74914A7C0330B5917EBE0 /* cpu.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 321E94024D948ED56CC95C0A /* cpu.h */; };
@@ -115,6 +130,7 @@
 		F16ED93DFD21942B599FD474 /* zstd_fast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D141D48CEDCA1CCE51384B2 /* zstd_fast.h */; };
 		F2AA7014E957F2AE1EA2CB45 /* LibrarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C879B34E452A40012A0E5 /* LibrarySnapshot.swift */; };
 		F5B60F4D5899BAE429FA3DEB /* zstd_compress_superblock.c in Sources */ = {isa = PBXBuildFile; fileRef = 80B7BC0D8EF9D33DAE5BB95A /* zstd_compress_superblock.c */; };
+		FBEEFE8661A056288B867AD0 /* ArchiveRepairJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA4F8CCC628EDB91D6E235B /* ArchiveRepairJournal.swift */; };
 		FE8CFE681267742408CCA113 /* StreamCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53B8F5A1A3A0E70E7F8DEC79 /* StreamCodec.swift */; };
 /* End PBXBuildFile section */
 
@@ -192,9 +208,11 @@
 		11A03D8793B34D4C6B68C5B3 /* zstd_compress_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_internal.h; sourceTree = "<group>"; };
 		126560BC2766558C671E33B7 /* zstd_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_common.c; sourceTree = "<group>"; };
 		17CCD20F6B024686F7007515 /* zstd_ldm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_ldm.h; sourceTree = "<group>"; };
+		193FC9A45C49C980F224D0E0 /* ArchiveRepairView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveRepairView.swift; sourceTree = "<group>"; };
 		19978E5D8C297040381B3029 /* zstd_double_fast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_double_fast.h; sourceTree = "<group>"; };
 		1B1039FA2CE1901792EE724C /* huf_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_decompress.c; sourceTree = "<group>"; };
 		1DD710E5D66F3162F8BF31DA /* BrowserTreeCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserTreeCache.swift; sourceTree = "<group>"; };
+		1E00D5E50C28C8C173BF6B2C /* ArchiveDiagnosis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDiagnosis.swift; sourceTree = "<group>"; };
 		1FC6FC5BA34CA5171EA87268 /* FileDropReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDropReader.swift; sourceTree = "<group>"; };
 		23978259D308D9BBF73F3A81 /* error_private.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = error_private.c; sourceTree = "<group>"; };
 		247D1228FA44B8895E551447 /* FilePanels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePanels.swift; sourceTree = "<group>"; };
@@ -206,11 +224,13 @@
 		2C492EE2D787C2A66E127606 /* xxhash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xxhash.h; sourceTree = "<group>"; };
 		2D773323574AF117FA3096F2 /* allocations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = allocations.h; sourceTree = "<group>"; };
 		2DA1586FB9951284E4873F74 /* error_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = error_private.h; sourceTree = "<group>"; };
+		2F979F4A7F793AB1F0891102 /* ArchivePackageEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivePackageEvidence.swift; sourceTree = "<group>"; };
 		30916ABDF99D00360EB678CB /* NUPStudioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NUPStudioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveContentJournal.swift; sourceTree = "<group>"; };
 		321E94024D948ED56CC95C0A /* cpu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
 		3602F8D6C930AAAF74AD506F /* zstd_decompress_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_decompress_internal.h; sourceTree = "<group>"; };
 		3775F88275839F2E42E8E3AF /* NUPStudio-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NUPStudio-Bridging-Header.h"; sourceTree = "<group>"; };
+		3BC822B418620BD66975876E /* ArchiveROMFSRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveROMFSRecovery.swift; sourceTree = "<group>"; };
 		3ED871BE27D5B1AC7358E1F3 /* LibraryMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryMetadataTests.swift; sourceTree = "<group>"; };
 		48215A9B6AF7C4E14C842FC8 /* ArchiveOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveOperations.swift; sourceTree = "<group>"; };
 		499AD86EDF91E6349E2D8953 /* zstd_decompress_block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_decompress_block.h; sourceTree = "<group>"; };
@@ -227,6 +247,7 @@
 		60CC54566324FA5178601401 /* zstd_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_internal.h; sourceTree = "<group>"; };
 		611ECF0AB0D7A4D30A0E215F /* debug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryCoverSaveTests.swift; sourceTree = "<group>"; };
+		67F50CBB329BDF611BA122EA /* WorkspaceWindowGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceWindowGuard.swift; sourceTree = "<group>"; };
 		69426466EF00D7AE93032C6C /* NUP-MIT.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "NUP-MIT.txt"; sourceTree = "<group>"; };
 		698EA7FC63902473FE410DD1 /* zstd_compress_literals.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress_literals.c; sourceTree = "<group>"; };
 		69D71BD04F6306DC44E08C75 /* threading.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = threading.c; sourceTree = "<group>"; };
@@ -253,12 +274,16 @@
 		8430719BB768849A01B8F4A7 /* xxhash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xxhash.c; sourceTree = "<group>"; };
 		858D52AF4BC26C54F72E29FD /* fse_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_decompress.c; sourceTree = "<group>"; };
 		8A8457A00380F2E183F8B8A4 /* compiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
+		8AFA3F2BC049A8E3B21E6AE9 /* ArchiveRepairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveRepairTests.swift; sourceTree = "<group>"; };
 		8D2DB43492BE24C5094996E9 /* huf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = huf.h; sourceTree = "<group>"; };
 		90768CB734279CD495BFB6B4 /* zstd_ldm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_ldm.c; sourceTree = "<group>"; };
 		92DAC2A81DE8C4CD039DD848 /* zstd_opt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_opt.h; sourceTree = "<group>"; };
+		93F3DC582E5EAD78FD8F75C6 /* PreBlobMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreBlobMetadataTests.swift; sourceTree = "<group>"; };
 		94F24F28DD38E3509A1E8EC7 /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
+		9659004163758B6F094178A3 /* ArchiveROMFSRepairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveROMFSRepairTests.swift; sourceTree = "<group>"; };
 		966D0B60ECDA4FF832D8A7D7 /* hist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hist.h; sourceTree = "<group>"; };
 		9C25DF5F87DA4C49142AF2F8 /* zstd_compress_sequences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_sequences.h; sourceTree = "<group>"; };
+		9EED01D22BC48C3352868508 /* ArchiveEditDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEditDraftTests.swift; sourceTree = "<group>"; };
 		9F2FCA8E7A069AC59858B280 /* Zstandard-BSD.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Zstandard-BSD.txt"; sourceTree = "<group>"; };
 		A0F840B70BDD658FFA2880A2 /* zstd_ddict.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_ddict.c; sourceTree = "<group>"; };
 		A5802E4002B728FAA0410C3F /* zstd_lazy.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_lazy.c; sourceTree = "<group>"; };
@@ -275,6 +300,7 @@
 		BF99334A9EFDE2DD80C3CFA2 /* hist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hist.c; sourceTree = "<group>"; };
 		C0DC9FB77080FE28677BD446 /* zstd_lazy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_lazy.h; sourceTree = "<group>"; };
 		C11E96EE0F10122DF1F1C548 /* NUPCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPCoreTests.swift; sourceTree = "<group>"; };
+		C9AA71F31D65BF5482CCF077 /* ArchivePackageDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivePackageDraft.swift; sourceTree = "<group>"; };
 		CB48BAED37E0FC540412067F /* ArchiveFileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFileEditor.swift; sourceTree = "<group>"; };
 		CC9A3A0F9CC5E3DC889E68EE /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		CD0D2F4E091E268290FA4147 /* LibraryCoverDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryCoverDraft.swift; sourceTree = "<group>"; };
@@ -284,20 +310,26 @@
 		D200D5356A156BE38BAF6559 /* NUPModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPModels.swift; sourceTree = "<group>"; };
 		D28DA3E28015315A65547455 /* libZstandard.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libZstandard.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2B53979E1B2D1307D4885D3 /* zstd_preSplit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_preSplit.h; sourceTree = "<group>"; };
+		D39203EF67B711D06E3C8BD0 /* ArchiveEditDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEditDraft.swift; sourceTree = "<group>"; };
 		D549CDD3AFD87DDE58399437 /* zstd_compress_literals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_literals.h; sourceTree = "<group>"; };
 		D550B3F316F6E6F5DD342D07 /* fse_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_compress.c; sourceTree = "<group>"; };
 		D5CADA007CF7F1F9236DEE1C /* NUPArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUPArchive.swift; sourceTree = "<group>"; };
+		D8006D9F5C25CC0CE4F76B80 /* ArchiveEditBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEditBar.swift; sourceTree = "<group>"; };
 		D8DA381802FA03E833371C7F /* zstd_errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_errors.h; sourceTree = "<group>"; };
 		D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFileEditingTests.swift; sourceTree = "<group>"; };
 		E2F829189BCF633DD629664D /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		E3FAC2FBA7449BFEEFDF90D8 /* zstd_deps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_deps.h; sourceTree = "<group>"; };
 		E69AB300F182660B58ADDDEB /* fse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fse.h; sourceTree = "<group>"; };
 		E7B6297AA6455E59A6C151A1 /* LibraryMetadataReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryMetadataReader.swift; sourceTree = "<group>"; };
+		EC4D2FCB9E7018F98A928A2F /* WorkspaceEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceEditing.swift; sourceTree = "<group>"; };
 		ECE6F9E9587AA68CB437D102 /* MetadataTransactionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataTransactionTests.swift; sourceTree = "<group>"; };
 		ED249B0DF293DBD1961AA227 /* zstd_trace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_trace.h; sourceTree = "<group>"; };
+		F42F046F8E47F85A4200CE2A /* ArchiveRepair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveRepair.swift; sourceTree = "<group>"; };
 		F6B134F49E5CA228D4F2F474 /* WorkspaceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceStore.swift; sourceTree = "<group>"; };
+		F71BCE695AC9B1401A3803D0 /* ArchiveEditRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEditRequest.swift; sourceTree = "<group>"; };
 		F754E204FD682F6B3CF248DC /* LibraryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTests.swift; sourceTree = "<group>"; };
 		FA301C5E169E25AD3EC134E6 /* bitstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitstream.h; sourceTree = "<group>"; };
+		FDA4F8CCC628EDB91D6E235B /* ArchiveRepairJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveRepairJournal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -369,6 +401,7 @@
 			isa = PBXGroup;
 			children = (
 				BC9F8F320DF369EAC751197D /* LibraryMetadataStore.swift */,
+				EC4D2FCB9E7018F98A928A2F /* WorkspaceEditing.swift */,
 				F6B134F49E5CA228D4F2F474 /* WorkspaceStore.swift */,
 			);
 			path = Stores;
@@ -413,8 +446,11 @@
 		411B7E4E4ED07B92C1A3D201 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				9EED01D22BC48C3352868508 /* ArchiveEditDraftTests.swift */,
 				D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */,
 				7E0E82179FDA8F4E0AA832A3 /* ArchiveOptimizationTests.swift */,
+				8AFA3F2BC049A8E3B21E6AE9 /* ArchiveRepairTests.swift */,
+				9659004163758B6F094178A3 /* ArchiveROMFSRepairTests.swift */,
 				5ED0512B376D96A74406FB13 /* FileDropTests.swift */,
 				64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */,
 				3ED871BE27D5B1AC7358E1F3 /* LibraryMetadataTests.swift */,
@@ -422,6 +458,7 @@
 				F754E204FD682F6B3CF248DC /* LibraryTests.swift */,
 				ECE6F9E9587AA68CB437D102 /* MetadataTransactionTests.swift */,
 				C11E96EE0F10122DF1F1C548 /* NUPCoreTests.swift */,
+				93F3DC582E5EAD78FD8F75C6 /* PreBlobMetadataTests.swift */,
 				2AAAB0DB3D96CA345628D14E /* ReferenceFixtures.swift */,
 				AB122A8CF98DEBD3A8E1C017 /* SpecificationWorkflowTests.swift */,
 			);
@@ -431,6 +468,8 @@
 		437CAB11C035E2E115A596E5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D8006D9F5C25CC0CE4F76B80 /* ArchiveEditBar.swift */,
+				193FC9A45C49C980F224D0E0 /* ArchiveRepairView.swift */,
 				CC9A3A0F9CC5E3DC889E68EE /* ArchiveView.swift */,
 				B3F2C4BB5D9098C164C0D8E7 /* ContentView.swift */,
 				7689C0D45E5720491C76DA5C /* LibraryCoverEditor.swift */,
@@ -439,6 +478,7 @@
 				CE2420CF784AB92B6D93CD6E /* LocalizationEditor.swift */,
 				D132F865B9EA07400973F45F /* MetadataView.swift */,
 				78C1711D9E936EE51AA56E6A /* PackView.swift */,
+				67F50CBB329BDF611BA122EA /* WorkspaceWindowGuard.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -447,9 +487,15 @@
 			isa = PBXGroup;
 			children = (
 				30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */,
+				1E00D5E50C28C8C173BF6B2C /* ArchiveDiagnosis.swift */,
+				F71BCE695AC9B1401A3803D0 /* ArchiveEditRequest.swift */,
 				CB48BAED37E0FC540412067F /* ArchiveFileEditor.swift */,
 				03F05EB4ECD605210272E5AE /* ArchiveFilePlan.swift */,
 				48215A9B6AF7C4E14C842FC8 /* ArchiveOperations.swift */,
+				2F979F4A7F793AB1F0891102 /* ArchivePackageEvidence.swift */,
+				F42F046F8E47F85A4200CE2A /* ArchiveRepair.swift */,
+				FDA4F8CCC628EDB91D6E235B /* ArchiveRepairJournal.swift */,
+				3BC822B418620BD66975876E /* ArchiveROMFSRecovery.swift */,
 				5B1F84AE0B014EA9A772393A /* Binary.swift */,
 				1DD710E5D66F3162F8BF31DA /* BrowserTreeCache.swift */,
 				764EDCAAE8679E6C244423EB /* DumpDiscovery.swift */,
@@ -497,6 +543,8 @@
 		63094E12B4CEBD27EBEBD503 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D39203EF67B711D06E3C8BD0 /* ArchiveEditDraft.swift */,
+				C9AA71F31D65BF5482CCF077 /* ArchivePackageDraft.swift */,
 				CD0D2F4E091E268290FA4147 /* LibraryCoverDraft.swift */,
 				51BCDB04AF714D4261D75790 /* LibraryMetadata.swift */,
 				594C879B34E452A40012A0E5 /* LibrarySnapshot.swift */,
@@ -677,8 +725,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3A223F814EE6FAF7463168C /* ArchiveEditDraftTests.swift in Sources */,
 				660DA86CB8C2AAF3DF964B1B /* ArchiveFileEditingTests.swift in Sources */,
 				6DFB4B29D8D86A57EA7C7C43 /* ArchiveOptimizationTests.swift in Sources */,
+				5279F0C84B7AE024A2D7A46C /* ArchiveROMFSRepairTests.swift in Sources */,
+				7C64FEBEAF238F4D2DBCA73C /* ArchiveRepairTests.swift in Sources */,
 				55B0F156148417194EBA1769 /* FileDropTests.swift in Sources */,
 				30A740673821CADF55EBCAE9 /* LibraryCoverSaveTests.swift in Sources */,
 				9454FC08BC63F82B2F808FCB /* LibraryMetadataTests.swift in Sources */,
@@ -686,6 +737,7 @@
 				DF26ECAC8AAF6F05C23EFA24 /* LibraryTests.swift in Sources */,
 				8EC096F1A32F4B731C72E012 /* MetadataTransactionTests.swift in Sources */,
 				451C3FDBCE46C8E4689456F5 /* NUPCoreTests.swift in Sources */,
+				7AD066E086C15505226A9FA3 /* PreBlobMetadataTests.swift in Sources */,
 				E9084EED838A5C2299EF43D7 /* ReferenceFixtures.swift in Sources */,
 				D6BF3E993CAAC7073B18FDEF /* SpecificationWorkflowTests.swift in Sources */,
 			);
@@ -729,9 +781,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EE0FF3BC486D99EAEB92ED3 /* ArchiveContentJournal.swift in Sources */,
+				0C03DC8F921E487103806C02 /* ArchiveDiagnosis.swift in Sources */,
+				36B54D36143D2AFF14505096 /* ArchiveEditBar.swift in Sources */,
+				239ED9F04DF26F95052917C5 /* ArchiveEditDraft.swift in Sources */,
+				0F25CF3FB0C9BD5465C0372F /* ArchiveEditRequest.swift in Sources */,
 				D847EAF3838AB62D6989303D /* ArchiveFileEditor.swift in Sources */,
 				3A435F4A1BF4908ABF562FDA /* ArchiveFilePlan.swift in Sources */,
 				4879CF096F1863A60F22EAED /* ArchiveOperations.swift in Sources */,
+				3512B4FA46D7A3FF13C09EF8 /* ArchivePackageDraft.swift in Sources */,
+				1E3C91D3D8C34CD5F8407146 /* ArchivePackageEvidence.swift in Sources */,
+				5454BAF6F73B6210A1E986CB /* ArchiveROMFSRecovery.swift in Sources */,
+				58C09447C159F3BB17BE7E53 /* ArchiveRepair.swift in Sources */,
+				FBEEFE8661A056288B867AD0 /* ArchiveRepairJournal.swift in Sources */,
+				ADF6D464A13A59C24AC35D68 /* ArchiveRepairView.swift in Sources */,
 				AE0588F1E3D143D3C44CEFF8 /* ArchiveView.swift in Sources */,
 				65B39327F246D1BE7B6067CA /* Binary.swift in Sources */,
 				B2D4107D9EB9B95BB176AD1D /* BrowserTreeCache.swift in Sources */,
@@ -758,7 +820,9 @@
 				31B0046FB3EAD5F3723C2F0B /* NUPWriter.swift in Sources */,
 				3A65EC85DFBCBF6766710FD6 /* PackView.swift in Sources */,
 				FE8CFE681267742408CCA113 /* StreamCodec.swift in Sources */,
+				7DB0281EC37A7797111A9840 /* WorkspaceEditing.swift in Sources */,
 				61A4546E93737A10A3CEB090 /* WorkspaceStore.swift in Sources */,
+				143BAC01CD3EFA2B13E398A5 /* WorkspaceWindowGuard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,7 +847,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 12;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -798,7 +862,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -894,7 +958,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 12;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -909,7 +973,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -59,6 +59,7 @@ extension NUPArchive {
 
     func saveMetadata(package index: Int, changes: MetadataEdit, profile: MetadataProfile,
                       destination: URL, replacingOriginal: Bool = false, context: JobContext) throws {
+        try require(permitsEditing, "Ein Diagnose-Snapshot darf nicht zur normalen Metadatenbearbeitung verwendet werden.")
         let input = try regularFile(url)
         defer { try? input.close() }
         let sourceRevision = try FileRevision(handle: input)
