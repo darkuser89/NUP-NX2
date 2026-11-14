@@ -5,23 +5,6 @@ struct ArchiveFileLocation {
     let path: String
 }
 
-extension NUPArchive {
-    func fileLocation(node: Int, package: Int) -> ArchiveFileLocation? {
-        guard packages.indices.contains(package) else { return nil }
-        var stack: [(Int, String)] = [(packages[package].root, "")]
-        while let (id, path) = stack.popLast() {
-            if id == node { return ArchiveFileLocation(directory: id, path: path.isEmpty ? "/" : path) }
-            for child in directories[id].children {
-                let name = child < directories.count ? directories[child].name : files[child - directories.count].name
-                if child == node { return ArchiveFileLocation(directory: child < directories.count ? child : id,
-                    path: child < directories.count ? path + "/" + name : (path.isEmpty ? "/" : path)) }
-                if child < directories.count { stack.append((child, path + "/" + name)) }
-            }
-        }
-        return nil
-    }
-}
-
 /// Rebuild only the TOC. Existing compressed extents keep their bytes and, where
 /// possible, their offsets. Only extents overtaken by the growing TOC move to EOF.
 struct ArchiveFilePlan {
@@ -38,16 +21,11 @@ struct ArchiveFilePlan {
     init(archive: NUPArchive, package: Int, directory: Int, additions: [NUPFile], stageSize: UInt64,
          removing: Set<Int>) throws {
         try require(archive.packages.indices.contains(package), "Paket existiert nicht.")
-        var ownedDirectories = Set<Int>(), ownedFiles = Set<Int>(), stack = [archive.packages[package].root]
-        while let id = stack.popLast() {
-            ownedDirectories.insert(id)
-            for child in archive.directories[id].children {
-                if child < archive.directories.count { stack.append(child) }
-                else { ownedFiles.insert(child - archive.directories.count) }
-            }
-        }
-        try require(ownedDirectories.contains(directory), "Zielordner gehört nicht zum ausgewählten Paket.")
-        try require(removing.isSubset(of: ownedFiles), "Die ausgewählte Datei gehört nicht zum Paket.")
+        try require(archive.directories.indices.contains(directory) && archive.owns(node: directory, package: package),
+                    "Zielordner gehört nicht zum ausgewählten Paket.")
+        try require(removing.allSatisfy { archive.files.indices.contains($0) &&
+                    archive.owns(node: archive.directories.count + $0, package: package) },
+                    "Die ausgewählte Datei gehört nicht zum Paket.")
         var names = Set(archive.directories[directory].children.compactMap { child -> String? in
             if child >= archive.directories.count && removing.contains(child - archive.directories.count) { return nil }
             return (child < archive.directories.count ? archive.directories[child].name : archive.files[child - archive.directories.count].name)
@@ -74,17 +52,20 @@ struct ArchiveFilePlan {
             }
         }
         dirs[directory].children += addedIndices.map { dc + $0 }
-        for id in dirs.indices {
-            let children = dirs[id].children.sorted { a, b in
+        // Removing entries preserves the validated UTF-8 ordering everywhere.
+        // Only the destination can need sorting after additions.
+        if !additions.isEmpty {
+            let children = dirs[directory].children.sorted { a, b in
                 let x = a < dc ? dirs[a].name : files[a - dc].name
                 let y = b < dc ? dirs[b].name : files[b - dc].name
                 return x.utf8.lexicographicallyPrecedes(y.utf8)
             }
-            dirs[id].children = children
+            dirs[directory].children = children
         }
         var packages = archive.packages
         let tocStart = try archive.header.uint(8, 8)
-        let tocSize = try Self.serialize(packages: packages, directories: dirs, files: files).count
+        var rebuiltTOC = try Self.serialize(packages: packages, directories: dirs, files: files)
+        let tocSize = rebuiltTOC.count
         let blob = max(archive.blobOffset, try aligned(tocStart + UInt64(tocSize)))
         var cursor = max(archive.fileSize, blob), relocations: [Extent: UInt64] = [:], moves: [Move] = []
         func relocate(_ extent: Extent) throws -> UInt64 {
@@ -109,7 +90,15 @@ struct ArchiveFilePlan {
             files[index].offset = try Self.end(stageOffset, files[index].offset)
         }
         self.moves = moves
-        toc = try Self.serialize(packages: packages, directories: dirs, files: files)
+        // Relocations only change fixed-width offsets, not TOC layout or names.
+        for index in packages.indices {
+            rebuiltTOC.put(packages[index].metaOffset, at: 48 + index * 64 + 32, width: 8)
+        }
+        let fileStart = 48 + packages.count * 64 + dirs.count * 24
+        for index in files.indices {
+            rebuiltTOC.put(files[index].offset, at: fileStart + index * 80 + 16, width: 8)
+        }
+        toc = rebuiltTOC
         var header = archive.header
         header.put(UInt64(toc.count), at: 16, width: 8)
         header.put(toc.sha256, at: 24)

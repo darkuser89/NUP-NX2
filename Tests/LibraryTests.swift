@@ -57,6 +57,19 @@ final class LibraryTests: XCTestCase {
         XCTAssertNotEqual(first.id, second.id)
     }
 
+    func testMetadataSearchNormalizesOnceAndTracksEditedTitles() throws {
+        try file("unknown.nup")
+        let snapshot = try LibraryScanner.scan(root), url = try XCTUnwrap(snapshot.entries.first).url
+        var item = LibraryItemMetadata(title: "Pokémon Überall")
+        XCTAssertEqual(snapshot.matching("  POKEMON UBERALL ", metadata: [url: item]).count, 1)
+        item.title = "Geändert"
+        XCTAssertTrue(snapshot.matching("pokemon", metadata: [url: item]).isEmpty)
+        XCTAssertEqual(snapshot.matching("GEANDERT", metadata: [url: item]).count, 1)
+        item.title = nil
+        XCTAssertTrue(snapshot.matching("GEANDERT", metadata: [url: item]).isEmpty)
+        XCTAssertEqual(snapshot.matching("unknown", metadata: [url: item]).count, 1)
+    }
+
     func testEmptyFolderInvalidRootAndCancellation() throws {
         XCTAssertTrue(try LibraryScanner.scan(root).entries.isEmpty)
         let invalid = try file("a.nup")

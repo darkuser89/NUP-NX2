@@ -42,6 +42,9 @@ final class LibraryMetadataStore: ObservableObject {
         entryRevisions.removeAll()
         completed = 0; loading = !snapshot.entries.isEmpty; revision += 1
         task = Task { [weak self, loader] in
+            var processed = 0, unpublished = false
+            let clock = ContinuousClock()
+            var lastPublication = clock.now
             for entry in snapshot.entries {
                 guard !Task.isCancelled else { break }
                 let entryRevision = self?.entryRevisions[entry.url]
@@ -50,10 +53,24 @@ final class LibraryMetadataStore: ObservableObject {
                 catch is CancellationError { break }
                 catch { result = LibraryMetadataResult(item: LibraryItemMetadata(notice: "Metadaten nicht lesbar: \(error.localizedDescription)")) }
                 guard !Task.isCancelled, let self, self.generation == identifier else { break }
-                if self.entryRevisions[entry.url] == entryRevision { self.apply(result, to: entry.url) }
-                self.completed += 1
+                if self.entryRevisions[entry.url] == entryRevision {
+                    self.apply(result, to: entry.url, publish: false)
+                    unpublished = true
+                }
+                processed += 1
+                let now = clock.now
+                // Show the first result immediately, then coalesce fast reads.
+                if processed == 1 || processed % 16 == 0 || lastPublication.duration(to: now) >= .milliseconds(100) {
+                    self.completed = processed
+                    if unpublished { self.revision += 1; unpublished = false }
+                    lastPublication = now
+                }
             }
-            if let self, self.generation == identifier { self.loading = false }
+            if let self, self.generation == identifier {
+                self.completed = processed
+                if unpublished { self.revision += 1 }
+                self.loading = false
+            }
         }
     }
 
@@ -85,12 +102,12 @@ final class LibraryMetadataStore: ObservableObject {
         }
     }
 
-    private func apply(_ result: LibraryMetadataResult, to url: URL) {
+    private func apply(_ result: LibraryMetadataResult, to url: URL, publish: Bool = true) {
         items[url] = result.item
         covers.removeObject(forKey: url as NSURL)
         if let data = result.thumbnail, let image = NSImage(data: data) {
             covers.setObject(image, forKey: url as NSURL, cost: 128 * 128 * 4)
         }
-        revision += 1
+        if publish { revision += 1 }
     }
 }

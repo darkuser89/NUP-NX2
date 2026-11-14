@@ -6,6 +6,7 @@ struct LibraryGameRow: View {
     var editCover: () -> Void
     @State private var cover: NSImage?
     @State private var generation: UUID?
+    @State private var itemID: UUID?
 
     var body: some View {
         let item = metadata.items[entry.url]
@@ -33,11 +34,15 @@ struct LibraryGameRow: View {
         .padding(.vertical, 5)
         .help(item?.title.map { $0 + "\n" + entry.relativePath } ?? entry.relativePath)
         .onAppear(perform: refreshCover)
-        .onChange(of: metadata.revision) { refreshCover() }
+        .onChange(of: item?.id) { refreshCover() }
     }
 
     private func refreshCover() {
-        if generation != metadata.generation { cover = nil; generation = metadata.generation }
+        let item = metadata.items[entry.url]
+        if generation != metadata.generation || itemID != item?.id {
+            cover = nil; generation = metadata.generation; itemID = item?.id
+        }
+        guard item?.hasCover == true else { cover = nil; return }
         if let image = metadata.cover(for: entry.url) { cover = image }
         else if cover == nil { metadata.ensureCover(for: entry) }
     }

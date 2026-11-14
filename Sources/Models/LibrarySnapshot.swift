@@ -30,7 +30,7 @@ struct LibrarySnapshot: Identifiable, Sendable {
     func matching(_ query: String, metadata: [URL: LibraryItemMetadata] = [:]) -> [LibraryEntry] {
         let key = Self.searchKey(query.trimmingCharacters(in: .whitespacesAndNewlines))
         return key.isEmpty ? entries : entries.filter {
-            $0.searchKey.contains(key) || metadata[$0.url]?.title.map { Self.searchKey($0).contains(key) } == true
+            $0.searchKey.contains(key) || metadata[$0.url]?.searchKey?.contains(key) == true
         }
     }
 

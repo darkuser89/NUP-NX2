@@ -13,6 +13,8 @@ struct NUPArchive: Sendable {
     let header: Data
     let toc: Data
     let revision: FileRevision
+    private var nodeParents: [Int] = []
+    private var nodePackages: [Int] = []
 
     init(url: URL, context: JobContext = JobContext(), recoverPendingMetadata: Bool = true) throws {
         self.url = url
@@ -70,12 +72,14 @@ struct NUPArchive: Sendable {
             return name
         }
         var children: [Int] = []
+        children.reserveCapacity((poolOffset - nodesEnd) / 4)
         for position in stride(from: nodesEnd, to: poolOffset, by: 4) {
             let child = try integer(toc.uint(position, 4))
             try require(child < dirCount + fileCount, "Kindknoten außerhalb der Tabelle.")
             children.append(child)
         }
         var parsedPackages: [NUPPackage] = []
+        parsedPackages.reserveCapacity(packageCount)
         var position = 48
         var metadataBytes = 0
         for index in 0..<packageCount {
@@ -111,6 +115,7 @@ struct NUPArchive: Sendable {
             position += 64
         }
         var parsedDirectories: [NUPDirectory] = []
+        parsedDirectories.reserveCapacity(dirCount)
         var usedSlots = Set<Int>()
         for _ in 0..<dirCount {
             try context.check()
@@ -126,6 +131,7 @@ struct NUPArchive: Sendable {
         }
         try require(usedSlots.count == children.count, "Unbenutzte Kindknotenplätze.")
         var parsedFiles: [NUPFile] = []
+        parsedFiles.reserveCapacity(fileCount)
         for _ in 0..<fileCount {
             try context.check()
             let file = NUPFile(name: try name(at: position), size: try toc.uint(position + 8, 8),
@@ -150,7 +156,7 @@ struct NUPArchive: Sendable {
         files = parsedFiles
         uuid = try header.bytes(80, 16)
         try validateGraph(context: context)
-        try validateRegions()
+        try validateRegions(context: context)
         var identity = Data()
         for package in packages {
             identity.appendLE(package.titleID, width: 8)
@@ -160,60 +166,92 @@ struct NUPArchive: Sendable {
         try require(Data(identity.sha256.prefix(16)) == uuid, "Paket-UUID stimmt nicht überein.")
     }
 
-    private func validateGraph(context: JobContext) throws {
+    private mutating func validateGraph(context: JobContext) throws {
         try require(packages.filter { $0.kind == 0 }.count <= 1, "Mehrere Basispakete sind nicht zulässig.")
         let hasBase = packages.contains { $0.kind == 0 }
-        var visited = Set<Int>()
-        var visitedFiles = Set<Int>()
+        nodeParents = Array(repeating: -1, count: directories.count + files.count)
+        nodePackages = Array(repeating: -1, count: nodeParents.count)
+        var visitedCount = 0
         for package in packages {
             if package.kind == 1 {
                 try require(hasBase || package.flags & 1 == 1, "Update ohne Basis benötigt das Standalone-Flag.")
             }
             var stack: [(Int, Int)] = [(package.root, 0)]
-            var packageDirs = Set<Int>()
             while let (index, depth) = stack.popLast() {
                 try context.check()
                 try require(depth <= 256, "Verzeichnisstruktur ist tiefer als 256 Ebenen.")
-                try require(visited.insert(index).inserted, "Zyklus oder mehrfach referenziertes Verzeichnis.")
-                packageDirs.insert(index)
+                try require(nodePackages[index] == -1, "Zyklus oder mehrfach referenziertes Verzeichnis.")
+                nodePackages[index] = package.id
+                visitedCount += 1
                 let directory = directories[index]
                 try safeName(directory.name, allowEmpty: index == package.root)
-                var names = Set<Data>()
                 var previous: Data?
                 for child in directory.children {
                     let name = child < directories.count ? directories[child].name : files[child - directories.count].name
                     let bytes = Data(name.utf8)
-                    try require(names.insert(bytes).inserted, "Doppelte Dateinamen im Verzeichnis.")
-                    if let previous { try require(previous.lexicographicallyPrecedes(bytes), "Kindknoten sind nicht nach UTF-8 sortiert.") }
+                    if let previous {
+                        try require(previous != bytes, "Doppelte Dateinamen im Verzeichnis.")
+                        try require(previous.lexicographicallyPrecedes(bytes), "Kindknoten sind nicht nach UTF-8 sortiert.")
+                    }
                     previous = bytes
+                    nodeParents[child] = index
                     if child < directories.count { stack.append((child, depth + 1)) }
-                    else { try require(visitedFiles.insert(child - directories.count).inserted, "Mehrfach referenzierter Dateiknoten.") }
+                    else {
+                        try require(nodePackages[child] == -1, "Mehrfach referenzierter Dateiknoten.")
+                        nodePackages[child] = package.id
+                        visitedCount += 1
+                    }
                 }
             }
             for content in [package.exefs, package.romfs].compactMap({ $0 }) {
-                try require(packageDirs.contains(content) && content != package.root, "Content-Verzeichnis liegt außerhalb des Pakets.")
+                try require(nodePackages[content] == package.id && content != package.root, "Content-Verzeichnis liegt außerhalb des Pakets.")
             }
         }
-        try require(visited.count == directories.count && visitedFiles.count == files.count, "Nicht erreichbare Knoten im Inhaltsverzeichnis.")
+        try require(visitedCount == nodePackages.count, "Nicht erreichbare Knoten im Inhaltsverzeichnis.")
     }
 
-    private func validateRegions() throws {
-        struct Region { var offset: UInt64; var size: UInt64; var key: String }
-        var regions: [Region] = files.filter { $0.storedSize > 0 }.map {
-            Region(offset: $0.offset, size: $0.storedSize, key: "\($0.size):\($0.codec):\($0.hash.hex)")
+    private func validateRegions(context: JobContext) throws {
+        struct Region { let offset: UInt64; let size: UInt64; let file: Int? }
+        var regions: [Region] = []
+        regions.reserveCapacity(files.count + packages.count)
+        for index in files.indices where files[index].storedSize > 0 {
+            try context.check()
+            regions.append(Region(offset: files[index].offset, size: files[index].storedSize, file: index))
         }
         regions += packages.filter { $0.metaSize > 0 }.map {
-            Region(offset: $0.metaOffset, size: UInt64($0.metaSize), key: "meta:\($0.id)")
+            Region(offset: $0.metaOffset, size: UInt64($0.metaSize), file: nil)
         }
         regions.sort { $0.offset == $1.offset ? $0.size < $1.size : $0.offset < $1.offset }
         var last: Region?
         for region in regions {
+            try context.check()
             if let previous = last, previous.offset + previous.size > region.offset {
-                try require(previous.offset == region.offset && previous.size == region.size && previous.key == region.key,
-                            "Überlappende Datenbereiche oder widersprüchliche Deduplizierung.")
+                guard previous.offset == region.offset, previous.size == region.size,
+                      let a = previous.file, let b = region.file,
+                      files[a].size == files[b].size, files[a].codec == files[b].codec,
+                      files[a].hash == files[b].hash else {
+                    throw NUPError("Überlappende Datenbereiche oder widersprüchliche Deduplizierung.")
+                }
             }
             last = region
         }
+    }
+
+    func owns(node: Int, package: Int) -> Bool {
+        packages.indices.contains(package) && nodePackages.indices.contains(node) && nodePackages[node] == package
+    }
+
+    /// Validation builds parent/owner tables once, off the UI thread. Lookups
+    /// then follow at most 256 parents instead of walking every file again.
+    func fileLocation(node: Int, package: Int) -> ArchiveFileLocation? {
+        guard owns(node: node, package: package) else { return nil }
+        let directory = node < directories.count ? node : nodeParents[node]
+        var current = directory, components: [String] = []
+        while current != packages[package].root {
+            components.append(directories[current].name)
+            current = nodeParents[current]
+        }
+        return ArchiveFileLocation(directory: directory, path: "/" + components.reversed().joined(separator: "/"))
     }
 
     func browserNodes(package index: Int) -> [BrowserNode] {

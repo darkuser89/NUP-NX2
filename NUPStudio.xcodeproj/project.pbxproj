@@ -52,6 +52,7 @@
 		65B39327F246D1BE7B6067CA /* Binary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1F84AE0B014EA9A772393A /* Binary.swift */; };
 		660DA86CB8C2AAF3DF964B1B /* ArchiveFileEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */; };
 		6DC09C60D3EB628F07E8F5B0 /* LibraryCoverEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7689C0D45E5720491C76DA5C /* LibraryCoverEditor.swift */; };
+		6DFB4B29D8D86A57EA7C7C43 /* ArchiveOptimizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E82179FDA8F4E0AA832A3 /* ArchiveOptimizationTests.swift */; };
 		7483CF48CB55361E780493FB /* zstd_errors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = D8DA381802FA03E833371C7F /* zstd_errors.h */; };
 		75281F1051325826CB6528BC /* zstd_compress_literals.c in Sources */ = {isa = PBXBuildFile; fileRef = 698EA7FC63902473FE410DD1 /* zstd_compress_literals.c */; };
 		78AF7CA992839A0A419867C3 /* zstdmt_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E82002E88267CFDEBCB4F /* zstdmt_compress.c */; };
@@ -246,6 +247,7 @@
 		799C49AAB27CC3272CDEE044 /* zstd_compress_sequences.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress_sequences.c; sourceTree = "<group>"; };
 		7AE75EE7BF774CF4B93E7FDE /* zstd_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_decompress.c; sourceTree = "<group>"; };
 		7D9C370134ADDE9C1268A79F /* bits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bits.h; sourceTree = "<group>"; };
+		7E0E82179FDA8F4E0AA832A3 /* ArchiveOptimizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveOptimizationTests.swift; sourceTree = "<group>"; };
 		80B7BC0D8EF9D33DAE5BB95A /* zstd_compress_superblock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress_superblock.c; sourceTree = "<group>"; };
 		824D65F13688D73B0F3B0B53 /* debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = debug.c; sourceTree = "<group>"; };
 		8430719BB768849A01B8F4A7 /* xxhash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xxhash.c; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 			isa = PBXGroup;
 			children = (
 				D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */,
+				7E0E82179FDA8F4E0AA832A3 /* ArchiveOptimizationTests.swift */,
 				5ED0512B376D96A74406FB13 /* FileDropTests.swift */,
 				64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */,
 				3ED871BE27D5B1AC7358E1F3 /* LibraryMetadataTests.swift */,
@@ -675,6 +678,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				660DA86CB8C2AAF3DF964B1B /* ArchiveFileEditingTests.swift in Sources */,
+				6DFB4B29D8D86A57EA7C7C43 /* ArchiveOptimizationTests.swift in Sources */,
 				55B0F156148417194EBA1769 /* FileDropTests.swift in Sources */,
 				30A740673821CADF55EBCAE9 /* LibraryCoverSaveTests.swift in Sources */,
 				9454FC08BC63F82B2F808FCB /* LibraryMetadataTests.swift in Sources */,

@@ -1,6 +1,7 @@
 import XCTest
 import ImageIO
 import UniformTypeIdentifiers
+import Combine
 @testable import NUPStudio
 
 final class LibraryMetadataTests: XCTestCase {
@@ -158,5 +159,36 @@ final class LibraryMetadataTests: XCTestCase {
         catalog.load(try LibraryScanner.scan(other))
         XCTAssertTrue(catalog.items.isEmpty)
         XCTAssertFalse(catalog.loading)
+    }
+
+    @MainActor func testBatchedCatalogPublishesTailAndCoverRemovalWithoutChangingOtherRows() async throws {
+        _ = try packed("good.nup", title: "Vorher")
+        for index in 0..<61 {
+            try Data([0]).write(to: root.appendingPathComponent("bad-\(index).nup"))
+        }
+        let snapshot = try LibraryScanner.scan(root), catalog = LibraryMetadataStore(defaults: defaults)
+        let good = try XCTUnwrap(snapshot.entries.first { $0.name == "good.nup" }).url
+        let bad = try XCTUnwrap(snapshot.entries.first { $0.name.hasPrefix("bad-") }).url
+        var publications = 0
+        let subscription = catalog.$revision.sink { _ in publications += 1 }
+        defer { subscription.cancel() }
+        catalog.load(snapshot)
+        try await waitFor { !catalog.loading }
+        XCTAssertEqual(catalog.completed, 62)
+        XCTAssertEqual(catalog.items.count, 62)
+        XCTAssertEqual(catalog.items[good]?.title, "Vorher")
+        XCTAssertNotNil(catalog.cover(for: good))
+        XCTAssertTrue(snapshot.entries.filter { $0.url != good }.allSatisfy { catalog.items[$0.url]?.notice != nil })
+        print("Library catalog: \(publications) publications for 62 entries")
+        let goodID = catalog.items[good]?.id, badID = catalog.items[bad]?.id
+        let archive = try NUPArchive(url: good)
+        try archive.saveMetadata(package: 0, changes: MetadataEdit(name: "Nachher", publisher: "", displayVersion: "", icon: nil),
+                                 profile: .specification, destination: good, replacingOriginal: true, context: JobContext())
+        catalog.update(try NUPArchive(url: good))
+        try await waitFor { catalog.items[good]?.title == "Nachher" }
+        XCTAssertNotEqual(catalog.items[good]?.id, goodID)
+        XCTAssertEqual(catalog.items[bad]?.id, badID)
+        XCTAssertFalse(catalog.items[good]!.hasCover)
+        XCTAssertNil(catalog.cover(for: good))
     }
 }
