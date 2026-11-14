@@ -150,7 +150,7 @@ final class LibraryMetadataTests: XCTestCase {
         try await waitFor { !catalog.loading }
         XCTAssertEqual(catalog.items[file]?.title, "Vorher")
         let archive = try NUPArchive(url: file)
-        try archive.saveMetadata(package: 0, changes: MetadataEdit(name: "Nachher", publisher: "", displayVersion: "", icon: nil, removeIcon: true),
+        try archive.saveMetadata(package: 0, changes: MetadataEdit(name: "Nachher", publisher: "", displayVersion: "", icon: nil),
             profile: .specification, destination: file, replacingOriginal: true, context: JobContext())
         catalog.update(try NUPArchive(url: file))
         try await waitFor { catalog.items[file]?.title == "Nachher" }
@@ -182,7 +182,7 @@ final class LibraryMetadataTests: XCTestCase {
         print("Library catalog: \(publications) publications for 62 entries")
         let goodID = catalog.items[good]?.id, badID = catalog.items[bad]?.id
         let archive = try NUPArchive(url: good)
-        try archive.saveMetadata(package: 0, changes: MetadataEdit(name: "Nachher", publisher: "", displayVersion: "", icon: nil),
+        try archive.saveMetadata(package: 0, changes: MetadataEdit(name: "Nachher", publisher: "", displayVersion: "", icon: nil, removeIcon: true),
                                  profile: .specification, destination: good, replacingOriginal: true, context: JobContext())
         catalog.update(try NUPArchive(url: good))
         try await waitFor { catalog.items[good]?.title == "Nachher" }
