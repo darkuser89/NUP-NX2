@@ -56,7 +56,8 @@ struct ArchiveRepairJournal {
 
     var data: Data {
         var b = Data((legacy ? "NUPFIX01" : "NUPFIX02").utf8)
-        for v in [device, inode, size, (try? oldHeader.uint(8, 8)) ?? 0, (try? oldHeader.uint(16, 8)) ?? 0] { b.appendLE(v, width: 8) }
+        let fields: [UInt64] = [device, inode, size, (try? oldHeader.uint(8, 8)) ?? 0, (try? oldHeader.uint(16, 8)) ?? 0]
+        for value in fields { b.appendLE(value, width: 8) }
         b.appendLE(UInt64(entries.count), width: 4); b.appendLE(0, width: 4)
         b.append(oldHeader); b.append(newHeader)
         for e in entries {
