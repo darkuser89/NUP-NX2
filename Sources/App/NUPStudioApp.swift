@@ -7,11 +7,12 @@ struct NUPStudioApp: App {
 
     var body: some Scene {
         Window("NUP Studio", id: "main") {
-            ContentView(store: store)
+            ContentView(store: store, applicationDelegate: appDelegate)
                 .frame(minWidth: 980, minHeight: 680)
-                .onAppear { appDelegate.store = store }
                 .task { store.restoreLibraryIfNeeded() }
-                .onOpenURL { store.receiveFileURLs([$0]) }
+                // SwiftUI owns URL delivery once its scene is running; cold
+                // Launch Services requests can arrive at the delegate earlier.
+                .onOpenURL { appDelegate.receive([$0]) }
         }
         .defaultSize(width: 1180, height: 780)
         .commands {

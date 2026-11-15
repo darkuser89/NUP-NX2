@@ -1,15 +1,6 @@
 import SwiftUI
 import AppKit
 
-@MainActor final class WorkspaceApplicationDelegate: NSObject, NSApplicationDelegate {
-    weak var store: WorkspaceStore?
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        guard let store else { return .terminateNow }
-        if store.busy { store.status = "Bitte den laufenden Vorgang abschließen oder abbrechen."; return .terminateCancel }
-        return store.deferNavigation(.quit) ? .terminateCancel : .terminateNow
-    }
-}
-
 /// SwiftUI owns the draft. This bridge only intercepts native window closing
 /// and forwards unrelated window delegate behavior to SwiftUI's own delegate.
 struct WorkspaceWindowGuard: NSViewRepresentable {

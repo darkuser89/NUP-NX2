@@ -101,6 +101,25 @@ final class WorkspaceStore: ObservableObject {
         }
     }
 
+    /// Finder events also arrive during startup, jobs and modal previews. Keep
+    /// the latest valid request instead of dropping it through the drag/drop guard.
+    @discardableResult
+    func receiveExternalFileURLs(_ urls: [URL]) -> Bool {
+        do {
+            let url = try FileDropReader.validate(urls)
+            if libraryCoverDraft != nil || repairReport != nil || pendingNavigation != nil {
+                pendingOpenURL = url
+            } else { open(url) }
+            return true
+        } catch { self.error = error.localizedDescription; return false }
+    }
+    func drainPendingOpenIfPossible() {
+        guard !busy, libraryCoverDraft == nil, repairReport == nil, pendingNavigation == nil,
+              let url = pendingOpenURL else { return }
+        pendingOpenURL = nil
+        open(url)
+    }
+
     func receiveDrop(_ providers: [NSItemProvider]) -> Bool {
         guard canReceiveFiles, libraryCoverDraft == nil else { return false }
         guard providers.count == 1 else {
@@ -116,12 +135,11 @@ final class WorkspaceStore: ObservableObject {
 
     func open(_ url: URL) {
         // An explicit Finder open takes precedence over the automatic startup scan.
-        if busy && restoringLibrary {
+        if busy {
             pendingOpenURL = url
-            context?.cancel()
+            if restoringLibrary { context?.cancel() }
             return
         }
-        guard !busy else { return }
         if DumpDiscovery.isDirectory(url) { scanLibrary(url); return }
         if deferNavigation(.open(url)) { return }
         section = .archive
@@ -353,10 +371,7 @@ final class WorkspaceStore: ObservableObject {
             busy = false; context = nil; jobID = nil
             restoringLibrary = false
             if let action = completedNavigation { continueNavigation(action) }
-            if let url = pendingOpenURL {
-                pendingOpenURL = nil
-                open(url)
-            }
+            drainPendingOpenIfPossible()
         }
     }
 }

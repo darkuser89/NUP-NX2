@@ -3,6 +3,8 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @ObservedObject var store: WorkspaceStore
+    let applicationDelegate: WorkspaceApplicationDelegate
+    @Environment(\.openWindow) private var openWindow
     @State private var targeted = false
 
     var body: some View {
@@ -43,6 +45,13 @@ struct ContentView: View {
                 StatusBar(store: store)
             }
         }
+        .onAppear {
+            let action = openWindow
+            applicationDelegate.attach(store: store, showMainWindow: { action(id: "main") })
+        }
+        .onChange(of: store.libraryCoverDraft == nil) { _, _ in store.drainPendingOpenIfPossible() }
+        .onChange(of: store.repairReport == nil) { _, _ in store.drainPendingOpenIfPossible() }
+        .onChange(of: store.pendingNavigation == nil) { _, _ in store.drainPendingOpenIfPossible() }
         .toolbar {
             ToolbarItemGroup {
                 Button(action: store.openPanel) { Label("Öffnen", systemImage: "folder") }.disabled(store.busy)

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0AD9C979C9AA122940717A08 /* FinderOpenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB18608AA7694264FA62C648 /* FinderOpenTests.swift */; };
 		0B6237EF39F64202F5878B7B /* fse_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = D550B3F316F6E6F5DD342D07 /* fse_compress.c */; };
 		0BB28F77938912DD7ED7752A /* MetadataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA58C20EB1CE6B6C4E147BD5 /* MetadataTransaction.swift */; };
 		0C03DC8F921E487103806C02 /* ArchiveDiagnosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E00D5E50C28C8C173BF6B2C /* ArchiveDiagnosis.swift */; };
@@ -126,6 +127,7 @@
 		E8CEA9C4D70AFB2B3ECF1E8E /* zstd_decompress_internal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3602F8D6C930AAAF74AD506F /* zstd_decompress_internal.h */; };
 		E8E8954E2A10731BFC7604A1 /* zstd_fast.c in Sources */ = {isa = PBXBuildFile; fileRef = 27B0D8B8FAE64B316C8AC04F /* zstd_fast.c */; };
 		E9084EED838A5C2299EF43D7 /* ReferenceFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAB0DB3D96CA345628D14E /* ReferenceFixtures.swift */; };
+		ECB8017E0C3648D497C1B775 /* WorkspaceApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0294CB7385FCF3960A7C97ED /* WorkspaceApplicationDelegate.swift */; };
 		F02CEBF7C67D91E40DC245AF /* LibraryMetadataReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B6297AA6455E59A6C151A1 /* LibraryMetadataReader.swift */; };
 		F16ED93DFD21942B599FD474 /* zstd_fast.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D141D48CEDCA1CCE51384B2 /* zstd_fast.h */; };
 		F2AA7014E957F2AE1EA2CB45 /* LibrarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C879B34E452A40012A0E5 /* LibrarySnapshot.swift */; };
@@ -203,6 +205,7 @@
 /* Begin PBXFileReference section */
 		011914EF8C4CF22A56E3081F /* zstdmt_compress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstdmt_compress.h; sourceTree = "<group>"; };
 		01E6A84DD10A3CBC57776781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0294CB7385FCF3960A7C97ED /* WorkspaceApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceApplicationDelegate.swift; sourceTree = "<group>"; };
 		03F05EB4ECD605210272E5AE /* ArchiveFilePlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFilePlan.swift; sourceTree = "<group>"; };
 		0D2005D7EC55970C2D26ABAF /* huf_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_compress.c; sourceTree = "<group>"; };
 		11A03D8793B34D4C6B68C5B3 /* zstd_compress_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_internal.h; sourceTree = "<group>"; };
@@ -317,6 +320,7 @@
 		D8006D9F5C25CC0CE4F76B80 /* ArchiveEditBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveEditBar.swift; sourceTree = "<group>"; };
 		D8DA381802FA03E833371C7F /* zstd_errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_errors.h; sourceTree = "<group>"; };
 		D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFileEditingTests.swift; sourceTree = "<group>"; };
+		DB18608AA7694264FA62C648 /* FinderOpenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderOpenTests.swift; sourceTree = "<group>"; };
 		E2F829189BCF633DD629664D /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		E3FAC2FBA7449BFEEFDF90D8 /* zstd_deps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_deps.h; sourceTree = "<group>"; };
 		E69AB300F182660B58ADDDEB /* fse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fse.h; sourceTree = "<group>"; };
@@ -452,6 +456,7 @@
 				8AFA3F2BC049A8E3B21E6AE9 /* ArchiveRepairTests.swift */,
 				9659004163758B6F094178A3 /* ArchiveROMFSRepairTests.swift */,
 				5ED0512B376D96A74406FB13 /* FileDropTests.swift */,
+				DB18608AA7694264FA62C648 /* FinderOpenTests.swift */,
 				64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */,
 				3ED871BE27D5B1AC7358E1F3 /* LibraryMetadataTests.swift */,
 				AA7035262385A88CE415CC74 /* LibraryRestoreTests.swift */,
@@ -591,6 +596,7 @@
 			isa = PBXGroup;
 			children = (
 				743DD097DEBC4816A1C9C1A9 /* NUPStudioApp.swift */,
+				0294CB7385FCF3960A7C97ED /* WorkspaceApplicationDelegate.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -731,6 +737,7 @@
 				5279F0C84B7AE024A2D7A46C /* ArchiveROMFSRepairTests.swift in Sources */,
 				7C64FEBEAF238F4D2DBCA73C /* ArchiveRepairTests.swift in Sources */,
 				55B0F156148417194EBA1769 /* FileDropTests.swift in Sources */,
+				0AD9C979C9AA122940717A08 /* FinderOpenTests.swift in Sources */,
 				30A740673821CADF55EBCAE9 /* LibraryCoverSaveTests.swift in Sources */,
 				9454FC08BC63F82B2F808FCB /* LibraryMetadataTests.swift in Sources */,
 				51BF599AC2B2C52F8EFC5663 /* LibraryRestoreTests.swift in Sources */,
@@ -820,6 +827,7 @@
 				31B0046FB3EAD5F3723C2F0B /* NUPWriter.swift in Sources */,
 				3A65EC85DFBCBF6766710FD6 /* PackView.swift in Sources */,
 				FE8CFE681267742408CCA113 /* StreamCodec.swift in Sources */,
+				ECB8017E0C3648D497C1B775 /* WorkspaceApplicationDelegate.swift in Sources */,
 				7DB0281EC37A7797111A9840 /* WorkspaceEditing.swift in Sources */,
 				61A4546E93737A10A3CEB090 /* WorkspaceStore.swift in Sources */,
 				143BAC01CD3EFA2B13E398A5 /* WorkspaceWindowGuard.swift in Sources */,
@@ -847,7 +855,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -862,7 +870,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -958,7 +966,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -973,7 +981,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
