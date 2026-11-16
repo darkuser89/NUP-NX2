@@ -23,6 +23,12 @@ enum FilePanels {
         panel.allowedContentTypes = [.png, .jpeg]
         return panel.runModal() == .OK ? panel.url : nil
     }
+    static func applicationControl() -> URL? {
+        let panel = NSOpenPanel()
+        panel.title = "NACP-Datei auswählen"
+        panel.allowedContentTypes = [UTType(filenameExtension: "nacp") ?? .data]
+        return panel.runModal() == .OK ? panel.url : nil
+    }
     static func filesToAdd(target: String) -> [URL] {
         let panel = NSOpenPanel()
         panel.title = "Dateien zur NUP hinzufügen"

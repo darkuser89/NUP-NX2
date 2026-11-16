@@ -30,6 +30,12 @@ struct MetadataView: View {
                             }
                         }
                         Button("Entfernen") { binding(\.icon, draft.icon).wrappedValue = nil }.disabled(draft.icon == nil)
+                        if let packages = store.editDraft?.packages, packages.count > 1 {
+                            coverMenu(packages)
+                        }
+                    }
+                    LabeledContent("Anwendungsdaten ergänzen") {
+                        applicationDataMenu(store.editDraft?.packages ?? [])
                     }
                     Text("Leere Textfelder entfernen die jeweilige Angabe. Die Paketidentität bleibt geschützt.")
                         .font(.caption).foregroundStyle(.secondary)
@@ -51,6 +57,48 @@ struct MetadataView: View {
                 if let error = draft.validationError { Text(error).font(.caption).foregroundStyle(.red) }
             }.formStyle(.grouped).textFieldStyle(.roundedBorder).disabled(store.busy)
         }
+    }
+
+    private func packageLabel(_ draft: ArchivePackageDraft) -> String {
+        "Paket \(draft.original.id + 1) · \(draft.original.kindName) · \(draft.original.versionString)"
+    }
+
+    private func coverMenu(_ packages: [ArchivePackageDraft]) -> some View {
+        let others = packages.filter { $0.original.id != package.id }
+        let sources = others.filter { $0.icon?.isEmpty == false }
+        let hasCover = packages[package.id].icon?.isEmpty == false
+        return Menu("Cover kopieren") {
+            Menu("Aus Paket übernehmen") {
+                ForEach(sources, id: \.original.id) { source in
+                    Button(packageLabel(source)) { store.stageCover(from: source.original.id, to: [package.id]) }
+                }
+            }.disabled(sources.isEmpty)
+            Menu("An Paket weitergeben") {
+                ForEach(others, id: \.original.id) { target in
+                    Button(packageLabel(target)) { store.stageCover(from: package.id, to: [target.original.id]) }
+                }
+            }.disabled(!hasCover)
+            Button("An alle Pakete ohne Cover weitergeben") {
+                store.stageCover(from: package.id, to: others.map(\.original.id), onlyMissing: true)
+            }.disabled(!hasCover || !others.contains(where: { $0.icon == nil }))
+        }.disabled(sources.isEmpty && !hasCover)
+    }
+
+    private func applicationDataMenu(_ packages: [ArchivePackageDraft]) -> some View {
+        let sources = packages.filter { $0.original.id != package.id && (!$0.name.isEmpty || !$0.publisher.isEmpty) }
+        return Menu("Aus Quelle lesen") {
+            Button("Aus diesem Paket lesen") { store.importApplicationData(package: package.id) }
+            Button("NACP-Datei auswählen …") {
+                if let url = FilePanels.applicationControl() { store.importApplicationData(package: package.id, file: url) }
+            }
+            if !sources.isEmpty {
+                Menu("Titel und Publisher aus anderem Paket") {
+                    ForEach(sources, id: \.original.id) { source in
+                        Button(packageLabel(source)) { store.stageMissingApplicationText(from: source.original.id, to: package.id) }
+                    }
+                }
+            }
+        }.help("Ergänzt leere Felder und fehlende Sprachtitel im Entwurf.")
     }
 
     private func binding<Value>(_ keyPath: WritableKeyPath<ArchivePackageDraft, Value>, _ fallback: Value) -> Binding<Value> {

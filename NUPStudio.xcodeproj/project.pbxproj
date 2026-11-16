@@ -13,6 +13,7 @@
 		0BB28F77938912DD7ED7752A /* MetadataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA58C20EB1CE6B6C4E147BD5 /* MetadataTransaction.swift */; };
 		0C03DC8F921E487103806C02 /* ArchiveDiagnosis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E00D5E50C28C8C173BF6B2C /* ArchiveDiagnosis.swift */; };
 		0E5E45A95925257E090B9A8E /* threading.c in Sources */ = {isa = PBXBuildFile; fileRef = 69D71BD04F6306DC44E08C75 /* threading.c */; };
+		0E6BE4D3CC314A17F6C98C53 /* ApplicationControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1793DF60BB374D79007F4488 /* ApplicationControlTests.swift */; };
 		0EE0FF3BC486D99EAEB92ED3 /* ArchiveContentJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */; };
 		0F25CF3FB0C9BD5465C0372F /* ArchiveEditRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71BCE695AC9B1401A3803D0 /* ArchiveEditRequest.swift */; };
 		0FEC92219D91D15310CBF6DE /* zstd_ddict.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 26493BABFDC90215045A0F52 /* zstd_ddict.h */; };
@@ -32,6 +33,7 @@
 		2893F82E43E99637579026EB /* libZstandard.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D28DA3E28015315A65547455 /* libZstandard.a */; };
 		2994D652EE395A6B5D9BDAC4 /* LibraryScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566B9217C62A878DA3FE1784 /* LibraryScanner.swift */; };
 		2A68A5D88D5954B4FE30CBC3 /* hist.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 966D0B60ECDA4FF832D8A7D7 /* hist.h */; };
+		2AB0C9BF5CFAC9899EB1EDEF /* ApplicationControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889B44B55C0FDF90920DFF34 /* ApplicationControl.swift */; };
 		2C5F16E35AABB55D20681452 /* huf_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B1039FA2CE1901792EE724C /* huf_decompress.c */; };
 		30A740673821CADF55EBCAE9 /* LibraryCoverSaveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E154E8122467D337664F0A /* LibraryCoverSaveTests.swift */; };
 		3185E3553B724664F83D409B /* bitstream.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA301C5E169E25AD3EC134E6 /* bitstream.h */; };
@@ -127,6 +129,7 @@
 		DF26ECAC8AAF6F05C23EFA24 /* LibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F754E204FD682F6B3CF248DC /* LibraryTests.swift */; };
 		DF3FC3D67BF9AB7F29F570DA /* zstd_compress_internal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11A03D8793B34D4C6B68C5B3 /* zstd_compress_internal.h */; };
 		E10524A0990DFE067D0C354D /* zstdmt_compress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 011914EF8C4CF22A56E3081F /* zstdmt_compress.h */; };
+		E1772ED209C27197741CFCBF /* WorkspaceApplicationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8051224E5CB3A719B7F55CAA /* WorkspaceApplicationData.swift */; };
 		E51B057B9B10DF3FD0274A0B /* NUP-MIT.txt in Resources */ = {isa = PBXBuildFile; fileRef = 69426466EF00D7AE93032C6C /* NUP-MIT.txt */; };
 		E8CEA9C4D70AFB2B3ECF1E8E /* zstd_decompress_internal.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3602F8D6C930AAAF74AD506F /* zstd_decompress_internal.h */; };
 		E8E8954E2A10731BFC7604A1 /* zstd_fast.c in Sources */ = {isa = PBXBuildFile; fileRef = 27B0D8B8FAE64B316C8AC04F /* zstd_fast.c */; };
@@ -215,6 +218,7 @@
 		0D2005D7EC55970C2D26ABAF /* huf_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_compress.c; sourceTree = "<group>"; };
 		11A03D8793B34D4C6B68C5B3 /* zstd_compress_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_compress_internal.h; sourceTree = "<group>"; };
 		126560BC2766558C671E33B7 /* zstd_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_common.c; sourceTree = "<group>"; };
+		1793DF60BB374D79007F4488 /* ApplicationControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationControlTests.swift; sourceTree = "<group>"; };
 		17CCD20F6B024686F7007515 /* zstd_ldm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_ldm.h; sourceTree = "<group>"; };
 		193FC9A45C49C980F224D0E0 /* ArchiveRepairView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveRepairView.swift; sourceTree = "<group>"; };
 		19978E5D8C297040381B3029 /* zstd_double_fast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_double_fast.h; sourceTree = "<group>"; };
@@ -279,10 +283,12 @@
 		7AE75EE7BF774CF4B93E7FDE /* zstd_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_decompress.c; sourceTree = "<group>"; };
 		7D9C370134ADDE9C1268A79F /* bits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bits.h; sourceTree = "<group>"; };
 		7E0E82179FDA8F4E0AA832A3 /* ArchiveOptimizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveOptimizationTests.swift; sourceTree = "<group>"; };
+		8051224E5CB3A719B7F55CAA /* WorkspaceApplicationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceApplicationData.swift; sourceTree = "<group>"; };
 		80B7BC0D8EF9D33DAE5BB95A /* zstd_compress_superblock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress_superblock.c; sourceTree = "<group>"; };
 		824D65F13688D73B0F3B0B53 /* debug.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = debug.c; sourceTree = "<group>"; };
 		8430719BB768849A01B8F4A7 /* xxhash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xxhash.c; sourceTree = "<group>"; };
 		858D52AF4BC26C54F72E29FD /* fse_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_decompress.c; sourceTree = "<group>"; };
+		889B44B55C0FDF90920DFF34 /* ApplicationControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationControl.swift; sourceTree = "<group>"; };
 		8A8457A00380F2E183F8B8A4 /* compiler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compiler.h; sourceTree = "<group>"; };
 		8AFA3F2BC049A8E3B21E6AE9 /* ArchiveRepairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveRepairTests.swift; sourceTree = "<group>"; };
 		8D2DB43492BE24C5094996E9 /* huf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = huf.h; sourceTree = "<group>"; };
@@ -415,6 +421,7 @@
 			isa = PBXGroup;
 			children = (
 				BC9F8F320DF369EAC751197D /* LibraryMetadataStore.swift */,
+				8051224E5CB3A719B7F55CAA /* WorkspaceApplicationData.swift */,
 				EC4D2FCB9E7018F98A928A2F /* WorkspaceEditing.swift */,
 				F6B134F49E5CA228D4F2F474 /* WorkspaceStore.swift */,
 			);
@@ -460,6 +467,7 @@
 		411B7E4E4ED07B92C1A3D201 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				1793DF60BB374D79007F4488 /* ApplicationControlTests.swift */,
 				9EED01D22BC48C3352868508 /* ArchiveEditDraftTests.swift */,
 				D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */,
 				B9BB9F501263C9F58E33E40B /* ArchiveInspectionTests.swift */,
@@ -503,6 +511,7 @@
 		46A75F638EEA156A2C74D86F /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				889B44B55C0FDF90920DFF34 /* ApplicationControl.swift */,
 				30A7B8020773EFC5CD6BA1C4 /* ArchiveContentJournal.swift */,
 				1E00D5E50C28C8C173BF6B2C /* ArchiveDiagnosis.swift */,
 				F71BCE695AC9B1401A3803D0 /* ArchiveEditRequest.swift */,
@@ -746,6 +755,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E6BE4D3CC314A17F6C98C53 /* ApplicationControlTests.swift in Sources */,
 				A3A223F814EE6FAF7463168C /* ArchiveEditDraftTests.swift in Sources */,
 				660DA86CB8C2AAF3DF964B1B /* ArchiveFileEditingTests.swift in Sources */,
 				02B6A6E00758E14D407EEA06 /* ArchiveInspectionTests.swift in Sources */,
@@ -803,6 +813,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AB0C9BF5CFAC9899EB1EDEF /* ApplicationControl.swift in Sources */,
 				0EE0FF3BC486D99EAEB92ED3 /* ArchiveContentJournal.swift in Sources */,
 				0C03DC8F921E487103806C02 /* ArchiveDiagnosis.swift in Sources */,
 				36B54D36143D2AFF14505096 /* ArchiveEditBar.swift in Sources */,
@@ -847,6 +858,7 @@
 				31B0046FB3EAD5F3723C2F0B /* NUPWriter.swift in Sources */,
 				3A65EC85DFBCBF6766710FD6 /* PackView.swift in Sources */,
 				FE8CFE681267742408CCA113 /* StreamCodec.swift in Sources */,
+				E1772ED209C27197741CFCBF /* WorkspaceApplicationData.swift in Sources */,
 				ECB8017E0C3648D497C1B775 /* WorkspaceApplicationDelegate.swift in Sources */,
 				7DB0281EC37A7797111A9840 /* WorkspaceEditing.swift in Sources */,
 				61A4546E93737A10A3CEB090 /* WorkspaceStore.swift in Sources */,
@@ -875,7 +887,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -890,7 +902,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.0;
+				MARKETING_VERSION = 1.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -986,7 +998,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1001,7 +1013,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.0;
+				MARKETING_VERSION = 1.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

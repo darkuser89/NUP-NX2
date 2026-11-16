@@ -44,6 +44,29 @@ struct ArchivePackageDraft: Sendable {
     }
 
     private var originalBuild: String { original.metadata[7].flatMap { $0.count == 32 ? $0.hex : nil } ?? "" }
+
+    mutating func fillMissing(name: String, publisher: String, version: String = "", titles: [String: String] = [:]) -> Bool {
+        var changed = false
+        if self.name.isEmpty && !name.isEmpty { self.name = name; changed = true }
+        if self.publisher.isEmpty && !publisher.isEmpty { self.publisher = publisher; changed = true }
+        if displayVersion.isEmpty && !version.isEmpty { displayVersion = version; changed = true }
+        // An opaque language list must survive importing unrelated text fields.
+        if decodingNotice == nil {
+            for (tag, title) in titles.sorted(by: { $0.key < $1.key }) {
+                if let index = localized.firstIndex(where: {
+                    $0.language.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == tag
+                }) {
+                    guard localized[index].title.isEmpty else { continue }
+                    localized[index].title = title
+                } else {
+                    localized.append(LocalizedEntry(language: tag, title: title))
+                }
+                changed = true
+            }
+        }
+        return changed
+    }
+
     var hasChanges: Bool {
         name != original.text(5, profile: .specification) || publisher != original.text(6, profile: .specification) ||
         displayVersion != original.text(4, profile: .specification) || source != original.text(8, profile: .specification) ||

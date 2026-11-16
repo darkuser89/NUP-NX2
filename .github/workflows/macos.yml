@@ -88,6 +88,7 @@ jobs:
               '- Belegte Reparaturen einzeln auswählen; notwendige Abhängigkeiten und ungespeicherte Entwürfe werden geschützt.',
               '- Finder-Doppelklick öffnet die Datei beim Appstart und bei laufender App zuverlässig; frühe Dateianfragen bleiben erhalten.',
               '- Lokale Bibliothek mit Spielnamen und Covern.',
+              '- Cover zwischen Paketen kopieren und fehlende Anwendungsdaten aus NACP ergänzen.',
               '- Metadaten, Cover, Sprachen und Dateiänderungen paketübergreifend vormerken und gemeinsam mit Übernehmen speichern.',
               '- Entwürfe verwerfen sowie Schutz vor Dateiwechsel und Beenden mit offenen Änderungen.',
               '- Belegte Paket- und RomFS-Fehler direkt diagnostizieren und reparieren.',

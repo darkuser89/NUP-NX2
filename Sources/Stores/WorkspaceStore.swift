@@ -371,6 +371,8 @@ final class WorkspaceStore: ObservableObject {
                     recent.insert(opened.url.path, at: 0)
                     recent = Array(recent.prefix(8))
                     defaults.set(recent, forKey: "recentNUPFiles")
+                } else if let staged = result.editDraft, staged.archive.snapshotID == editDraft?.archive.snapshotID {
+                    editDraft = staged
                 }
                 if result.preferLibrary { section = .library }
                 if let url = result.reveal { lastOutput = url }
