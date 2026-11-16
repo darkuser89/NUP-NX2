@@ -56,7 +56,10 @@ struct ContentView: View {
             ToolbarItemGroup {
                 Button(action: store.openPanel) { Label("Öffnen", systemImage: "folder") }.disabled(store.busy)
                 Button(action: store.chooseLibrary) { Label("NUP-Ordner", systemImage: "folder.badge.plus") }.disabled(store.busy)
-                Button(action: store.diagnosePanel) { Label("Diagnose / Reparatur", systemImage: "wrench.and.screwdriver") }.disabled(store.busy)
+                Button {
+                    if let archive = store.archive, store.section == .archive { store.inspect(archive.url, deep: false) }
+                    else { store.diagnosePanel() }
+                } label: { Label("Diagnose / Reparatur", systemImage: "wrench.and.screwdriver") }.disabled(store.busy)
                 if store.archive != nil && store.section == .archive {
                     Button { store.verify(deep: true) } label: { Label("Prüfen", systemImage: "checkmark.shield") }
                         .disabled(store.busy)
@@ -99,7 +102,7 @@ struct ContentView: View {
             LibraryCoverEditor(store: store, draft: draft)
         }
         .sheet(item: $store.repairReport) { report in
-            ArchiveRepairView(store: store, report: report)
+            ArchiveRepairView(store: store, report: report).id(report.id)
         }
     }
 }

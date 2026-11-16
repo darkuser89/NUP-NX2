@@ -27,7 +27,8 @@ struct ArchiveRepairJournal {
         }
         for repair in source.romfsRepairs {
             let at = repair.offset(packages: source.packages.count)
-            changes.append(Entry(offset: at, old: try source.toc.bytes(at, 4), new: try layout.toc.bytes(at, 4)))
+            let old = try source.toc.bytes(at, 4), new = try layout.toc.bytes(at, 4)
+            if old != new { changes.append(Entry(offset: at, old: old, new: new)) }
         }
         entries = changes
         var expected = source.toc

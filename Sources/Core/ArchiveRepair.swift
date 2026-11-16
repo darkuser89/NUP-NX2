@@ -1,9 +1,11 @@
 import Foundation
 
 enum ArchiveRepair {
-    static func apply(_ report: ArchiveRepairReport, context: JobContext = JobContext()) throws -> NUPArchive {
+    static func apply(_ report: ArchiveRepairReport, selection: Set<ArchiveRepairTarget>? = nil,
+                      context: JobContext = JobContext()) throws -> NUPArchive {
         try require(report.canRepair, "Dieser Befund ist nicht sicher automatisch reparierbar.")
-        guard let source = report.source, let proposed = report.proposed else { throw NUPError("Reparaturvorschau fehlt.") }
+        guard let source = report.source, let complete = report.proposed else { throw NUPError("Reparaturvorschau fehlt.") }
+        let selected = selection ?? report.repairTargets
         let file = try regularFile(report.url, writable: true); defer { try? file.close() }
         try MetadataTransaction.lock(file)
         try ArchiveRepairJournal.requireNoPendingChanges(at: report.url)
@@ -11,8 +13,9 @@ enum ArchiveRepair {
         // Re-read and hash evidence under the write lock; never act on a stale preview.
         let fresh = try ArchiveDiagnosis.inspect(report.url, context: context)
         try require(fresh.canRepair && fresh.source?.header == source.header && fresh.source?.toc == source.toc &&
-                    fresh.proposed?.header == proposed.header && fresh.proposed?.toc == proposed.toc,
+                    fresh.proposed?.header == complete.header && fresh.proposed?.toc == complete.toc,
                     "Die Belege haben sich seit der Vorschau geändert. Bitte erneut diagnostizieren.")
+        let proposed = try fresh.selectedLayout(selected, context: context)
         try context.check(); try source.revision.requireCurrent(at: report.url)
         let journal = try ArchiveRepairJournal(source: source, layout: proposed)
         _ = try journal.layouts(url: report.url, file: file)

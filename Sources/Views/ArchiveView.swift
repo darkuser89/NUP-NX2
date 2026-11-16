@@ -16,6 +16,7 @@ struct ArchiveView: View {
         let package: Int
         let text: String
         let files: UUID?
+        let selection: UUID?
     }
 
     private var package: NUPPackage { archive.packages[min(store.packageIndex, archive.packages.count - 1)] }
@@ -55,8 +56,18 @@ struct ArchiveView: View {
                     .id("\(archive.url.path):\(package.id):\(store.profile.rawValue)")
             }
         }
-        .task(id: Query(archive: archive.snapshotID, package: package.id, text: search, files: store.editDraft?.fileRevision)) {
+        .task(id: Query(archive: archive.snapshotID, package: package.id, text: search, files: store.editDraft?.fileRevision, selection: store.fileSelection?.id)) {
             let index = package.id, query = search, snapshot = archive, draft = store.editDraft
+            if let focus = store.fileSelection, focus.snapshot == archive.snapshotID, focus.package == index {
+                tab = 0; selection = focus.nodes
+                nodes = focus.nodes.sorted().map { node in
+                    let file = snapshot.files[node - snapshot.directories.count]
+                    let parent = snapshot.fileLocation(node: node, package: index)!.path
+                    return BrowserNode(id: node, name: (parent == "/" ? "" : parent) + "/" + file.name,
+                        size: file.size, storedSize: file.storedSize, codec: file.codec)
+                }
+                return
+            }
             if !query.isEmpty { try? await Task.sleep(for: .milliseconds(140)) }
             guard !Task.isCancelled else { return }
             let filtered = await Task.detached(priority: .userInitiated) {
@@ -65,7 +76,11 @@ struct ArchiveView: View {
             guard !Task.isCancelled else { return }
             nodes = filtered
         }
-        .onChange(of: store.packageIndex) { _, _ in selection.removeAll() }
+        .onChange(of: store.packageIndex) { _, _ in
+            if let focus = store.fileSelection, focus.package == store.packageIndex, focus.snapshot == archive.snapshotID {
+                selection = focus.nodes
+            } else { selection.removeAll(); store.fileSelection = nil }
+        }
         .onChange(of: archive.snapshotID) { _, _ in selection.removeAll() }
         .confirmationDialog("\(pendingRemoval.count + pendingNewRemoval.count) Datei(en) zum Entfernen vormerken?", isPresented: $confirmRemoval) {
             Button("Entfernen vormerken", role: .destructive) {
@@ -100,6 +115,9 @@ struct ArchiveView: View {
                 Menu {
                     Button("Struktur prüfen") { store.verify(deep: false) }
                     Button("Vollständig mit SHA-256 prüfen") { store.verify(deep: true) }
+                    if let report = store.lastInspection, report.url == archive.url {
+                        Button("Letztes Prüfergebnis anzeigen") { store.repairReport = report }
+                    }
                     Divider()
                     Button("Paket entpacken …") { store.extract() }
                     Button("Nur ExeFS entpacken …") { store.extract(subtree: "exefs") }.disabled(package.exefs == nil)
@@ -120,6 +138,11 @@ struct ArchiveView: View {
     private var fileBrowser: some View {
         VStack(spacing: 0) {
             HStack(spacing: 12) {
+                if store.fileSelection != nil {
+                    Button("Alle Dateien zeigen") { store.fileSelection = nil; selection.removeAll(); search = "" }
+                    Text("Prüfbefunde ausgewählt").font(.caption).foregroundStyle(.orange)
+                    if let report = store.lastInspection { Button("Prüfergebnis") { store.repairReport = report } }
+                }
                 Button { store.addFiles(directory: destination.directory) } label: {
                     Label("Dateien hinzufügen …", systemImage: "plus")
                 }

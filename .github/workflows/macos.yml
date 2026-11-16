@@ -84,6 +84,8 @@ jobs:
               'Native SwiftUI-App für Apple-Silicon-Macs (arm64), ab macOS 14.',
               '',
               '- NUP öffnen, prüfen, entpacken und erstellen.',
+              '- Geöffnete NUP mit Befundliste prüfen: mehrere Datei-/Hashfehler sammeln und betroffene Dateien in der Inhaltsliste auswählen.',
+              '- Belegte Reparaturen einzeln auswählen; notwendige Abhängigkeiten und ungespeicherte Entwürfe werden geschützt.',
               '- Finder-Doppelklick öffnet die Datei beim Appstart und bei laufender App zuverlässig; frühe Dateianfragen bleiben erhalten.',
               '- Lokale Bibliothek mit Spielnamen und Covern.',
               '- Metadaten, Cover, Sprachen und Dateiänderungen paketübergreifend vormerken und gemeinsam mit Übernehmen speichern.',

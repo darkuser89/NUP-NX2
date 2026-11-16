@@ -22,6 +22,14 @@ Das Versions-Tag hat das Format `vMAJOR.MINOR.PATCH`. Die App erhält die Tag-Ve
 
 ## Öffnen und starten
 
+### Geöffnete NUP prüfen und Befunde auswählen
+
+**Prüfen** bzw. **⇧⌘R** prüft die gespeicherte NUP vollständig und zeigt eine Befundliste. Die Prüfung streamt die Inhalte lokal, sammelt Datei-/Hash-/Dekompressionsfehler und läuft nach einem einzelnen Dateifehler weiter. Paket und vollständiger interner Pfad stehen beim Befund. Bei mehr als 10.000 Dateifehlern werden alle Dateien geprüft, aber nur die ersten 10.000 Details angezeigt. Strukturfehler, die keinen sicheren Dateibaum zulassen, werden gesondert gemeldet; dann gibt es keine Zusage einer vollständigen Inhaltsprüfung.
+
+Dateifehler auswählen und **In Dateiliste auswählen** markieren die betroffenen Dateien eines Pakets. Es wird nichts gelöscht. **Prüfergebnis** öffnet den letzten Bericht ohne erneutes Lesen der Spieldaten; **Alle Dateien zeigen** kehrt zur normalen Inhaltsliste zurück. Sichere Paket-/RomFS-/UUID-Korrekturen lassen sich per Auswahlkästchen und **Auswahl reparieren** gezielt anwenden. Notwendige Abhängigkeiten werden vor dem Schreiben geprüft. Prüfsummen und UUID werden passend zur Auswahl aktualisiert. Beschädigte Dateiinhalte werden nicht erfunden oder durch neue Hashes als intakt ausgegeben.
+
+Die Prüfung erhält offene Entwürfe und verändert die NUP nicht. Vor einer Reparatur muss der Entwurf übernommen oder verworfen und erneut geprüft werden. Ein zwischenzeitlich geänderter Dateistand macht die Schreibvorschau ungültig.
+
 1. `NUPStudio.xcodeproj` in Xcode öffnen.
 2. Scheme **NUPStudio**, Ziel **My Mac** auswählen.
 3. Mit **⌘R** bauen und starten.

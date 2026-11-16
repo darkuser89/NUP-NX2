@@ -3,6 +3,18 @@ import Darwin
 @testable import NUPStudio
 
 extension NUPCoreTests {
+    func testIncompleteDependentROMFSSelectionIsRejectedWithoutWriting() throws {
+        let healthy = try brokenROMFS(both: true, corruptUUID: true)
+        let report = try ArchiveDiagnosis.inspect(healthy.url), before = try Data(contentsOf: healthy.url)
+        XCTAssertTrue(report.repairTargets.contains(.uuid))
+        let first = try XCTUnwrap(report.romfs.first)
+        XCTAssertThrowsError(try report.selectedLayout([.romfs(first.id)]))
+        XCTAssertThrowsError(try ArchiveRepair.apply(report, selection: [.romfs(first.id)]))
+        XCTAssertEqual(try Data(contentsOf: healthy.url), before); absentROMFSJournal(healthy.url)
+        let repaired = try ArchiveRepair.apply(report, selection: report.repairTargets)
+        XCTAssertEqual(repaired.directories.map(\.children), healthy.directories.map(\.children))
+    }
+
     private func romfsFixture() throws -> NUPArchive {
         let prefix = "romfs-\(UUID().uuidString)"
         var npdm = Data(count: 192)

@@ -3,6 +3,35 @@ import Darwin
 @testable import NUPStudio
 
 extension NUPCoreTests {
+    func testSelectedRepairChangesOnlyChosenPackageAndKeepsOtherFinding() throws {
+        let url = try repairFixture(broken: false)
+        try changeRepairTOC(url) { toc in
+            toc.put(0x0400FF500E34A000, at: 48, width: 8)
+            toc.put(0x0400FF500E34A001, at: 112, width: 8)
+        }
+        let before = try Data(contentsOf: url), report = try ArchiveDiagnosis.inspect(url)
+        XCTAssertEqual(report.repairTargets, [.package(0), .package(1)])
+        let source = try XCTUnwrap(report.source), chosen = try report.selectedLayout([.package(0)])
+        XCTAssertEqual(try chosen.toc.bytes(112, 64), try source.toc.bytes(112, 64))
+        let repaired = try ArchiveRepair.apply(report, selection: [.package(0)])
+        XCTAssertEqual(repaired.packages[0].titleID, 0x0400FF500E34A001)
+        XCTAssertEqual(repaired.packages[1].titleID, source.packages[1].titleID)
+        XCTAssertEqual(repaired.revision.inode, source.revision.inode)
+        var expected = before; expected.put(chosen.header, at: 0); expected.put(chosen.toc, at: try integer(source.header.uint(8, 8)))
+        XCTAssertEqual(try Data(contentsOf: url), expected)
+        XCTAssertEqual(try ArchiveDiagnosis.inspect(url).repairTargets, [.package(1)])
+        XCTAssertThrowsError(try ArchiveRepair.apply(report, selection: [.package(1)])) // stale preview
+        noRepairJournal(url)
+    }
+
+    func testRepairRejectsEmptyOrUnknownSelectionBeforeWriting() throws {
+        let url = try repairFixture(), report = try ArchiveDiagnosis.inspect(url), before = try Data(contentsOf: url)
+        for selection: Set<ArchiveRepairTarget> in [[], [.package(99)], [.romfs(999)]] {
+            XCTAssertThrowsError(try ArchiveRepair.apply(report, selection: selection))
+            XCTAssertEqual(try Data(contentsOf: url), before); noRepairJournal(url)
+        }
+    }
+
     private func repairNPDM(_ id: UInt64) -> Data {
         var b = Data(count: 192)
         b.put(Data("META".utf8), at: 0); b.put(128, at: 0x70, width: 4); b.put(64, at: 0x74, width: 4)

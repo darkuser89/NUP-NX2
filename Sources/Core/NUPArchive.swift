@@ -261,6 +261,11 @@ struct NUPArchive: Sendable {
         packages.indices.contains(package) && nodePackages.indices.contains(node) && nodePackages[node] == package
     }
 
+    func packageForNode(_ node: Int) -> Int? {
+        guard nodePackages.indices.contains(node), nodePackages[node] >= 0 else { return nil }
+        return nodePackages[node]
+    }
+
     /// Validation builds parent/owner tables once, off the UI thread. Lookups
     /// then follow at most 256 parents instead of walking every file again.
     func fileLocation(node: Int, package: Int) -> ArchiveFileLocation? {

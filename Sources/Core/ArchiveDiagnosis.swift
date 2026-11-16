@@ -17,6 +17,8 @@ struct ArchiveRepairReport: Identifiable, Sendable {
     var blockers: [String] = []
     var warnings: [String] = []
     var uuidChanged = false
+    var deepInspection = false
+    var fileCheck: ArchiveFileCheck?
     var source: NUPArchive?
     var proposed: ArchiveRepairLayout?
     var canRepair: Bool { blockers.isEmpty && proposed != nil && (uuidChanged || !romfs.isEmpty || packages.contains(where: \.changed)) }

@@ -40,6 +40,8 @@ final class WorkspaceStore: ObservableObject {
     @Published var libraryCoverError: String?
     @Published var repairReport: ArchiveRepairReport?
     @Published var repairError: String?
+    @Published var fileSelection: ArchiveFileSelection?
+    @Published var lastInspection: ArchiveRepairReport?
     @Published private(set) var rememberedLibraryFolder: URL?
     @Published private(set) var libraryUnavailableMessage: String?
     @Published var packageIndex = 0
@@ -167,12 +169,16 @@ final class WorkspaceStore: ObservableObject {
             return JobResult(message: "Diagnose abgeschlossen · Datei unverändert.", repairReport: report)
         }
     }
-    func repair(_ report: ArchiveRepairReport) {
+    func repair(_ report: ArchiveRepairReport, selection: Set<ArchiveRepairTarget>? = nil) {
         guard !busy, repairReport?.id == report.id, report.canRepair else { return }
+        guard !hasPendingEdits else {
+            repairError = "Bitte den Entwurf zuerst übernehmen oder verwerfen und danach erneut prüfen."
+            return
+        }
         repairError = nil
         perform("NUP direkt reparieren", reportFailure: { [weak self] in self?.repairError = $0 }) { context in
-            let archive = try ArchiveRepair.apply(report, context: context)
-            return JobResult(message: "NUP direkt repariert · Struktur, TOC-Hash und UUID geprüft. Spieldaten unverändert.",
+            let archive = try ArchiveRepair.apply(report, selection: selection, context: context)
+            return JobResult(message: "Ausgewählte Korrekturen gespeichert · Struktur, TOC-Hash und UUID geprüft. Dateiinhalte unverändert; gemeldete Inhaltsfehler bleiben bestehen.",
                              archive: archive, reveal: archive.url, repaired: true)
         }
     }
@@ -223,10 +229,35 @@ final class WorkspaceStore: ObservableObject {
     }
     func verify(deep: Bool) {
         guard !busy, let archive else { return }
+        inspect(archive.url, deep: deep)
+    }
+    func inspect(_ url: URL, deep: Bool) {
+        guard !busy else { return }
+        repairError = nil
         perform(deep ? "Dateien per SHA-256 prüfen" : "Struktur prüfen") { context in
-            try archive.verify(deep: deep, context: context)
-            return JobResult(message: deep ? "Vollständig geprüft: Struktur, TOC und alle \(archive.files.count) Datei-Hashes stimmen." : "Struktur, TOC-Hash und Paket-UUID geprüft. Dateiinhalte wurden nicht gehasht.")
+            let report = try ArchiveInspection.inspect(url, deep: deep, context: context)
+            let message = report.fileCheck.map { "\($0.checked) Dateien geprüft · \($0.failed) Dateifehler · Ergebnis liegt vor." }
+                ?? "Strukturdiagnose abgeschlossen · Ergebnis liegt vor. Dateiinhalte nicht vollständig geprüft."
+            return JobResult(message: message, repairReport: report)
         }
+    }
+
+    func canSelectFailedFiles(_ report: ArchiveRepairReport) -> Bool {
+        guard let archive, let source = report.source else { return false }
+        return archive.url.standardizedFileURL == report.url.standardizedFileURL &&
+            archive.revision == source.revision && archive.header == source.header && archive.toc == source.toc
+    }
+    func selectFailedFiles(_ report: ArchiveRepairReport, files: Set<Int>) {
+        guard !busy, canSelectFailedFiles(report), let archive else { return }
+        let failures = report.fileCheck?.failures.filter { files.contains($0.id) } ?? []
+        guard !failures.isEmpty, Set(failures.map(\.id)) == files, Set(failures.map(\.package)).count == 1,
+              let package = failures.first?.package else { return }
+        do { try archive.revision.requireCurrent(at: archive.url) }
+        catch { repairError = error.localizedDescription; return }
+        packageIndex = package; section = .archive
+        fileSelection = ArchiveFileSelection(snapshot: archive.snapshotID, package: package,
+            nodes: Set(files.map { archive.directories.count + $0 }))
+        repairReport = nil; repairError = nil
     }
     func addFiles(directory: Int) {
         guard !busy, let archive,
@@ -324,9 +355,11 @@ final class WorkspaceStore: ObservableObject {
                     libraryMetadata.load(scanned)
                 }
                 if let draft = result.coverDraft { libraryCoverDraft = draft }
-                if let report = result.repairReport { self.error = nil; repairError = nil; repairReport = report }
+                if let report = result.repairReport { self.error = nil; repairError = nil; repairReport = report; lastInspection = report }
                 if result.repaired { repairReport = nil; repairError = nil }
                 if let opened = result.archive {
+                    fileSelection = nil
+                    lastInspection = nil
                     let sameFile = archive?.url.standardizedFileURL == opened.url.standardizedFileURL
                     archive = opened
                     editDraft = result.editDraft ?? ArchiveEditDraft(archive: opened)
