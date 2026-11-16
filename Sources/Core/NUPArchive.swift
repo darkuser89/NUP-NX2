@@ -126,24 +126,27 @@ struct NUPArchive: Sendable {
         }
         var parsedDirectories: [NUPDirectory] = []
         parsedDirectories.reserveCapacity(dirCount)
-        var usedSlots = Set<Int>()
+        var usedSlots = Array(repeating: false, count: children.count)
+        var usedSlotCount = 0
         for _ in 0..<dirCount {
             try context.check()
             let first = try integer(toc.uint(position + 8, 4))
             let count = try integer(toc.uint(position + 12, 4))
             try require(first <= children.count && count <= children.count - first, "Ungültiger Kindknotenbereich.")
             for slot in first..<(first + count) {
-                try require(usedSlots.insert(slot).inserted, "Überlappende Kindknotenbereiche.")
+                try require(!usedSlots[slot], "Überlappende Kindknotenbereiche.")
+                usedSlots[slot] = true
             }
+            usedSlotCount += count
             try require(try toc.uint(position + 16, 8) == 0, "Reserviertes Verzeichnisfeld ist nicht null.")
             parsedDirectories.append(NUPDirectory(name: try name(at: position), children: Array(children[first..<(first + count)])))
             position += 24
         }
-        if usedSlots.count != children.count && validation == .packageDiagnosis {
+        if usedSlotCount != children.count && validation == .packageDiagnosis {
             romfsRepairs = try ArchiveROMFSRecovery.inspect(toc: toc, packages: parsedPackages,
                 directories: &parsedDirectories, children: children, used: usedSlots, context: context)
         } else {
-            try require(usedSlots.count == children.count, "Unbenutzte Kindknotenplätze.")
+            try require(usedSlotCount == children.count, "Unbenutzte Kindknotenplätze.")
             romfsRepairs = []
         }
         var parsedFiles: [NUPFile] = []
@@ -205,13 +208,13 @@ struct NUPArchive: Sendable {
                 visitedCount += 1
                 let directory = directories[index]
                 try safeName(directory.name, allowEmpty: index == package.root)
-                var previous: Data?
+                var previous: String.UTF8View?
                 for child in directory.children {
                     let name = child < directories.count ? directories[child].name : files[child - directories.count].name
-                    let bytes = Data(name.utf8)
-                    if let previous {
-                        try require(previous != bytes, "Doppelte Dateinamen im Verzeichnis.")
-                        try require(previous.lexicographicallyPrecedes(bytes), "Kindknoten sind nicht nach UTF-8 sortiert.")
+                    let bytes = name.utf8
+                    if let previous, !previous.lexicographicallyPrecedes(bytes) {
+                        if previous.elementsEqual(bytes) { throw NUPError("Doppelte Dateinamen im Verzeichnis.") }
+                        throw NUPError("Kindknoten sind nicht nach UTF-8 sortiert.")
                     }
                     previous = bytes
                     nodeParents[child] = index

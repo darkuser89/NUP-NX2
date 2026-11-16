@@ -82,9 +82,12 @@ func readRange(_ handle: FileHandle, offset: UInt64, count: Int) throws -> Data 
 }
 
 func safeName(_ name: String, allowEmpty: Bool = false) throws {
-    try require((allowEmpty || !name.isEmpty) && name != "." && name != ".." &&
-                !name.contains("/") && !name.contains("\\") && !name.contains("\0"),
-                "Unsicherer Dateiname im Container: \(name)")
+    // These forbidden characters are single ASCII bytes and cannot appear
+    // inside a UTF-8 multibyte sequence.
+    guard (allowEmpty || !name.isEmpty), name != ".", name != "..",
+          !name.utf8.contains(where: { $0 == 0 || $0 == 0x2f || $0 == 0x5c }) else {
+        throw NUPError("Unsicherer Dateiname im Container: \(name)")
+    }
 }
 
 func regularFile(_ url: URL, writable: Bool = false) throws -> FileHandle {

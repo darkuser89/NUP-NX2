@@ -17,7 +17,7 @@ enum ArchiveROMFSRecovery {
     /// The caller subsequently validates the complete resulting graph and all
     /// data regions. No inferred layout is ever exposed for normal editing.
     static func inspect(toc: Data, packages: [NUPPackage], directories: inout [NUPDirectory],
-                        children: [Int], used: Set<Int>, context: JobContext) throws -> [ArchiveROMFSRepair] {
+                        children: [Int], used: [Bool], context: JobContext) throws -> [ArchiveROMFSRepair] {
         var candidates: [Int: [(Int, Int)]] = [:]
         for package in packages {
             guard let romfs = package.romfs, directories[romfs].name == "romfs",
@@ -30,9 +30,9 @@ enum ArchiveROMFSRecovery {
         var repairs: [ArchiveROMFSRepair] = [], slot = 0
         while slot < children.count {
             try context.check()
-            if used.contains(slot) { slot += 1; continue }
+            if used[slot] { slot += 1; continue }
             let first = slot
-            while slot < children.count && !used.contains(slot) { slot += 1 }
+            while slot < children.count && !used[slot] { slot += 1 }
             guard let matches = candidates[first], matches.count == 1 else {
                 throw NUPError("Unbenutzte Kindknotenplätze lassen sich keinem leeren /romfs eindeutig zuordnen.")
             }
