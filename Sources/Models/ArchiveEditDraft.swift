@@ -33,9 +33,9 @@ struct ArchiveEditDraft: Sendable {
         }
         return nil
     }
-    var summary: String {
+    var summary: AppMessage {
         let edited = packages.filter(\.hasChanges).count
-        return L10n.text("\(String(describing: edited)) Paket(e) bearbeitet · \(String(describing: additions.count)) Datei(en) hinzugefügt · \(String(describing: removals.count)) entfernt — noch nicht gespeichert")
+        return .localized("\(String(edited)) Paket(e) bearbeitet · \(String(additions.count)) Datei(en) hinzugefügt · \(String(removals.count)) entfernt — noch nicht gespeichert")
     }
     mutating func stageFiles(package: Int, directory: Int, urls: [URL], removing: Set<Int> = []) throws {
         try require(archive.packages.indices.contains(package) && archive.directories.indices.contains(directory) && archive.owns(node: directory, package: package), L10n.text("Zielordner gehört nicht zum Paket."))

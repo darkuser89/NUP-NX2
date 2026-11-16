@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ArchiveView: View {
+    @Environment(\.appLanguage) private var language
     @ObservedObject var store: WorkspaceStore
     let archive: NUPArchive
     @State private var tab = 0
@@ -37,15 +38,15 @@ struct ArchiveView: View {
             header.padding(24)
             Divider()
             HStack {
-                Picker(L10n.text("Ansicht"), selection: $tab) {
-                    Text(L10n.text("Inhalte")).tag(0)
-                    Text(L10n.text("Metadaten")).tag(1)
+                Picker(language.text("Ansicht"), selection: $tab) {
+                    Text(language.text("Inhalte")).tag(0)
+                    Text(language.text("Metadaten")).tag(1)
                 }.pickerStyle(.segmented).frame(width: 240)
                 Spacer()
                 if tab == 0 {
                     HStack(spacing: 6) {
                         Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
-                        TextField(L10n.text("Dateien suchen"), text: $search).textFieldStyle(.plain)
+                        TextField(language.text("Dateien suchen"), text: $search).textFieldStyle(.plain)
                         if !search.isEmpty { Button { search = "" } label: { Image(systemName: "xmark.circle.fill") }.buttonStyle(.plain) }
                     }.padding(7).background(.quaternary, in: RoundedRectangle(cornerRadius: 7)).frame(width: 220)
                 }
@@ -82,19 +83,19 @@ struct ArchiveView: View {
             } else { selection.removeAll(); store.fileSelection = nil }
         }
         .onChange(of: archive.snapshotID) { _, _ in selection.removeAll() }
-        .confirmationDialog(L10n.text("\(String(describing: pendingRemoval.count + pendingNewRemoval.count)) Datei(en) zum Entfernen vormerken?"), isPresented: $confirmRemoval) {
-            Button(L10n.text("Entfernen vormerken"), role: .destructive) {
+        .confirmationDialog(language.text("\(String(describing: pendingRemoval.count + pendingNewRemoval.count)) Datei(en) zum Entfernen vormerken?"), isPresented: $confirmRemoval) {
+            Button(language.text("Entfernen vormerken"), role: .destructive) {
                 if !pendingRemoval.isEmpty { store.editFiles(directory: package.root, removing: pendingRemoval) }
                 store.removeStagedFiles(pendingNewRemoval)
             }
         } message: {
-            Text(L10n.text("Erst Übernehmen entfernt vorhandene Dateien aus dem Paket. Vorgemerkte neue Dateien werden nur aus dem Entwurf genommen. Bisherige Datenblöcke können in der NUP verbleiben; die NUP wird nicht verkleinert."))
+            Text(language.text("Erst Übernehmen entfernt vorhandene Dateien aus dem Paket. Vorgemerkte neue Dateien werden nur aus dem Entwurf genommen. Bisherige Datenblöcke können in der NUP verbleiben; die NUP wird nicht verkleinert."))
         }
     }
     private var header: some View {
         VStack(alignment: .leading, spacing: 18) {
             if store.library != nil {
-                Button { store.section = .library } label: { Label(L10n.text("Zur Bibliothek"), systemImage: "folder") }
+                Button { store.section = .library } label: { Label(language.text("Zur Bibliothek"), systemImage: "folder") }
                     .buttonStyle(.borderless).font(.caption)
             }
             HStack(alignment: .top, spacing: 14) {
@@ -108,30 +109,30 @@ struct ArchiveView: View {
                     Text(name.isEmpty ? archive.url.deletingPathExtension().lastPathComponent : name)
                         .font(.system(size: 25, weight: .semibold)).lineLimit(1).textSelection(.enabled)
                     Text(archive.url.lastPathComponent).font(.subheadline).foregroundStyle(.secondary).textSelection(.enabled)
-                    Text(L10n.text("\(String(describing: archive.packages.count)) Pakete · \(String(describing: archive.files.count)) Dateien · \(String(describing: ByteCountFormatter.string(fromByteCount: Int64(clamping: archive.fileSize), countStyle: .file)))"))
+                    Text(language.text("\(String(describing: archive.packages.count)) Pakete · \(String(describing: archive.files.count)) Dateien · \(String(describing: ByteCountFormatter.string(fromByteCount: Int64(clamping: archive.fileSize), countStyle: .file)))"))
                         .font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
                 Menu {
-                    Button(L10n.text("Struktur prüfen")) { store.verify(deep: false) }
-                    Button(L10n.text("Vollständig mit SHA-256 prüfen")) { store.verify(deep: true) }
+                    Button(language.text("Struktur prüfen")) { store.verify(deep: false) }
+                    Button(language.text("Vollständig mit SHA-256 prüfen")) { store.verify(deep: true) }
                     if let report = store.lastInspection, report.url == archive.url {
-                        Button(L10n.text("Letztes Prüfergebnis anzeigen")) { store.repairReport = report }
+                        Button(language.text("Letztes Prüfergebnis anzeigen")) { store.repairReport = report }
                     }
                     Divider()
-                    Button(L10n.text("Paket entpacken …")) { store.extract() }
-                    Button(L10n.text("Nur ExeFS entpacken …")) { store.extract(subtree: "exefs") }.disabled(package.exefs == nil)
-                    Button(L10n.text("Nur RomFS entpacken …")) { store.extract(subtree: "romfs") }.disabled(package.romfs == nil)
+                    Button(language.text("Paket entpacken …")) { store.extract() }
+                    Button(language.text("Nur ExeFS entpacken …")) { store.extract(subtree: "exefs") }.disabled(package.exefs == nil)
+                    Button(language.text("Nur RomFS entpacken …")) { store.extract(subtree: "romfs") }.disabled(package.romfs == nil)
                 } label: { Image(systemName: "ellipsis.circle") }.menuStyle(.borderlessButton).frame(width: 24).disabled(store.busy)
             }
             HStack(spacing: 24) {
-                Picker(L10n.text("Paket"), selection: $store.packageIndex) {
+                Picker(language.text("Paket"), selection: $store.packageIndex) {
                     ForEach(archive.packages) { package in
-                        Text("\(package.id + 1) · \(package.kindName) · \(package.versionString)").tag(package.id)
+                        Text("\(package.id + 1) · \(package.kindName(in: language)) · \(package.versionString)").tag(package.id)
                     }
                 }.frame(maxWidth: 300).disabled(store.busy)
-                LabeledContent(L10n.text("Titel-ID")) { Text(package.titleIDString).monospaced().textSelection(.enabled) }.font(.caption)
-                if package.flags & 1 != 0 { Text(L10n.text("Standalone-Update")).font(.caption).foregroundStyle(.secondary) }
+                LabeledContent(language.text("Titel-ID")) { Text(package.titleIDString).monospaced().textSelection(.enabled) }.font(.caption)
+                if package.flags & 1 != 0 { Text(language.text("Standalone-Update")).font(.caption).foregroundStyle(.secondary) }
             }
         }
     }
@@ -139,58 +140,58 @@ struct ArchiveView: View {
         VStack(spacing: 0) {
             HStack(spacing: 12) {
                 if store.fileSelection != nil {
-                    Button(L10n.text("Alle Dateien zeigen")) { store.fileSelection = nil; selection.removeAll(); search = "" }
-                    Text(L10n.text("Prüfbefunde ausgewählt")).font(.caption).foregroundStyle(.orange)
-                    if let report = store.lastInspection { Button(L10n.text("Prüfergebnis")) { store.repairReport = report } }
+                    Button(language.text("Alle Dateien zeigen")) { store.fileSelection = nil; selection.removeAll(); search = "" }
+                    Text(language.text("Prüfbefunde ausgewählt")).font(.caption).foregroundStyle(.orange)
+                    if let report = store.lastInspection { Button(language.text("Prüfergebnis")) { store.repairReport = report } }
                 }
                 Button { store.addFiles(directory: destination.directory) } label: {
-                    Label(L10n.text("Dateien hinzufügen …"), systemImage: "plus")
+                    Label(language.text("Dateien hinzufügen …"), systemImage: "plus")
                 }
                 Button {
                     pendingRemoval = selectedFiles.subtracting(store.editDraft?.removals ?? [])
                     pendingNewRemoval = Set(selection.filter { $0 < 0 })
                     confirmRemoval = true
                 } label: {
-                    Label(L10n.text("Dateien entfernen …"), systemImage: "trash")
+                    Label(language.text("Dateien entfernen …"), systemImage: "trash")
                 }.disabled(selectedFiles.subtracting(store.editDraft?.removals ?? []).isEmpty && !selection.contains(where: { $0 < 0 }))
                 if !selectedFiles.intersection(store.editDraft?.removals ?? []).isEmpty {
-                    Button(L10n.text("Entfernen zurücknehmen")) { store.restoreStagedFiles(selectedFiles) }
+                    Button(language.text("Entfernen zurücknehmen")) { store.restoreStagedFiles(selectedFiles) }
                 }
                 Spacer()
-                Text(L10n.text("Ziel: \(String(describing: destination.path))")).font(.caption).foregroundStyle(.secondary).lineLimit(1)
-                    .help(L10n.text("Ordner in der Liste auswählen, um das Ziel für neue Dateien festzulegen."))
+                Text(language.text("Ziel: \(String(describing: destination.path))")).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                    .help(language.text("Ordner in der Liste auswählen, um das Ziel für neue Dateien festzulegen."))
             }.padding(.horizontal, 24).padding(.bottom, 12).disabled(store.busy)
             Table(nodes, children: \.children, selection: $selection) {
-                TableColumn(L10n.text("Name")) { node in
+                TableColumn(language.text("Name")) { node in
                     HStack(spacing: 8) {
                         Image(systemName: node.isDirectory ? "folder.fill" : "doc")
                             .foregroundStyle(node.isDirectory ? Color.accentColor : Color.secondary)
                             .frame(width: 18)
                         Text(node.name).lineLimit(1)
                             .strikethrough(node.id >= archive.directories.count && store.editDraft?.removals.contains(node.id - archive.directories.count) == true)
-                        if node.id < 0 { Image(systemName: "plus.circle.fill").foregroundStyle(.green).help(L10n.text("Hinzufügen vorgemerkt")) }
+                        if node.id < 0 { Image(systemName: "plus.circle.fill").foregroundStyle(.green).help(language.text("Hinzufügen vorgemerkt")) }
                         else if node.id >= archive.directories.count && store.editDraft?.removals.contains(node.id - archive.directories.count) == true {
-                            Image(systemName: "minus.circle.fill").foregroundStyle(.orange).help(L10n.text("Entfernen vorgemerkt"))
+                            Image(systemName: "minus.circle.fill").foregroundStyle(.orange).help(language.text("Entfernen vorgemerkt"))
                         }
                     }.padding(.vertical, 3)
                 }.width(min: 180, ideal: 360)
-                TableColumn(L10n.text("Größe")) { node in
+                TableColumn(language.text("Größe")) { node in
                     Text(size(node.size)).monospacedDigit().frame(maxWidth: .infinity, alignment: .trailing)
                 }.width(90)
-                TableColumn(L10n.text("Gespeichert")) { node in
+                TableColumn(language.text("Gespeichert")) { node in
                     Text(size(node.storedSize)).monospacedDigit().frame(maxWidth: .infinity, alignment: .trailing)
                 }.width(100)
-                TableColumn(L10n.text("Codec")) { node in
-                    Text(node.id < 0 ? L10n.text("Neu") : (node.codec.map { $0 == 0 ? "RAW" : "ZSTD" } ?? "—"))
+                TableColumn(language.text("Codec")) { node in
+                    Text(node.id < 0 ? language.text("Neu") : (node.codec.map { $0 == 0 ? "RAW" : "ZSTD" } ?? "—"))
                         .font(.system(size: 10, design: .monospaced))
                 }.width(54)
             }.padding(.horizontal, 16)
                 .disabled(store.busy)
             if nodes.isEmpty {
-                Text(search.isEmpty ? L10n.text("Dieses Paket ist leer.") : L10n.text("Keine passenden Dateien."))
+                Text(search.isEmpty ? language.text("Dieses Paket ist leer.") : language.text("Keine passenden Dateien."))
                     .foregroundStyle(.secondary).padding()
             }
-            Text(L10n.text("Dateiänderungen werden vorgemerkt. Erst Übernehmen speichert sie gemeinsam mit den Metadaten; vorhandene Dateien werden nicht neu komprimiert."))
+            Text(language.text("Dateiänderungen werden vorgemerkt. Erst Übernehmen speichert sie gemeinsam mit den Metadaten; vorhandene Dateien werden nicht neu komprimiert."))
                 .font(.caption).foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 24).padding(.vertical, 10)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -38,7 +38,7 @@ extension NUPArchive {
         for (number, item) in planned.enumerated() {
             let (node, parts) = item
             let target = parts.reduce(temporary) { $0.appendingPathComponent($1) }
-            try context.report(Double(number) / Double(max(1, planned.count)), L10n.text("Entpacke \(String(describing: parts.last ?? ""))"))
+            try context.report(Double(number) / Double(max(1, planned.count)), .localized("Entpacke \(String(describing: parts.last ?? ""))"))
             if node < directories.count {
                 try FileManager.default.createDirectory(at: target, withIntermediateDirectories: false)
             } else {
@@ -54,7 +54,7 @@ extension NUPArchive {
         }
         try context.check()
         try publishDirectory(temporary, to: destination)
-        try? context.report(1, L10n.text("Paket entpackt; alle geschriebenen Dateien per SHA-256 geprüft."))
+        try? context.report(1, .localized("Paket entpackt; alle geschriebenen Dateien per SHA-256 geprüft."))
     }
 
     func saveMetadata(package index: Int, changes: MetadataEdit, profile: MetadataProfile,
@@ -95,7 +95,7 @@ extension NUPArchive {
         defer { try? output.close() }
         var copied: UInt64 = 0
         while copied < dataEnd {
-            try context.report(Double(copied) / Double(max(1, dataEnd)), L10n.text("Kopiere Containerinhalt …"))
+            try context.report(Double(copied) / Double(max(1, dataEnd)), .localized("Kopiere Containerinhalt …"))
             try autoreleasepool {
                 let data = try readExactly(input, Int(min(UInt64(StreamCodec.chunkSize), dataEnd - copied)))
                 try output.write(contentsOf: data); copied += UInt64(data.count)
@@ -122,6 +122,6 @@ extension NUPArchive {
         try sourceRevision.requireCurrent(at: url)
         try context.check()
         try publishFile(temporary, to: destination)
-        try? context.report(1, L10n.text("Metadaten als neue NUP-Datei gespeichert."))
+        try? context.report(1, .localized("Metadaten als neue NUP-Datei gespeichert."))
     }
 }

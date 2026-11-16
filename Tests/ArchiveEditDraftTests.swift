@@ -1,10 +1,38 @@
 import XCTest
+import AppKit
 import ImageIO
 import UniformTypeIdentifiers
 import Darwin
 @testable import NUPStudio
 
 extension NUPCoreTests {
+    @MainActor func testClosingSettingsDoesNotAskToSaveTheWorkspaceDraft() throws {
+        final class TestWindow: NSWindow {
+            var closeRequested = false
+            override func performClose(_ sender: Any?) { closeRequested = true }
+        }
+        let workspace = TestWindow(contentRect: .zero, styleMask: [.titled, .closable], backing: .buffered, defer: true)
+        let settings = TestWindow(contentRect: .zero, styleMask: [.titled, .closable], backing: .buffered, defer: true)
+        let suite = "NUPWindowTests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = WorkspaceStore(defaults: defaults)
+        store.workspaceWindow = workspace
+        store.editDraft = ArchiveEditDraft(archive: try packed())
+        store.editDraft?.packages[0].name = "Unsaved"
+
+        store.requestWindowClose(settings)
+        XCTAssertTrue(settings.closeRequested)
+        XCTAssertNil(store.pendingNavigation)
+        XCTAssertTrue(store.hasPendingEdits)
+
+        store.requestWindowClose(workspace)
+        XCTAssertFalse(workspace.closeRequested)
+        guard case .close? = store.pendingNavigation else {
+            return XCTFail("Closing the workspace must ask to save the draft")
+        }
+    }
+
     private func draftCover() throws -> Data {
         let context = try XCTUnwrap(CGContext(data: nil, width: 8, height: 8, bitsPerComponent: 8, bytesPerRow: 0,
             space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
@@ -99,7 +127,7 @@ extension NUPCoreTests {
         let archive = try packed(), original = try Data(contentsOf: archive.url)
         var draft = try combinedDraft(archive)
         for phase in [L10n.text("Aktualisiere Dateiverzeichnis …"), L10n.text("Prüfe geänderten Container …")] {
-            let box = Box(); box.context = JobContext { _, message in if message == phase { box.context?.cancel() } }
+            let box = Box(); box.context = JobContext { _, message in if message.text(in: L10n.language) == phase { box.context?.cancel() } }
             do { _ = try draft.archive.applyEdits(draft.request(), context: box.context!); XCTFail("Expected cancellation") }
             catch let failure as ArchiveEditFailure {
                 XCTAssertTrue(failure.underlying is CancellationError)
@@ -116,7 +144,7 @@ extension NUPCoreTests {
         final class Box: @unchecked Sendable { var context: JobContext? }
         let archive = try packed(), original = try Data(contentsOf: archive.url)
         var draft = ArchiveEditDraft(archive: archive); draft.packages[0].name = "Retry title"
-        let box = Box(); box.context = JobContext { _, message in if message == L10n.text("Prüfe Metadatenänderung …") { box.context?.cancel() } }
+        let box = Box(); box.context = JobContext { _, message in if message.text(in: L10n.language) == L10n.text("Prüfe Metadatenänderung …") { box.context?.cancel() } }
         do { _ = try archive.applyEdits(draft.request(), context: box.context!); XCTFail("Expected cancellation") }
         catch let failure as ArchiveEditFailure { XCTAssertTrue(failure.underlying is CancellationError); try draft.rebase(on: failure.recovered) }
         XCTAssertEqual(try Data(contentsOf: archive.url), original)
@@ -325,11 +353,11 @@ extension NUPCoreTests {
         store.open(archive.url); try await finish()
         store.editDraft = try combinedDraft(XCTUnwrap(store.archive))
         let draft = try XCTUnwrap(store.editDraft), box = Box()
-        box.context = JobContext { _, message in if message == L10n.text("Prüfe geänderten Container …") { box.context?.cancel() } }
+        box.context = JobContext { _, message in if message.text(in: L10n.language) == L10n.text("Prüfe geänderten Container …") { box.context?.cancel() } }
         let context = box.context!
-        store.perform("Cancel batch") { _ in
+        store.perform(.verbatim("Cancel batch")) { _ in
             let updated = try draft.archive.applyEdits(draft.request(), context: context)
-            return JobResult(message: "unexpected", archive: updated)
+            return JobResult(message: .verbatim("unexpected"), archive: updated)
         }
         try await finish()
         XCTAssertEqual(try Data(contentsOf: archive.url), original)
@@ -350,6 +378,8 @@ extension NUPCoreTests {
         XCTAssertEqual(delegate.applicationShouldTerminate(NSApplication.shared), .terminateCancel)
         XCTAssertNotNil(store.pendingNavigation); store.pendingNavigation = nil
         let coordinator = WorkspaceWindowGuard.Coordinator(store: store), window = NSWindow()
+        coordinator.attach(window)
+        defer { coordinator.detach() }
         store.requestWindowClose(window); XCTAssertNotNil(store.pendingNavigation); store.pendingNavigation = nil
         store.requestQuit(); XCTAssertNotNil(store.pendingNavigation); store.pendingNavigation = nil
         XCTAssertFalse(coordinator.windowShouldClose(window)); XCTAssertNotNil(store.pendingNavigation)

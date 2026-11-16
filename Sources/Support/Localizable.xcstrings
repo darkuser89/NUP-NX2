@@ -24,29 +24,6 @@
         }
       }
     },
-    " · %@ Hinweise": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " · %@ Hinweise"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " · Notes: %@"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " · Observații: %@"
-          }
-        }
-      }
-    },
     "%@ Datei(en) zum Entfernen vormerken?": {
       "extractionState": "manual",
       "localizations": {
@@ -181,6 +158,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fișiere NUP găsite: %@"
+          }
+        }
+      }
+    },
+    "%@ NUP-Dateien gefunden · %@ Hinweise": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ NUP-Dateien gefunden · %@ Hinweise"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NUP files found: %@ · Notes: %@"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fișiere NUP găsite: %@ · Observații: %@"
           }
         }
       }
@@ -10324,29 +10324,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Actualizare independentă"
-          }
-        }
-      }
-    },
-    "Starte NUP Studio neu, um die gewählte Sprache zu verwenden.": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Starte NUP Studio neu, um die gewählte Sprache zu verwenden."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restart NUP Studio to use the selected language."
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Repornește NUP Studio pentru a folosi limba selectată."
           }
         }
       }

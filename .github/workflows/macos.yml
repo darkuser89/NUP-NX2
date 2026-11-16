@@ -83,7 +83,7 @@ jobs:
             const body = [
               'Native SwiftUI-App für Apple-Silicon-Macs (arm64), ab macOS 14.',
               '',
-              '- Deutsch, Rumänisch und Englisch mit automatischer Systemsprache und manueller Auswahl in den Einstellungen.',
+              '- Deutsch, Rumänisch und Englisch mit automatischer Systemsprache und sofortigem Wechsel in den Einstellungen.',
               '- NUP öffnen, prüfen, entpacken und erstellen.',
               '- Geöffnete NUP mit Befundliste prüfen: mehrere Datei-/Hashfehler sammeln und betroffene Dateien in der Inhaltsliste auswählen.',
               '- Belegte Reparaturen einzeln auswählen; notwendige Abhängigkeiten und ungespeicherte Entwürfe werden geschützt.',

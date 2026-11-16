@@ -21,12 +21,22 @@ final class AppLanguageTests: XCTestCase {
         ]
         for (language, library, progress) in expected {
             let bundle = L10n.resources(for: language)
-            let locale = Locale(identifier: language.rawValue)
             XCTAssertEqual(bundle.bundleURL.lastPathComponent, "\(language.rawValue).lproj")
-            XCTAssertEqual(String(localized: "Bibliothek", bundle: bundle, locale: locale), library)
+            XCTAssertEqual(language.text("Bibliothek"), library)
             let name = "Ä.rfs"
-            XCTAssertEqual(String(localized: "Datei \(String(describing: 1))/\(String(describing: 2)): \(name)",
-                                  bundle: bundle, locale: locale), progress)
+            let message = AppMessage.localized("Datei \(String(1))/\(String(2)): \(name)")
+            XCTAssertEqual(message.text(in: language), progress)
         }
+    }
+
+    func testStoredStatusAndPackageTypeCanRenderInANewLanguage() {
+        let status = AppMessage.localized("Bereit")
+        let package = NUPPackage(id: 0)
+        XCTAssertEqual(status.text(in: .de), "Bereit")
+        XCTAssertEqual(status.text(in: .ro), "Gata")
+        XCTAssertEqual(status.text(in: .en), "Ready")
+        XCTAssertEqual(package.kindName(in: .de), "Basis")
+        XCTAssertEqual(package.kindName(in: .ro), "Bază")
+        XCTAssertEqual(package.kindName(in: .en), "Base")
     }
 }

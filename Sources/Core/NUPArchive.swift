@@ -305,9 +305,9 @@ struct NUPArchive: Sendable {
         let input = try regularFile(url)
         defer { try? input.close() }
         for (index, file) in files.enumerated() {
-            try context.report(Double(index) / Double(max(1, files.count)), L10n.text("Prüfe \(String(describing: file.name))"))
+            try context.report(Double(index) / Double(max(1, files.count)), .localized("Prüfe \(String(describing: file.name))"))
             try StreamCodec.consume(file, input: input, context: context)
         }
-        try context.report(1, L10n.text("Alle \(String(describing: files.count)) Dateien geprüft."))
+        try context.report(1, .localized("Alle \(String(describing: files.count)) Dateien geprüft."))
     }
 }

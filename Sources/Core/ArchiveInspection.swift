@@ -26,7 +26,7 @@ enum ArchiveInspection {
         try require(FileRevision(handle: input) == source.revision, L10n.text("Die NUP wurde während der Prüfung verändert. Bitte erneut prüfen."))
         var check = ArchiveFileCheck()
         for (index, file) in source.files.enumerated() {
-            try context.report(Double(index) / Double(max(1, source.files.count)), L10n.text("Datei \(String(describing: index + 1))/\(String(describing: source.files.count)): \(String(describing: file.name))"), force: index == 0)
+            try context.report(Double(index) / Double(max(1, source.files.count)), .localized("Datei \(String(describing: index + 1))/\(String(describing: source.files.count)): \(String(describing: file.name))"), force: index == 0)
             do { try StreamCodec.consume(file, input: input, context: context) }
             catch is CancellationError { throw CancellationError() }
             catch {
@@ -45,7 +45,7 @@ enum ArchiveInspection {
         try source.revision.requireCurrent(at: url)
         try require(FileRevision(handle: input) == source.revision, L10n.text("Die NUP wurde während der Prüfung verändert. Bitte erneut prüfen."))
         report.fileCheck = check
-        try context.report(1, L10n.text("\(String(describing: check.checked)) Dateien geprüft · \(String(describing: check.failed)) Dateifehler."))
+        try context.report(1, .localized("\(String(describing: check.checked)) Dateien geprüft · \(String(describing: check.failed)) Dateifehler."))
         return report
     }
 }

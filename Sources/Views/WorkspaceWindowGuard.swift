@@ -27,14 +27,16 @@ struct WorkspaceWindowGuard: NSViewRepresentable {
             guard let newWindow else { return }
             if window !== newWindow { detach(); window = newWindow }
             if newWindow.delegate !== self { previous = newWindow.delegate; newWindow.delegate = self }
+            store.workspaceWindow = newWindow
             newWindow.isDocumentEdited = store.hasPendingEdits
         }
         @MainActor func detach() {
             if window?.delegate === self { window?.delegate = previous }
+            if store.workspaceWindow === window { store.workspaceWindow = nil }
             window = nil; previous = nil
         }
         func windowShouldClose(_ sender: NSWindow) -> Bool {
-            if store.busy { store.status = L10n.text("Bitte den laufenden Vorgang abschließen oder abbrechen."); return false }
+            if store.busy { store.status = .localized("Bitte den laufenden Vorgang abschließen oder abbrechen."); return false }
             if store.deferNavigation(.close(sender.windowNumber)) { return false }
             return previous?.windowShouldClose?(sender) ?? true
         }

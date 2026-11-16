@@ -11,7 +11,7 @@ extension WorkspaceStore {
 
     func discardEdits() {
         guard !busy, let archive else { return }
-        editDraft = ArchiveEditDraft(archive: archive); status = L10n.text("Entwurf verworfen · NUP unverändert.")
+        editDraft = ArchiveEditDraft(archive: archive); status = .localized("Entwurf verworfen · NUP unverändert.")
     }
     func restoreStagedFiles(_ indices: Set<Int>) { editDraft?.restoreFiles(indices) }
     func removeStagedFiles(_ nodes: Set<Int>) { editDraft?.removePending(nodes: nodes) }
@@ -20,22 +20,23 @@ extension WorkspaceStore {
         guard !busy, let draft = editDraft, draft.hasChanges || destination != nil else { return }
         if let error = draft.validationError { self.error = error; afterApply = nil; return }
         let stayInLibrary = destination == nil && section == .library
-        perform(destination == nil ? L10n.text("Änderungen übernehmen") : L10n.text("Entwurf als neue NUP speichern")) { context in
+        perform(destination == nil ? .localized("Änderungen übernehmen") : .localized("Entwurf als neue NUP speichern")) { context in
             let request = try draft.request()
             let updated: NUPArchive
             if let destination { updated = try draft.archive.saveEditsAs(request, destination: destination, context: context) }
             else { updated = try draft.archive.applyEdits(request, context: context) }
-            return JobResult(message: destination == nil ? L10n.text("Alle vorgemerkten Änderungen übernommen · Struktur geprüft.") : L10n.text("Entwurf als neue NUP gespeichert · Original unverändert."),
+            return JobResult(message: destination == nil ? .localized("Alle vorgemerkten Änderungen übernommen · Struktur geprüft.") : .localized("Entwurf als neue NUP gespeichert · Original unverändert."),
                              archive: updated, reveal: updated.url, preferLibrary: stayInLibrary)
         }
     }
     func requestWindowClose(_ window: NSWindow? = nil) {
         guard let window = window ?? NSApp.keyWindow else { return }
-        if busy { status = L10n.text("Bitte den laufenden Vorgang abschließen oder abbrechen."); return }
+        guard window === workspaceWindow else { window.performClose(nil); return }
+        if busy { status = .localized("Bitte den laufenden Vorgang abschließen oder abbrechen."); return }
         if !deferNavigation(.close(window.windowNumber)) { window.performClose(nil) }
     }
     func requestQuit() {
-        if busy { status = L10n.text("Bitte den laufenden Vorgang abschließen oder abbrechen."); return }
+        if busy { status = .localized("Bitte den laufenden Vorgang abschließen oder abbrechen."); return }
         if !deferNavigation(.quit) { NSApp.terminate(nil) }
     }
     func saveDraftAs() {

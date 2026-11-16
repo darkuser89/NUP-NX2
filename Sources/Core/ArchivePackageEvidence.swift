@@ -18,7 +18,7 @@ struct ArchivePackageIdentity: Equatable, Sendable {
         titleID = package.titleID; version = package.version; kind = package.kind; flags = package.flags
     }
     var title: String { String(format: "%016llX", titleID) }
-    var kindName: String { NUPPackage.kindName(kind) }
+    func kindName(in language: AppLanguage) -> String { NUPPackage.kindName(kind, in: language) }
     var versionText: String { "\(version) (\(version >> 16).\((version >> 8) & 255).\(version & 255))" }
     func put(into toc: inout Data, package: Int) {
         let at = 48 + package * 64

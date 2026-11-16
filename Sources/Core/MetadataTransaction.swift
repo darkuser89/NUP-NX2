@@ -240,7 +240,7 @@ struct MetadataTransaction {
 
     static func update(archive: NUPArchive, package index: Int, metadata: [UInt16: Data], context: JobContext, didRollback: ((NUPArchive) -> Void)? = nil) throws {
         try require(archive.permitsEditing, L10n.text("Ein Diagnose-Snapshot darf nur über die bestätigte Reparatur geschrieben werden."))
-        try context.report(0, L10n.text("Bereite Metadaten-Aktualisierung vor …"))
+        try context.report(0, .localized("Bereite Metadaten-Aktualisierung vor …"))
         let file = try regularFile(archive.url, writable: true)
         defer { try? file.close() }
         try lock(file)
@@ -262,7 +262,7 @@ struct MetadataTransaction {
             try context.check()
             try transaction.writeRecord(to: file)
             try transaction.writeHeader(to: file)
-            try context.report(0.85, L10n.text("Prüfe Metadatenänderung …"), force: true)
+            try context.report(0.85, .localized("Prüfe Metadatenänderung …"), force: true)
             _ = try NUPArchive(url: archive.url, context: context, recoverPendingMetadata: false)
             let storedBlock = try readRange(file, offset: transaction.writeOffset, count: transaction.newBlock.count)
             try require(storedBlock == transaction.newBlock, L10n.text("Die gespeicherten Metadaten stimmen nicht mit der Änderung überein."))
@@ -287,7 +287,7 @@ struct MetadataTransaction {
             }
             throw error
         }
-        try? context.report(1, L10n.text("Metadaten direkt aktualisiert."))
+        try? context.report(1, .localized("Metadaten direkt aktualisiert."))
     }
 
     static func recoverIfNeeded(url: URL) throws {

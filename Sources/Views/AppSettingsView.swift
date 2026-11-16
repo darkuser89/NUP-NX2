@@ -1,23 +1,19 @@
 import SwiftUI
 
 struct AppSettingsView: View {
-    @AppStorage(AppLanguage.preferenceKey) private var choice: AppLanguage = .system
+    @Environment(\.appLanguage) private var language
+    @Binding var choice: AppLanguage
 
     var body: some View {
         Form {
-            Picker(L10n.text("Sprache der App"), selection: $choice) {
-                ForEach(AppLanguage.allCases) { language in
-                    Text(language.name).tag(language)
+            Picker(language.text("Sprache der App"), selection: $choice) {
+                ForEach(AppLanguage.allCases) { option in
+                    Text(option.name(in: language)).tag(option)
                 }
             }
-            LabeledContent(L10n.text("Aktive Sprache"), value: L10n.language.name)
-            if choice.resolved(preferred: Locale.preferredLanguages) != L10n.language {
-                Text(L10n.text("Starte NUP Studio neu, um die gewählte Sprache zu verwenden."))
-                    .font(.callout).foregroundStyle(.secondary)
-            }
+            LabeledContent(language.text("Aktive Sprache"), value: language.name(in: language))
         }
         .formStyle(.grouped)
-        .frame(width: 450, height: 165)
-        .environment(\.locale, L10n.locale)
+        .frame(width: 450, height: 135)
     }
 }

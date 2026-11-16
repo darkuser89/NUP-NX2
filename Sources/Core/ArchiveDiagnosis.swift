@@ -56,7 +56,7 @@ enum ArchiveDiagnosis {
                 return data
             }
             for package in archive.packages {
-                try context.report(Double(package.id) / Double(archive.packages.count), L10n.text("Prüfe Paketbelege \(String(describing: package.id + 1)) …"))
+                try context.report(Double(package.id) / Double(archive.packages.count), .localized("Prüfe Paketbelege \(String(describing: package.id + 1)) …"))
                 let identity = ArchivePackageIdentity(package)
                 var finding = ArchivePackageFinding(id: package.id, before: identity, proposed: identity)
                 do {
@@ -131,7 +131,7 @@ enum ArchiveDiagnosis {
                 report.proposed = layout
             }
             try archive.revision.requireCurrent(at: url)
-            try context.report(1, L10n.text("Diagnose abgeschlossen; noch nichts geschrieben."))
+            try context.report(1, .localized("Diagnose abgeschlossen; noch nichts geschrieben."))
         } catch is CancellationError { throw CancellationError() }
         catch {
             report.proposed = nil

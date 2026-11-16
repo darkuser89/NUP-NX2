@@ -214,7 +214,7 @@ extension NUPCoreTests {
         let healthy = try brokenROMFS(), original = try Data(contentsOf: healthy.url)
         for phase in [L10n.text("Reparaturdatensätze korrigiert …"), L10n.text("Prüfe reparierte NUP …")] {
             let report = try ArchiveDiagnosis.inspect(healthy.url), box = Box()
-            box.context = JobContext { _, message in if message == phase { box.context?.cancel() } }
+            box.context = JobContext { _, message in if message.text(in: L10n.language) == phase { box.context?.cancel() } }
             XCTAssertThrowsError(try ArchiveRepair.apply(report, context: box.context!)) { XCTAssertTrue($0 is CancellationError) }
             XCTAssertEqual(try Data(contentsOf: healthy.url), original); absentROMFSJournal(healthy.url)
         }

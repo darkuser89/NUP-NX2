@@ -36,7 +36,7 @@ import AppKit
     }
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         guard let store else { return .terminateNow }
-        if store.busy { store.status = L10n.text("Bitte den laufenden Vorgang abschließen oder abbrechen."); return .terminateCancel }
+        if store.busy { store.status = .localized("Bitte den laufenden Vorgang abschließen oder abbrechen."); return .terminateCancel }
         return store.deferNavigation(.quit) ? .terminateCancel : .terminateNow
     }
 }

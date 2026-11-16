@@ -20,7 +20,7 @@ enum LibraryScanner {
             try context.check()
             checked += 1
             if checked % 128 == 0 {
-                try context.report(0, L10n.text("\(String(describing: entries.count)) NUPs gefunden · \(String(describing: checked)) Einträge durchsucht"))
+                try context.report(0, .localized("\(String(describing: entries.count)) NUPs gefunden · \(String(describing: checked)) Einträge durchsucht"))
             }
             // FileManager does not follow symlink directories; skip symlink files too.
             guard url.pathExtension.lowercased() == "nup" else { continue }

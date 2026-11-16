@@ -20,10 +20,9 @@ struct NUPPackage: Identifiable, Sendable {
     var metaSize: Int = 0
     var metadata: [UInt16: Data] = [:]
 
-    private static let kindNames = [L10n.text("Basis"), L10n.text("Update"), L10n.text("DLC"),
-                                    L10n.text("DLC-Update"), L10n.text("System")]
-    static func kindName(_ kind: UInt8) -> String { kindNames[Int(kind)] }
-    var kindName: String { Self.kindName(kind) }
+    private static let kindNames: [String.LocalizationValue] = ["Basis", "Update", "DLC", "DLC-Update", "System"]
+    static func kindName(_ kind: UInt8, in language: AppLanguage) -> String { language.text(kindNames[Int(kind)]) }
+    func kindName(in language: AppLanguage) -> String { Self.kindName(kind, in: language) }
     var titleIDString: String { String(format: "%016llX", titleID) }
     var versionString: String { "\(version >> 16).\((version >> 8) & 255).\(version & 255)" }
     func text(_ type: UInt16, profile: MetadataProfile) -> String {

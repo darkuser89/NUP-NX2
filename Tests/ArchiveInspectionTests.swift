@@ -54,7 +54,7 @@ extension NUPCoreTests {
         let url = archive.url
         let firstFileMessage = L10n.text("Datei \(String(describing: 1))/\(String(describing: archive.files.count)): \(archive.files[0].name)")
         let changing = JobContext { _, message in
-            guard message == firstFileMessage else { return }
+            guard message.text(in: L10n.language) == firstFileMessage else { return }
             let handle = try! regularFile(url, writable: true)
             try! handle.seek(toOffset: archive.files[0].offset)
             try! handle.write(contentsOf: Data([255])); try! handle.close()

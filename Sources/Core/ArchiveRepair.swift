@@ -24,9 +24,9 @@ enum ArchiveRepair {
         do {
             try context.check(); try source.revision.requireCurrent(at: report.url)
             if !journal.entries.isEmpty { mutated = true; try journal.writeRecords(to: file) }
-            try context.report(0.8, L10n.text("Reparaturdatensätze korrigiert …"), force: true)
+            try context.report(0.8, .localized("Reparaturdatensätze korrigiert …"), force: true)
             try context.check(); mutated = true; try journal.writeHeader(to: file)
-            try context.report(0.9, L10n.text("Prüfe reparierte NUP …"), force: true)
+            try context.report(0.9, .localized("Prüfe reparierte NUP …"), force: true)
             let current = try NUPArchive(url: report.url, context: context, recoverPendingMetadata: false)
             try require(current.header == proposed.header && current.toc == proposed.toc, L10n.text("Reparatur wurde nicht korrekt zurückgelesen."))
             try FileRevision(handle: file).requireCurrent(at: report.url)

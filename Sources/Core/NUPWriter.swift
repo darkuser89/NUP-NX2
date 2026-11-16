@@ -72,7 +72,7 @@ enum NUPWriter {
         var files: [NUPFile] = []
         var seen: [String: NUPFile] = [:]
         for (index, path) in paths.enumerated() {
-            try context.report(Double(index) / Double(max(1, paths.count)), L10n.text("Packe \(String(describing: path.lastPathComponent))"))
+            try context.report(Double(index) / Double(max(1, paths.count)), .localized("Packe \(String(describing: path.lastPathComponent))"))
             let cursor = try output.offset()
             let start = try aligned(cursor)
             try output.write(contentsOf: Data(count: Int(start - cursor)))
@@ -146,7 +146,7 @@ enum NUPWriter {
         _ = try NUPArchive(url: temporary, context: context)
         try context.check()
         try publishFile(temporary, to: destination)
-        try? context.report(1, L10n.text("Container erstellt."))
+        try? context.report(1, .localized("Container erstellt."))
     }
 
     static func putPackage(_ record: NUPPackage, into toc: inout Data, at position: Int) {

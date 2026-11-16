@@ -52,7 +52,7 @@ Das Skript verwendet genau einen stabilen Buildbaum unter `../../builds/NUPStudi
 
 ## Bedienung
 
-Unter **NUP Studio → Einstellungen** (\`⌘,\`) wählst du **Systemsprache**, **Deutsch**, **Română** oder **English**. Automatisch verwendet die App die erste bevorzugte macOS-Sprache, bei anderen Sprachen Englisch. Eine geänderte Auswahl gilt ab dem nächsten Start.
+Unter **NUP Studio → Einstellungen** (`⌘,`) wählst du **Systemsprache**, **Deutsch**, **Română** oder **English**. Automatisch verwendet die App die erste bevorzugte macOS-Sprache, bei anderen Sprachen Englisch. Die Auswahl wirkt sofort und wird für den nächsten Start gespeichert.
 
 - **Container**: NUP öffnen oder in das Fenster ziehen; Paket auswählen, Dateibaum durchsuchen und Metadaten bearbeiten.
 - **Bibliothek**: **NUP-Ordner** auswählen (⇧⌘O). Alle regulären `.nup`-/`.NUP`-Dateien einschließlich Unterordnern erscheinen mit Pfad und Größe. Nach Spielname, Dateiname oder Pfad filtern, eine Zeile auswählen und **Öffnen** anklicken oder die Zeile doppelklicken. **Neu einlesen** aktualisiert die Liste; **Zur Bibliothek** führt vom geöffneten Container zurück. Symbolische Links werden übersprungen. Der zuletzt erfolgreich eingelesene Ordner wird gespeichert und beim nächsten App-Start automatisch neu eingelesen. Ist das Laufwerk getrennt, bleibt die Auswahl erhalten; nach dem Verbinden **Erneut versuchen** wählen. Die Ordnersuche liest zuerst nur Namen und Dateiattribute. Anschließend werden Spielnamen und Cover im Hintergrund aus den NUP-Metadaten nachgeladen. Die Spieldaten werden dafür nicht gelesen oder entpackt. Ordner, die außerhalb von **Erstellen** ins Fenster gezogen werden, öffnen ebenfalls die Bibliothek.

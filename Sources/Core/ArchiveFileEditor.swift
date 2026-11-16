@@ -19,7 +19,7 @@ final class ArchiveFileStage {
             throw NUPError(L10n.text("Temporäre Datei kann nicht sicher vorbereitet werden."))
         }
         for (index, url) in urls.enumerated() {
-            try context.report(0.25 * Double(index) / Double(max(1, urls.count)), L10n.text("Bereite neue Datei vor: \(String(describing: url.lastPathComponent))"))
+            try context.report(0.25 * Double(index) / Double(max(1, urls.count)), .localized("Bereite neue Datei vor: \(String(describing: url.lastPathComponent))"))
             let input = try regularFile(url)
             let revision: FileRevision
             do { revision = try FileRevision(handle: input); try input.close() }
@@ -62,12 +62,12 @@ extension ArchiveFilePlan {
             return Data(hash.finalize())
         }
         for (index, move) in moves.enumerated() {
-            try context.report(0.3 + 0.3 * Double(index) / Double(max(1, moves.count)), L10n.text("Bewahre vorhandene Datenblöcke …"))
+            try context.report(0.3 + 0.3 * Double(index) / Double(max(1, moves.count)), .localized("Bewahre vorhandene Datenblöcke …"))
             let hash = try copy(input, offset: move.source.offset, count: move.source.count, destination: move.destination)
             copied.append(ArchiveCopiedExtent(offset: move.destination, count: move.source.count, digest: hash))
         }
         if stageSize > 0 {
-            try context.report(0.65, L10n.text("Füge neue Dateien hinzu …"))
+            try context.report(0.65, .localized("Füge neue Dateien hinzu …"))
             _ = try copy(stage, offset: 0, count: stageSize, destination: stageOffset)
         }
         for block in metadataWrites {
@@ -95,7 +95,7 @@ extension NUPArchive {
 
     func applyEdits(_ request: ArchiveEditRequest, context: JobContext = JobContext()) throws -> NUPArchive {
         try require(permitsEditing, L10n.text("Ein Diagnose-Snapshot darf nicht zur normalen Bearbeitung verwendet werden."))
-        try context.report(0, L10n.text("Bereite Änderungen vor …"))
+        try context.report(0, .localized("Bereite Änderungen vor …"))
         let output = try regularFile(url, writable: true)
         defer { try? output.close() }
         try MetadataTransaction.lock(output)
@@ -145,10 +145,10 @@ extension NUPArchive {
             try context.check(); try revision.requireCurrent(at: url)
             mutated = true
             let copied = try plan.appendPayloads(input: input, output: output, stage: stage.handle, context: context)
-            try context.report(0.8, L10n.text("Aktualisiere Dateiverzeichnis …"), force: true)
+            try context.report(0.8, .localized("Aktualisiere Dateiverzeichnis …"), force: true)
             try context.check(); try plan.writeTOC(to: output)
             try context.check(); try plan.writeHeader(to: output)
-            try context.report(0.9, L10n.text("Prüfe geänderten Container …"), force: true)
+            try context.report(0.9, .localized("Prüfe geänderten Container …"), force: true)
             let updated = try NUPArchive(url: url, context: context, recoverPendingMetadata: false)
             try require(updated.header == plan.header && updated.toc == plan.toc, L10n.text("Gespeichertes Inhaltsverzeichnis stimmt nicht überein."))
             for extent in copied {
@@ -171,7 +171,7 @@ extension NUPArchive {
             committed = true
             try? FileManager.default.removeItem(at: paths.committed)
             MetadataTransaction.syncDirectory(url.deletingLastPathComponent())
-            try? context.report(1, L10n.text("Dateien direkt aktualisiert."))
+            try? context.report(1, .localized("Dateien direkt aktualisiert."))
             return updated
         } catch {
             var recovered: NUPArchive?

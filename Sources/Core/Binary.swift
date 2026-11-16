@@ -151,15 +151,15 @@ final class JobContext: @unchecked Sendable {
     private let lock = NSLock()
     private var cancelled = false
     private var lastUpdate = Date.distantPast
-    private let callback: @Sendable (Double, String) -> Void
+    private let callback: @Sendable (Double, AppMessage) -> Void
 
-    init(progress: @escaping @Sendable (Double, String) -> Void = { _, _ in }) { callback = progress }
+    init(progress: @escaping @Sendable (Double, AppMessage) -> Void = { _, _ in }) { callback = progress }
     func cancel() { lock.lock(); cancelled = true; lock.unlock() }
     func check() throws {
         lock.lock(); let value = cancelled; lock.unlock()
         if value { throw CancellationError() }
     }
-    func report(_ fraction: Double, _ message: @autoclosure () -> String, force: Bool = false) throws {
+    func report(_ fraction: Double, _ message: @autoclosure () -> AppMessage, force: Bool = false) throws {
         try check()
         lock.lock()
         let now = Date()

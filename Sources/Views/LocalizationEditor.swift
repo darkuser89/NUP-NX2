@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct LocalizationEditor: View {
+    @Environment(\.appLanguage) private var language
     @Binding var entries: [LocalizedEntry]
     @State private var error: String?
     var body: some View {
@@ -9,17 +10,17 @@ struct LocalizationEditor: View {
                 VStack(alignment: .leading, spacing: 14) {
                     HStack(alignment: .top, spacing: 16) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(L10n.text("Sprachkürzel")).font(.caption.weight(.semibold))
-                            TextField(L10n.text("z. B. de"), text: $entry.language)
+                            Text(language.text("Sprachkürzel")).font(.caption.weight(.semibold))
+                            TextField(language.text("z. B. de"), text: $entry.language)
                                 .labelsHidden()
-                                .accessibilityLabel(L10n.text("Sprachkürzel"))
-                            Text(L10n.text("de · en · ja · en-us")).font(.caption2).foregroundStyle(.secondary)
+                                .accessibilityLabel(language.text("Sprachkürzel"))
+                            Text(language.text("de · en · ja · en-us")).font(.caption2).foregroundStyle(.secondary)
                         }.frame(width: 150)
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(L10n.text("Lokalisierter Spielname")).font(.caption.weight(.semibold))
-                            TextField(L10n.text("Spielname in dieser Sprache"), text: $entry.title)
+                            Text(language.text("Lokalisierter Spielname")).font(.caption.weight(.semibold))
+                            TextField(language.text("Spielname in dieser Sprache"), text: $entry.title)
                                 .labelsHidden()
-                                .accessibilityLabel(L10n.text("Lokalisierter Spielname"))
+                                .accessibilityLabel(language.text("Lokalisierter Spielname"))
                         }.frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .textFieldStyle(.roundedBorder)
@@ -31,7 +32,7 @@ struct LocalizationEditor: View {
                             Image(nsImage: image).resizable().scaledToFit()
                                 .frame(width: 36, height: 36)
                                 .clipShape(RoundedRectangle(cornerRadius: 6))
-                                .accessibilityLabel(L10n.text("Cover für diese Sprache"))
+                                .accessibilityLabel(language.text("Cover für diese Sprache"))
                         }
                         Button {
                             if let url = FilePanels.image() {
@@ -39,14 +40,14 @@ struct LocalizationEditor: View {
                                 catch { self.error = error.localizedDescription }
                             }
                         } label: {
-                            Label(L10n.text("Sprach-Cover auswählen …"), systemImage: "photo")
+                            Label(language.text("Sprach-Cover auswählen …"), systemImage: "photo")
                         }
                         if entry.icon != nil {
-                            Button(L10n.text("Cover entfernen")) { entry.icon = nil }
+                            Button(language.text("Cover entfernen")) { entry.icon = nil }
                         }
                         Spacer(minLength: 12)
                         Button { entries.removeAll { $0.id == entry.id } } label: {
-                            Label(L10n.text("Sprache entfernen"), systemImage: "minus.circle")
+                            Label(language.text("Sprache entfernen"), systemImage: "minus.circle")
                         }
                     }
                 }
@@ -57,7 +58,7 @@ struct LocalizationEditor: View {
                         .strokeBorder(Color.secondary.opacity(0.35), lineWidth: 1)
                 }
             }
-            Button { entries.append(LocalizedEntry()) } label: { Label(L10n.text("Sprache hinzufügen"), systemImage: "plus") }
+            Button { entries.append(LocalizedEntry()) } label: { Label(language.text("Sprache hinzufügen"), systemImage: "plus") }
             if let error { Text(error).font(.caption).foregroundStyle(.red) }
         }
     }
