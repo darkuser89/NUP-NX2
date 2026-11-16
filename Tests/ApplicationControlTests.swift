@@ -40,7 +40,7 @@ extension NUPCoreTests {
         try write("application-data/updates/65536/romfs/update.bin", Data("payload".utf8))
         let url = root.appendingPathComponent("application-data.nup")
         var options = PackOptions()
-        let icon = try XCTUnwrap(Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X1iUAAAAASUVORK5CYII="))
+        let icon = try XCTUnwrap(Data(base64Encoded: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGPQCmr4DwADogH8SmkI7gAAAABJRU5ErkJggg=="))
         options.icon = icon
         try NUPWriter.pack(source: directory, destination: url, options: options, context: JobContext())
         let archive = try NUPArchive(url: url)

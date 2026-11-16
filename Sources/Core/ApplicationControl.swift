@@ -30,12 +30,16 @@ struct ApplicationControl: Sendable {
             let publisher = try Self.text(entries, offset + 0x200, 0x100)
             if !name.isEmpty || !publisher.isEmpty { records.append((language, name, publisher)) }
         }
-        let primary = preferredLanguages.lazy.compactMap { preferred in
+        var primary = records.first
+        for preferred in preferredLanguages {
             let tag = preferred.replacingOccurrences(of: "_", with: "-").lowercased()
             let language = tag.split(separator: "-").first
-            return records.first { $0.language == tag }
-                ?? records.first { $0.language.split(separator: "-").first == language }
-        }.first ?? records.first
+            if let match = records.first(where: { $0.language == tag })
+                ?? records.first(where: { $0.language.split(separator: "-").first == language }) {
+                primary = match
+                break
+            }
+        }
         name = primary?.name ?? ""
         publisher = primary?.publisher ?? ""
         displayVersion = try Self.text(data, 0x3060, 0x10)
