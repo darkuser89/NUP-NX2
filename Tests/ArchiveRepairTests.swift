@@ -176,9 +176,9 @@ extension NUPCoreTests {
     func testCancellationAfterRecordOrHeaderRollsBackOriginalBrokenLayout() throws {
         final class Box: @unchecked Sendable { var context: JobContext? }
         let url = try repairFixture(), original = try Data(contentsOf: url)
-        for phase in ["Reparaturdatensätze korrigiert", "Prüfe reparierte NUP"] {
+        for phase in [L10n.text("Reparaturdatensätze korrigiert …"), L10n.text("Prüfe reparierte NUP …")] {
             let report = try ArchiveDiagnosis.inspect(url), box = Box()
-            box.context = JobContext { _, message in if message.hasPrefix(phase) { box.context?.cancel() } }
+            box.context = JobContext { _, message in if message == phase { box.context?.cancel() } }
             XCTAssertThrowsError(try ArchiveRepair.apply(report, context: box.context!)) { XCTAssertTrue($0 is CancellationError, "\($0)") }
             XCTAssertEqual(try Data(contentsOf: url), original); noRepairJournal(url)
         }

@@ -27,7 +27,7 @@ struct ArchiveRepairReport: Identifiable, Sendable {
 enum ArchiveDiagnosis {
     static func uuid(toc: Data) throws -> Data {
         let count = try integer(toc.uint(4, 4))
-        try require(count > 0 && count <= (toc.count - 48) / 64, "Ungültige Pakettabelle.")
+        try require(count > 0 && count <= (toc.count - 48) / 64, L10n.text("Ungültige Pakettabelle."))
         var identity = Data()
         for index in 0..<count {
             let at = 48 + index * 64
@@ -49,14 +49,14 @@ enum ArchiveDiagnosis {
             func evidence(_ file: NUPFile) throws -> Data {
                 try require(file.size <= 4 * 1024 * 1024 && file.storedSize <= 8 * 1024 * 1024 &&
                             file.size + file.storedSize <= UInt64(budget) && count < 256,
-                            "Belegdateien überschreiten das Diagnose-Limit.")
+                            L10n.text("Belegdateien überschreiten das Diagnose-Limit."))
                 count += 1; budget -= Int(file.size + file.storedSize)
                 var data = Data()
                 try StreamCodec.consume(file, input: input, context: context) { data.append($0) }
                 return data
             }
             for package in archive.packages {
-                try context.report(Double(package.id) / Double(archive.packages.count), "Prüfe Paketbelege \(package.id + 1) …")
+                try context.report(Double(package.id) / Double(archive.packages.count), L10n.text("Prüfe Paketbelege \(String(describing: package.id + 1)) …"))
                 let identity = ArchivePackageIdentity(package)
                 var finding = ArchivePackageFinding(id: package.id, before: identity, proposed: identity)
                 do {
@@ -69,9 +69,9 @@ enum ArchiveDiagnosis {
                             let data = try evidence(archive.files[node - archive.directories.count])
                             program = try ArchivePackageEvidence.programID(data)
                             if let metadata = package.metadata[1] {
-                                try require(metadata == data, "NPDM im Dateibaum und Metadaten-TLV widersprechen sich.")
+                                try require(metadata == data, L10n.text("NPDM im Dateibaum und Metadaten-TLV widersprechen sich."))
                             }
-                            finding.evidence.append("exefs/main.npdm · SHA-256 geprüft · \(String(format: "%016llX", program!))")
+                            finding.evidence.append(L10n.text("exefs/main.npdm · SHA-256 geprüft · \(String(describing: String(format: "%016llX", program!)))"))
                         }
                     }
                     // Only direct meta/*.cnmt members are interpreted. Filenames
@@ -86,38 +86,38 @@ enum ArchiveDiagnosis {
                             guard file.name.lowercased().hasSuffix(".cnmt") else { continue }
                             let cnmt = try ArchivePackageEvidence.cnmt(evidence(file))
                             cnmts.append(cnmt)
-                            finding.evidence.append("meta/\(file.name) · SHA-256 geprüft · NCM-Version \(cnmt.version)")
+                            finding.evidence.append(L10n.text("meta/\(String(describing: file.name)) · SHA-256 geprüft · NCM-Version \(String(describing: cnmt.version))"))
                         }
                     }
                     if let cnmt = cnmts.first {
-                        try require(cnmts.allSatisfy { $0 == cnmt }, "Mehrere CNMTs liefern widersprüchliche Paketangaben.")
+                        try require(cnmts.allSatisfy { $0 == cnmt }, L10n.text("Mehrere CNMTs liefern widersprüchliche Paketangaben."))
                         if cnmt.kind == 2 {
-                            try require(program == nil, "DLC-CNMT und ausführbares NPDM-Programm widersprechen sich.")
+                            try require(program == nil, L10n.text("DLC-CNMT und ausführbares NPDM-Programm widersprechen sich."))
                             finding.proposed.titleID = cnmt.id
                         } else {
-                            guard let program else { throw NUPError("Für diese CNMT fehlt eine verifizierbare exefs/main.npdm.") }
-                            try require((program & ~UInt64(0xf)) == cnmt.application!, "NPDM und CNMT gehören zu unterschiedlichen Anwendungen.")
+                            guard let program else { throw NUPError(L10n.text("Für diese CNMT fehlt eine verifizierbare exefs/main.npdm.")) }
+                            try require((program & ~UInt64(0xf)) == cnmt.application!, L10n.text("NPDM und CNMT gehören zu unterschiedlichen Anwendungen."))
                             finding.proposed.titleID = program
                         }
                         finding.proposed.kind = cnmt.kind; finding.proposed.version = cnmt.version
                     } else if let program {
-                        try require(package.kind == 0 || package.kind == 1, "Ohne CNMT ist die Paketart nicht eindeutig belegbar.")
+                        try require(package.kind == 0 || package.kind == 1, L10n.text("Ohne CNMT ist die Paketart nicht eindeutig belegbar."))
                         finding.proposed.titleID = program
-                        report.warnings.append("Paket \(package.id + 1): keine CNMT; Paketart und interne Version bleiben unverändert.")
+                        report.warnings.append(L10n.text("Paket \(String(describing: package.id + 1)): keine CNMT; Paketart und interne Version bleiben unverändert."))
                     } else {
-                        report.warnings.append("Paket \(package.id + 1): keine auswertbaren Belegdateien; Paketangaben bleiben unverändert.")
+                        report.warnings.append(L10n.text("Paket \(String(describing: package.id + 1)): keine auswertbaren Belegdateien; Paketangaben bleiben unverändert."))
                     }
                 } catch is CancellationError { throw CancellationError() }
-                catch { report.blockers.append("Paket \(package.id + 1): \(error.localizedDescription)") }
+                catch { report.blockers.append(L10n.text("Paket \(String(describing: package.id + 1)): \(String(describing: error.localizedDescription))")) }
                 report.packages.append(finding)
             }
             let bases = report.packages.filter { $0.proposed.kind == 0 }.count
-            if bases > 1 { report.blockers.append("Auch nach Auswertung der Belege bleiben mehrere Basispakete. Die App rät keine Paketart und entfernt keine Programme.") }
+            if bases > 1 { report.blockers.append(L10n.text("Auch nach Auswertung der Belege bleiben mehrere Basispakete. Die App rät keine Paketart und entfernt keine Programme.")) }
             for index in report.packages.indices where report.packages[index].proposed.kind == 1 {
                 report.packages[index].proposed.flags = bases == 0 ? 1 : 0
             }
             if report.packages.filter(\.changed).count + report.romfs.count > 4096 {
-                report.blockers.append("Mehr als 4096 Paket-/RomFS-Korrekturen überschreiten das Reparaturlimit.")
+                report.blockers.append(L10n.text("Mehr als 4096 Paket-/RomFS-Korrekturen überschreiten das Reparaturlimit."))
             }
             var toc = archive.toc
             for finding in report.packages { finding.proposed.put(into: &toc, package: finding.id) }
@@ -131,7 +131,7 @@ enum ArchiveDiagnosis {
                 report.proposed = layout
             }
             try archive.revision.requireCurrent(at: url)
-            try context.report(1, "Diagnose abgeschlossen; noch nichts geschrieben.")
+            try context.report(1, L10n.text("Diagnose abgeschlossen; noch nichts geschrieben."))
         } catch is CancellationError { throw CancellationError() }
         catch {
             report.proposed = nil

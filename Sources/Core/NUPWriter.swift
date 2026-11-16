@@ -4,14 +4,14 @@ enum NUPWriter {
     static func pack(source: URL, destination: URL, options: PackOptions, context: JobContext) throws {
         let canonicalSource = source.resolvingSymlinksInPath().standardizedFileURL.path + "/"
         let canonicalDestination = destination.deletingLastPathComponent().resolvingSymlinksInPath().appendingPathComponent(destination.lastPathComponent).path
-        try require(!canonicalDestination.hasPrefix(canonicalSource), "Die NUP-Zieldatei muss außerhalb des Quellordners liegen.")
+        try require(!canonicalDestination.hasPrefix(canonicalSource), L10n.text("Die NUP-Zieldatei muss außerhalb des Quellordners liegen."))
         let packages = try DumpDiscovery.discover(source, options: options, context: context)
         var records = packages.map(\.record)
         var dirs: [NUPDirectory] = []
         var paths: [URL] = []
         func walk(_ url: URL, name: String, depth: Int) throws -> Int {
             try context.check()
-            try require(depth <= 256, "Quellordner ist tiefer als 256 Ebenen.")
+            try require(depth <= 256, L10n.text("Quellordner ist tiefer als 256 Ebenen."))
             let index = dirs.count
             dirs.append(NUPDirectory(name: name, children: []))
             var children: [Int] = []
@@ -23,12 +23,12 @@ enum NUPWriter {
                 let name = entry.lastPathComponent.precomposedStringWithCanonicalMapping
                 if name == ".DS_Store" || (!options.keepListings && name == ".listing") { continue }
                 try safeName(name)
-                try require(names.insert(name).inserted, "Dateinamen kollidieren nach Unicode-Normalisierung: \(name)")
+                try require(names.insert(name).inserted, L10n.text("Dateinamen kollidieren nach Unicode-Normalisierung: \(String(describing: name))"))
                 let info = try entry.resourceValues(forKeys: [.isSymbolicLinkKey, .isDirectoryKey, .isRegularFileKey])
-                try require(info.isSymbolicLink != true, "Symbolische Links werden nicht gepackt: \(entry.path)")
+                try require(info.isSymbolicLink != true, L10n.text("Symbolische Links werden nicht gepackt: \(String(describing: entry.path))"))
                 if info.isDirectory == true { children.append(try walk(entry, name: name, depth: depth + 1)) }
                 else {
-                    try require(info.isRegularFile == true, "Spezialdatei wird nicht gepackt: \(entry.path)")
+                    try require(info.isRegularFile == true, L10n.text("Spezialdatei wird nicht gepackt: \(String(describing: entry.path))"))
                     paths.append(entry); children.append(-paths.count)
                 }
             }
@@ -59,11 +59,11 @@ enum NUPWriter {
         paths.forEach { intern($0.lastPathComponent.precomposedStringWithCanonicalMapping) }
         let childCount = dirs.reduce(0) { $0 + $1.children.count }
         let tocSize = 48 + records.count * 64 + dirs.count * 24 + paths.count * 80 + childCount * 4 + pool.count
-        try require(tocSize <= 256 * 1024 * 1024, "Inhaltsverzeichnis ist größer als 256 MB.")
+        try require(tocSize <= 256 * 1024 * 1024, L10n.text("Inhaltsverzeichnis ist größer als 256 MB."))
         let blobOffset = try aligned(128 + UInt64(tocSize))
         let temporary = destination.deletingLastPathComponent().appendingPathComponent(".nup-\(UUID().uuidString).partial")
         guard FileManager.default.createFile(atPath: temporary.path, contents: nil, attributes: [.posixPermissions: 0o600]) else {
-            throw NUPError("Temporäre Zieldatei kann nicht angelegt werden.")
+            throw NUPError(L10n.text("Temporäre Zieldatei kann nicht angelegt werden."))
         }
         defer { try? FileManager.default.removeItem(at: temporary) }
         let output = try FileHandle(forWritingTo: temporary)
@@ -72,7 +72,7 @@ enum NUPWriter {
         var files: [NUPFile] = []
         var seen: [String: NUPFile] = [:]
         for (index, path) in paths.enumerated() {
-            try context.report(Double(index) / Double(max(1, paths.count)), "Packe \(path.lastPathComponent)")
+            try context.report(Double(index) / Double(max(1, paths.count)), L10n.text("Packe \(String(describing: path.lastPathComponent))"))
             let cursor = try output.offset()
             let start = try aligned(cursor)
             try output.write(contentsOf: Data(count: Int(start - cursor)))
@@ -87,7 +87,7 @@ enum NUPWriter {
         }
         for index in records.indices {
             let data = try MetadataCodec.serialize(records[index].metadata)
-            try require(data.count <= 64 * 1024 * 1024, "Paketmetadaten sind größer als 64 MB.")
+            try require(data.count <= 64 * 1024 * 1024, L10n.text("Paketmetadaten sind größer als 64 MB."))
             records[index].metaOffset = data.isEmpty ? 0 : try output.offset()
             records[index].metaSize = data.count
             try output.write(contentsOf: data)
@@ -146,7 +146,7 @@ enum NUPWriter {
         _ = try NUPArchive(url: temporary, context: context)
         try context.check()
         try publishFile(temporary, to: destination)
-        try? context.report(1, "Container erstellt.")
+        try? context.report(1, L10n.text("Container erstellt."))
     }
 
     static func putPackage(_ record: NUPPackage, into toc: inout Data, at position: Int) {

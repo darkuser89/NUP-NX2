@@ -23,30 +23,30 @@ struct ArchiveEditDraft: Sendable {
         try require(recovered.url.standardizedFileURL == archive.url.standardizedFileURL &&
                     recovered.revision.device == archive.revision.device && recovered.revision.inode == archive.revision.inode &&
                     recovered.fileSize == archive.fileSize && recovered.header == archive.header && recovered.toc == archive.toc,
-                    "Der zurückgenommene Stand entspricht nicht dem Entwurf.")
+                    L10n.text("Der zurückgenommene Stand entspricht nicht dem Entwurf."))
         archive = recovered; fileRevision = UUID()
     }
     var hasChanges: Bool { packages.contains(where: \.hasChanges) || !additions.isEmpty || !removals.isEmpty }
     var validationError: String? {
         for (index, package) in packages.enumerated() {
-            if let error = package.validationError { return "Paket \(index + 1): \(error)" }
+            if let error = package.validationError { return L10n.text("Paket \(String(describing: index + 1)): \(String(describing: error))") }
         }
         return nil
     }
     var summary: String {
         let edited = packages.filter(\.hasChanges).count
-        return "\(edited) Paket(e) bearbeitet · \(additions.count) Datei(en) hinzugefügt · \(removals.count) entfernt — noch nicht gespeichert"
+        return L10n.text("\(String(describing: edited)) Paket(e) bearbeitet · \(String(describing: additions.count)) Datei(en) hinzugefügt · \(String(describing: removals.count)) entfernt — noch nicht gespeichert")
     }
     mutating func stageFiles(package: Int, directory: Int, urls: [URL], removing: Set<Int> = []) throws {
-        try require(archive.packages.indices.contains(package) && archive.directories.indices.contains(directory) && archive.owns(node: directory, package: package), "Zielordner gehört nicht zum Paket.")
-        try require(removing.allSatisfy { archive.files.indices.contains($0) && archive.owns(node: archive.directories.count + $0, package: package) }, "Datei gehört nicht zum ausgewählten Paket.")
+        try require(archive.packages.indices.contains(package) && archive.directories.indices.contains(directory) && archive.owns(node: directory, package: package), L10n.text("Zielordner gehört nicht zum Paket."))
+        try require(removing.allSatisfy { archive.files.indices.contains($0) && archive.owns(node: archive.directories.count + $0, package: package) }, L10n.text("Datei gehört nicht zum ausgewählten Paket."))
         var candidate = self
         candidate.removals.formUnion(removing)
         for url in urls {
-            try require(url.isFileURL, "Nur lokale Dateien können hinzugefügt werden.")
+            try require(url.isFileURL, L10n.text("Nur lokale Dateien können hinzugefügt werden."))
             let input = try regularFile(url); defer { try? input.close() }
             let revision = try FileRevision(handle: input)
-            try require(revision.device != archive.revision.device || revision.inode != archive.revision.inode, "Die NUP kann nicht in sich selbst eingefügt werden.")
+            try require(revision.device != archive.revision.device || revision.inode != archive.revision.inode, L10n.text("Die NUP kann nicht in sich selbst eingefügt werden."))
             candidate.additions.append(ArchivePendingFile(nodeID: candidate.nextNodeID, package: package, directory: directory, url: url, revision: revision))
             candidate.nextNodeID -= 1
         }
@@ -68,14 +68,14 @@ struct ArchiveEditDraft: Sendable {
         for file in additions {
             if groups[file.directory] == nil { groups[file.directory] = ArchiveFileMutation(package: file.package, directory: file.directory) }
             if let earlier = request.sourceRevisions[file.url] {
-                try require(earlier == file.revision, "Eine Quelldatei wurde zwischen zwei Auswahlen verändert. Bitte neu auswählen.")
+                try require(earlier == file.revision, L10n.text("Eine Quelldatei wurde zwischen zwei Auswahlen verändert. Bitte neu auswählen."))
             }
             groups[file.directory]!.additions.append(file.url); request.sourceRevisions[file.url] = file.revision
         }
         for index in removals {
             guard archive.files.indices.contains(index), let package = archive.packages.first(where: {
                 archive.owns(node: archive.directories.count + index, package: $0.id)
-            }) else { throw NUPError("Datei gehört nicht zu diesem Archiv.") }
+            }) else { throw NUPError(L10n.text("Datei gehört nicht zu diesem Archiv.")) }
             if groups[package.root] == nil { groups[package.root] = ArchiveFileMutation(package: package.id, directory: package.root) }
             groups[package.root]!.removing.insert(index)
         }

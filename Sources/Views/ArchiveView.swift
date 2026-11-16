@@ -37,15 +37,15 @@ struct ArchiveView: View {
             header.padding(24)
             Divider()
             HStack {
-                Picker("Ansicht", selection: $tab) {
-                    Text("Inhalte").tag(0)
-                    Text("Metadaten").tag(1)
+                Picker(L10n.text("Ansicht"), selection: $tab) {
+                    Text(L10n.text("Inhalte")).tag(0)
+                    Text(L10n.text("Metadaten")).tag(1)
                 }.pickerStyle(.segmented).frame(width: 240)
                 Spacer()
                 if tab == 0 {
                     HStack(spacing: 6) {
                         Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
-                        TextField("Dateien suchen", text: $search).textFieldStyle(.plain)
+                        TextField(L10n.text("Dateien suchen"), text: $search).textFieldStyle(.plain)
                         if !search.isEmpty { Button { search = "" } label: { Image(systemName: "xmark.circle.fill") }.buttonStyle(.plain) }
                     }.padding(7).background(.quaternary, in: RoundedRectangle(cornerRadius: 7)).frame(width: 220)
                 }
@@ -82,19 +82,19 @@ struct ArchiveView: View {
             } else { selection.removeAll(); store.fileSelection = nil }
         }
         .onChange(of: archive.snapshotID) { _, _ in selection.removeAll() }
-        .confirmationDialog("\(pendingRemoval.count + pendingNewRemoval.count) Datei(en) zum Entfernen vormerken?", isPresented: $confirmRemoval) {
-            Button("Entfernen vormerken", role: .destructive) {
+        .confirmationDialog(L10n.text("\(String(describing: pendingRemoval.count + pendingNewRemoval.count)) Datei(en) zum Entfernen vormerken?"), isPresented: $confirmRemoval) {
+            Button(L10n.text("Entfernen vormerken"), role: .destructive) {
                 if !pendingRemoval.isEmpty { store.editFiles(directory: package.root, removing: pendingRemoval) }
                 store.removeStagedFiles(pendingNewRemoval)
             }
         } message: {
-            Text("Erst Übernehmen entfernt vorhandene Dateien aus dem Paket. Vorgemerkte neue Dateien werden nur aus dem Entwurf genommen. Bisherige Datenblöcke können in der NUP verbleiben; die NUP wird nicht verkleinert.")
+            Text(L10n.text("Erst Übernehmen entfernt vorhandene Dateien aus dem Paket. Vorgemerkte neue Dateien werden nur aus dem Entwurf genommen. Bisherige Datenblöcke können in der NUP verbleiben; die NUP wird nicht verkleinert."))
         }
     }
     private var header: some View {
         VStack(alignment: .leading, spacing: 18) {
             if store.library != nil {
-                Button { store.section = .library } label: { Label("Zur Bibliothek", systemImage: "folder") }
+                Button { store.section = .library } label: { Label(L10n.text("Zur Bibliothek"), systemImage: "folder") }
                     .buttonStyle(.borderless).font(.caption)
             }
             HStack(alignment: .top, spacing: 14) {
@@ -108,30 +108,30 @@ struct ArchiveView: View {
                     Text(name.isEmpty ? archive.url.deletingPathExtension().lastPathComponent : name)
                         .font(.system(size: 25, weight: .semibold)).lineLimit(1).textSelection(.enabled)
                     Text(archive.url.lastPathComponent).font(.subheadline).foregroundStyle(.secondary).textSelection(.enabled)
-                    Text("\(archive.packages.count) Pakete · \(archive.files.count) Dateien · \(ByteCountFormatter.string(fromByteCount: Int64(clamping: archive.fileSize), countStyle: .file))")
+                    Text(L10n.text("\(String(describing: archive.packages.count)) Pakete · \(String(describing: archive.files.count)) Dateien · \(String(describing: ByteCountFormatter.string(fromByteCount: Int64(clamping: archive.fileSize), countStyle: .file)))"))
                         .font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
                 Menu {
-                    Button("Struktur prüfen") { store.verify(deep: false) }
-                    Button("Vollständig mit SHA-256 prüfen") { store.verify(deep: true) }
+                    Button(L10n.text("Struktur prüfen")) { store.verify(deep: false) }
+                    Button(L10n.text("Vollständig mit SHA-256 prüfen")) { store.verify(deep: true) }
                     if let report = store.lastInspection, report.url == archive.url {
-                        Button("Letztes Prüfergebnis anzeigen") { store.repairReport = report }
+                        Button(L10n.text("Letztes Prüfergebnis anzeigen")) { store.repairReport = report }
                     }
                     Divider()
-                    Button("Paket entpacken …") { store.extract() }
-                    Button("Nur ExeFS entpacken …") { store.extract(subtree: "exefs") }.disabled(package.exefs == nil)
-                    Button("Nur RomFS entpacken …") { store.extract(subtree: "romfs") }.disabled(package.romfs == nil)
+                    Button(L10n.text("Paket entpacken …")) { store.extract() }
+                    Button(L10n.text("Nur ExeFS entpacken …")) { store.extract(subtree: "exefs") }.disabled(package.exefs == nil)
+                    Button(L10n.text("Nur RomFS entpacken …")) { store.extract(subtree: "romfs") }.disabled(package.romfs == nil)
                 } label: { Image(systemName: "ellipsis.circle") }.menuStyle(.borderlessButton).frame(width: 24).disabled(store.busy)
             }
             HStack(spacing: 24) {
-                Picker("Paket", selection: $store.packageIndex) {
+                Picker(L10n.text("Paket"), selection: $store.packageIndex) {
                     ForEach(archive.packages) { package in
                         Text("\(package.id + 1) · \(package.kindName) · \(package.versionString)").tag(package.id)
                     }
                 }.frame(maxWidth: 300).disabled(store.busy)
-                LabeledContent("Titel-ID") { Text(package.titleIDString).monospaced().textSelection(.enabled) }.font(.caption)
-                if package.flags & 1 != 0 { Text("Standalone-Update").font(.caption).foregroundStyle(.secondary) }
+                LabeledContent(L10n.text("Titel-ID")) { Text(package.titleIDString).monospaced().textSelection(.enabled) }.font(.caption)
+                if package.flags & 1 != 0 { Text(L10n.text("Standalone-Update")).font(.caption).foregroundStyle(.secondary) }
             }
         }
     }
@@ -139,58 +139,58 @@ struct ArchiveView: View {
         VStack(spacing: 0) {
             HStack(spacing: 12) {
                 if store.fileSelection != nil {
-                    Button("Alle Dateien zeigen") { store.fileSelection = nil; selection.removeAll(); search = "" }
-                    Text("Prüfbefunde ausgewählt").font(.caption).foregroundStyle(.orange)
-                    if let report = store.lastInspection { Button("Prüfergebnis") { store.repairReport = report } }
+                    Button(L10n.text("Alle Dateien zeigen")) { store.fileSelection = nil; selection.removeAll(); search = "" }
+                    Text(L10n.text("Prüfbefunde ausgewählt")).font(.caption).foregroundStyle(.orange)
+                    if let report = store.lastInspection { Button(L10n.text("Prüfergebnis")) { store.repairReport = report } }
                 }
                 Button { store.addFiles(directory: destination.directory) } label: {
-                    Label("Dateien hinzufügen …", systemImage: "plus")
+                    Label(L10n.text("Dateien hinzufügen …"), systemImage: "plus")
                 }
                 Button {
                     pendingRemoval = selectedFiles.subtracting(store.editDraft?.removals ?? [])
                     pendingNewRemoval = Set(selection.filter { $0 < 0 })
                     confirmRemoval = true
                 } label: {
-                    Label("Dateien entfernen …", systemImage: "trash")
+                    Label(L10n.text("Dateien entfernen …"), systemImage: "trash")
                 }.disabled(selectedFiles.subtracting(store.editDraft?.removals ?? []).isEmpty && !selection.contains(where: { $0 < 0 }))
                 if !selectedFiles.intersection(store.editDraft?.removals ?? []).isEmpty {
-                    Button("Entfernen zurücknehmen") { store.restoreStagedFiles(selectedFiles) }
+                    Button(L10n.text("Entfernen zurücknehmen")) { store.restoreStagedFiles(selectedFiles) }
                 }
                 Spacer()
-                Text("Ziel: \(destination.path)").font(.caption).foregroundStyle(.secondary).lineLimit(1)
-                    .help("Ordner in der Liste auswählen, um das Ziel für neue Dateien festzulegen.")
+                Text(L10n.text("Ziel: \(String(describing: destination.path))")).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                    .help(L10n.text("Ordner in der Liste auswählen, um das Ziel für neue Dateien festzulegen."))
             }.padding(.horizontal, 24).padding(.bottom, 12).disabled(store.busy)
             Table(nodes, children: \.children, selection: $selection) {
-                TableColumn("Name") { node in
+                TableColumn(L10n.text("Name")) { node in
                     HStack(spacing: 8) {
                         Image(systemName: node.isDirectory ? "folder.fill" : "doc")
                             .foregroundStyle(node.isDirectory ? Color.accentColor : Color.secondary)
                             .frame(width: 18)
                         Text(node.name).lineLimit(1)
                             .strikethrough(node.id >= archive.directories.count && store.editDraft?.removals.contains(node.id - archive.directories.count) == true)
-                        if node.id < 0 { Image(systemName: "plus.circle.fill").foregroundStyle(.green).help("Hinzufügen vorgemerkt") }
+                        if node.id < 0 { Image(systemName: "plus.circle.fill").foregroundStyle(.green).help(L10n.text("Hinzufügen vorgemerkt")) }
                         else if node.id >= archive.directories.count && store.editDraft?.removals.contains(node.id - archive.directories.count) == true {
-                            Image(systemName: "minus.circle.fill").foregroundStyle(.orange).help("Entfernen vorgemerkt")
+                            Image(systemName: "minus.circle.fill").foregroundStyle(.orange).help(L10n.text("Entfernen vorgemerkt"))
                         }
                     }.padding(.vertical, 3)
                 }.width(min: 180, ideal: 360)
-                TableColumn("Größe") { node in
+                TableColumn(L10n.text("Größe")) { node in
                     Text(size(node.size)).monospacedDigit().frame(maxWidth: .infinity, alignment: .trailing)
                 }.width(90)
-                TableColumn("Gespeichert") { node in
+                TableColumn(L10n.text("Gespeichert")) { node in
                     Text(size(node.storedSize)).monospacedDigit().frame(maxWidth: .infinity, alignment: .trailing)
                 }.width(100)
-                TableColumn("Codec") { node in
-                    Text(node.id < 0 ? "Neu" : (node.codec.map { $0 == 0 ? "RAW" : "ZSTD" } ?? "—"))
+                TableColumn(L10n.text("Codec")) { node in
+                    Text(node.id < 0 ? L10n.text("Neu") : (node.codec.map { $0 == 0 ? "RAW" : "ZSTD" } ?? "—"))
                         .font(.system(size: 10, design: .monospaced))
                 }.width(54)
             }.padding(.horizontal, 16)
                 .disabled(store.busy)
             if nodes.isEmpty {
-                Text(search.isEmpty ? "Dieses Paket ist leer." : "Keine passenden Dateien.")
+                Text(search.isEmpty ? L10n.text("Dieses Paket ist leer.") : L10n.text("Keine passenden Dateien."))
                     .foregroundStyle(.secondary).padding()
             }
-            Text("Dateiänderungen werden vorgemerkt. Erst Übernehmen speichert sie gemeinsam mit den Metadaten; vorhandene Dateien werden nicht neu komprimiert.")
+            Text(L10n.text("Dateiänderungen werden vorgemerkt. Erst Übernehmen speichert sie gemeinsam mit den Metadaten; vorhandene Dateien werden nicht neu komprimiert."))
                 .font(.caption).foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 24).padding(.vertical, 10)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)

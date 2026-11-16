@@ -34,9 +34,9 @@ enum ArchiveROMFSRecovery {
             let first = slot
             while slot < children.count && !used[slot] { slot += 1 }
             guard let matches = candidates[first], matches.count == 1 else {
-                throw NUPError("Unbenutzte Kindknotenplätze lassen sich keinem leeren /romfs eindeutig zuordnen.")
+                throw NUPError(L10n.text("Unbenutzte Kindknotenplätze lassen sich keinem leeren /romfs eindeutig zuordnen."))
             }
-            try require(repairs.count < 4096, "Mehr als 4096 RomFS-Korrekturen überschreiten das Reparaturlimit.")
+            try require(repairs.count < 4096, L10n.text("Mehr als 4096 RomFS-Korrekturen überschreiten das Reparaturlimit."))
             let (package, directory) = matches[0]
             let nodes = Array(children[first..<slot])
             let dirCount = directories.count, filesStart = 48 + packages.count * 64 + dirCount * 24
@@ -47,9 +47,9 @@ enum ArchiveROMFSRecovery {
                 let offset = try integer(toc.uint(at, 4)), length = try integer(toc.uint(at + 4, 4))
                 // File names are fully bounds/UTF-8/safety checked by the caller.
                 let poolSize = try integer(toc.uint(32, 8))
-                try require(offset <= poolSize && length <= poolSize - offset, "Ungültiger Dateiname im RomFS-Bereich.")
+                try require(offset <= poolSize && length <= poolSize - offset, L10n.text("Ungültiger Dateiname im RomFS-Bereich."))
                 guard let name = String(data: try toc.bytes(pool + offset, length), encoding: .utf8) else {
-                    throw NUPError("Dateiname ist kein gültiges UTF-8.")
+                    throw NUPError(L10n.text("Dateiname ist kein gültiges UTF-8."))
                 }
                 return name
             }

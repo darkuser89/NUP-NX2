@@ -24,59 +24,59 @@ struct LibraryView: View {
             Divider()
             if let library = store.library {
                 HStack {
-                    Text("\(visible.count) von \(library.entries.count) NUP-Dateien")
+                    Text(L10n.text("\(String(describing: visible.count)) von \(String(describing: library.entries.count)) NUP-Dateien"))
                         .font(.caption).foregroundStyle(.secondary)
                     if metadata.loading {
                         ProgressView().controlSize(.small)
-                        Text("Metadaten \(metadata.completed)/\(library.entries.count)")
+                        Text(L10n.text("Metadaten \(String(describing: metadata.completed))/\(String(describing: library.entries.count))"))
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     Spacer()
-                    TextField("Spielname oder Pfad suchen", text: $search)
+                    TextField(L10n.text("Spielname oder Pfad suchen"), text: $search)
                         .textFieldStyle(.roundedBorder).frame(width: 280)
                 }.padding(.horizontal, 24).padding(.vertical, 12)
                 Table(visible, selection: $selection) {
-                    TableColumn("Spiel") { entry in
+                    TableColumn(L10n.text("Spiel")) { entry in
                         LibraryGameRow(entry: entry, metadata: metadata) { store.requestLibraryCover(entry.url) }
                     }.width(min: 260, ideal: 400)
-                    TableColumn("Pfad") { entry in
+                    TableColumn(L10n.text("Pfad")) { entry in
                         Text(entry.relativePath).lineLimit(1).foregroundStyle(.secondary)
                             .help(entry.url.path)
                     }.width(min: 150, ideal: 330)
-                    TableColumn("Größe") { entry in
+                    TableColumn(L10n.text("Größe")) { entry in
                         Text(entry.size.map { ByteCountFormatter.string(fromByteCount: $0, countStyle: .file) } ?? "—")
                             .monospacedDigit().frame(maxWidth: .infinity, alignment: .trailing)
                     }.width(100)
                 }.padding(.horizontal, 16)
                     .contextMenu(forSelectionType: URL.self) { selected in
-                        Button("Öffnen") { open(selected) }.disabled(selected.count != 1 || store.busy)
-                        Button("Cover hinzufügen / ändern …") { editCover(selected) }.disabled(selected.count != 1 || store.busy)
-                        Button("Diagnostizieren / reparieren …") {
+                        Button(L10n.text("Öffnen")) { open(selected) }.disabled(selected.count != 1 || store.busy)
+                        Button(L10n.text("Cover hinzufügen / ändern …")) { editCover(selected) }.disabled(selected.count != 1 || store.busy)
+                        Button(L10n.text("Diagnostizieren / reparieren …")) {
                             if let url = selected.first { store.diagnose(url) }
                         }.disabled(selected.count != 1 || store.busy)
                     } primaryAction: { selected in
                         open(selected)
                     }
                 if !library.warnings.isEmpty {
-                    DisclosureGroup("\(library.warnings.count) Hinweise zur Ordnersuche") {
+                    DisclosureGroup(L10n.text("\(String(describing: library.warnings.count)) Hinweise zur Ordnersuche")) {
                         ScrollView { Text(library.warnings.joined(separator: "\n")).font(.caption).textSelection(.enabled) }
                             .frame(maxHeight: 90)
                     }.padding(.horizontal, 24).padding(.vertical, 10)
                 }
                 if visible.isEmpty {
-                    Text(search.isEmpty ? "Keine NUP-Dateien gefunden." : "Keine passenden NUP-Dateien.")
+                    Text(search.isEmpty ? L10n.text("Keine NUP-Dateien gefunden.") : L10n.text("Keine passenden NUP-Dateien."))
                         .foregroundStyle(.secondary).frame(maxWidth: .infinity).padding()
                 }
             } else {
                 VStack(spacing: 18) {
                     Image(systemName: "folder.badge.plus").font(.system(size: 56, weight: .light)).foregroundStyle(.tint)
-                    Text("Deine NUP-Sammlung").font(.title2)
-                    Text(store.libraryUnavailableMessage ?? (store.busy ? "Der gespeicherte Ordner wird eingelesen …" : "Ordner auswählen und alle NUP-Dateien einschließlich Unterordnern anzeigen."))
+                    Text(L10n.text("Deine NUP-Sammlung")).font(.title2)
+                    Text(store.libraryUnavailableMessage ?? (store.busy ? L10n.text("Der gespeicherte Ordner wird eingelesen …") : L10n.text("Ordner auswählen und alle NUP-Dateien einschließlich Unterordnern anzeigen.")))
                         .foregroundStyle(.secondary).multilineTextAlignment(.center)
                     if store.rememberedLibraryFolder != nil && !store.busy {
-                        Button("Erneut versuchen", action: store.refreshLibrary)
+                        Button(L10n.text("Erneut versuchen"), action: store.refreshLibrary)
                     }
-                    Button("Ordner auswählen …", action: store.chooseLibrary).buttonStyle(.borderedProminent)
+                    Button(L10n.text("Ordner auswählen …"), action: store.chooseLibrary).buttonStyle(.borderedProminent)
                 }.frame(maxWidth: .infinity, maxHeight: .infinity).padding(30)
             }
         }
@@ -96,23 +96,23 @@ struct LibraryView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Label("NUP-Bibliothek", systemImage: "folder").font(.title2.bold())
+                Label(L10n.text("NUP-Bibliothek"), systemImage: "folder").font(.title2.bold())
                 Spacer()
                 if store.library != nil {
-                    Button("Öffnen") { open(selection) }.disabled(selection.count != 1)
-                    Button("Cover …") { editCover(selection) }.disabled(selection.count != 1)
-                    Button("Neu einlesen", action: store.refreshLibrary)
+                    Button(L10n.text("Öffnen")) { open(selection) }.disabled(selection.count != 1)
+                    Button(L10n.text("Cover …")) { editCover(selection) }.disabled(selection.count != 1)
+                    Button(L10n.text("Neu einlesen"), action: store.refreshLibrary)
                 }
-                Button("Ordner auswählen …", action: store.chooseLibrary).buttonStyle(.borderedProminent)
+                Button(L10n.text("Ordner auswählen …"), action: store.chooseLibrary).buttonStyle(.borderedProminent)
             }
             if let folder = store.library?.folder ?? store.rememberedLibraryFolder {
                 Text(folder.path).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
             }
             HStack {
-                Text("Spielnamen und Cover werden lokal aus den Metadaten nachgeladen. Die Spieldaten werden nicht entpackt.")
+                Text(L10n.text("Spielnamen und Cover werden lokal aus den Metadaten nachgeladen. Die Spieldaten werden nicht entpackt."))
                     .font(.caption).foregroundStyle(.secondary)
                 Spacer()
-                Text("Spezifikation v1").font(.caption).foregroundStyle(.secondary)
+                Text(L10n.text("Spezifikation v1")).font(.caption).foregroundStyle(.secondary)
             }
         }
     }

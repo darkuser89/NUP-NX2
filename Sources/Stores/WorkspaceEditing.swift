@@ -11,7 +11,7 @@ extension WorkspaceStore {
 
     func discardEdits() {
         guard !busy, let archive else { return }
-        editDraft = ArchiveEditDraft(archive: archive); status = "Entwurf verworfen · NUP unverändert."
+        editDraft = ArchiveEditDraft(archive: archive); status = L10n.text("Entwurf verworfen · NUP unverändert.")
     }
     func restoreStagedFiles(_ indices: Set<Int>) { editDraft?.restoreFiles(indices) }
     func removeStagedFiles(_ nodes: Set<Int>) { editDraft?.removePending(nodes: nodes) }
@@ -20,27 +20,27 @@ extension WorkspaceStore {
         guard !busy, let draft = editDraft, draft.hasChanges || destination != nil else { return }
         if let error = draft.validationError { self.error = error; afterApply = nil; return }
         let stayInLibrary = destination == nil && section == .library
-        perform(destination == nil ? "Änderungen übernehmen" : "Entwurf als neue NUP speichern") { context in
+        perform(destination == nil ? L10n.text("Änderungen übernehmen") : L10n.text("Entwurf als neue NUP speichern")) { context in
             let request = try draft.request()
             let updated: NUPArchive
             if let destination { updated = try draft.archive.saveEditsAs(request, destination: destination, context: context) }
             else { updated = try draft.archive.applyEdits(request, context: context) }
-            return JobResult(message: destination == nil ? "Alle vorgemerkten Änderungen übernommen · Struktur geprüft." : "Entwurf als neue NUP gespeichert · Original unverändert.",
+            return JobResult(message: destination == nil ? L10n.text("Alle vorgemerkten Änderungen übernommen · Struktur geprüft.") : L10n.text("Entwurf als neue NUP gespeichert · Original unverändert."),
                              archive: updated, reveal: updated.url, preferLibrary: stayInLibrary)
         }
     }
     func requestWindowClose(_ window: NSWindow? = nil) {
         guard let window = window ?? NSApp.keyWindow else { return }
-        if busy { status = "Bitte den laufenden Vorgang abschließen oder abbrechen."; return }
+        if busy { status = L10n.text("Bitte den laufenden Vorgang abschließen oder abbrechen."); return }
         if !deferNavigation(.close(window.windowNumber)) { window.performClose(nil) }
     }
     func requestQuit() {
-        if busy { status = "Bitte den laufenden Vorgang abschließen oder abbrechen."; return }
+        if busy { status = L10n.text("Bitte den laufenden Vorgang abschließen oder abbrechen."); return }
         if !deferNavigation(.quit) { NSApp.terminate(nil) }
     }
     func saveDraftAs() {
         guard !busy, let archive, editDraft?.validationError == nil,
-              let target = FilePanels.save(name: archive.url.deletingPathExtension().lastPathComponent + "-bearbeitet.nup", title: "Gesamten Entwurf als neue NUP speichern") else { return }
+              let target = FilePanels.save(name: archive.url.deletingPathExtension().lastPathComponent + L10n.text("-bearbeitet.nup"), title: L10n.text("Gesamten Entwurf als neue NUP speichern")) else { return }
         applyEdits(destination: target)
     }
 

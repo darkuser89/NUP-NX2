@@ -13,7 +13,7 @@ extension WorkspaceStore {
         }
         guard count > 0 else { return }
         editDraft = draft
-        status = count == 1 ? "Cover für ein Paket vorgemerkt." : "Cover für \(count) Pakete vorgemerkt."
+        status = count == 1 ? L10n.text("Cover für ein Paket vorgemerkt.") : L10n.text("Cover für \(String(describing: count)) Pakete vorgemerkt.")
     }
 
     func stageMissingApplicationText(from source: Int, to target: Int) {
@@ -22,12 +22,12 @@ extension WorkspaceStore {
         let origin = draft.packages[source]
         guard draft.packages[target].fillMissing(name: origin.name, publisher: origin.publisher) else { return }
         editDraft = draft
-        status = "Titel und Publisher aus Paket \(source + 1) ergänzt."
+        status = L10n.text("Titel und Publisher aus Paket \(String(describing: source + 1)) ergänzt.")
     }
 
     func importApplicationData(package: Int, file: URL? = nil) {
         guard !busy, let draft = editDraft, draft.packages.indices.contains(package) else { return }
-        perform("Anwendungsdaten lesen") { context in
+        perform(L10n.text("Anwendungsdaten lesen")) { context in
             let control: ApplicationControl
             let source: String
             if let file {
@@ -40,8 +40,8 @@ extension WorkspaceStore {
             var updated = draft
             let changed = updated.packages[package].fillMissing(name: control.name, publisher: control.publisher,
                 version: control.displayVersion, titles: control.titles)
-            return JobResult(message: changed ? "\(source) · Fehlende Anwendungsdaten vorgemerkt." :
-                "\(source) gelesen · Keine fehlenden Anwendungsdaten zum Ergänzen.",
+            return JobResult(message: changed ? L10n.text("\(String(describing: source)) · Fehlende Anwendungsdaten vorgemerkt.") :
+                L10n.text("\(String(describing: source)) gelesen · Keine fehlenden Anwendungsdaten zum Ergänzen."),
                 editDraft: changed ? updated : nil)
         }
     }

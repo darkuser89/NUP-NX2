@@ -20,7 +20,10 @@ struct NUPPackage: Identifiable, Sendable {
     var metaSize: Int = 0
     var metadata: [UInt16: Data] = [:]
 
-    var kindName: String { ["Basis", "Update", "DLC", "DLC-Update", "System"][Int(kind)] }
+    private static let kindNames = [L10n.text("Basis"), L10n.text("Update"), L10n.text("DLC"),
+                                    L10n.text("DLC-Update"), L10n.text("System")]
+    static func kindName(_ kind: UInt8) -> String { kindNames[Int(kind)] }
+    var kindName: String { Self.kindName(kind) }
     var titleIDString: String { String(format: "%016llX", titleID) }
     var versionString: String { "\(version >> 16).\((version >> 8) & 255).\(version & 255)" }
     func text(_ type: UInt16, profile: MetadataProfile) -> String {
@@ -80,11 +83,11 @@ enum MetadataCodec {
         var records: [UInt16: Data] = [:]
         var position = 0
         while position < data.count {
-            try require(data.count - position >= 8, "Abgeschnittene Metadaten.")
+            try require(data.count - position >= 8, L10n.text("Abgeschnittene Metadaten."))
             let type = UInt16(try data.uint(position, 2))
-            try require(try data.uint(position + 2, 2) == 0, "Unbekannte Metadaten-Flags.")
+            try require(try data.uint(position + 2, 2) == 0, L10n.text("Unbekannte Metadaten-Flags."))
             let count = try integer(data.uint(position + 4, 4))
-            try require(records[type] == nil, "Doppelte Metadaten-Kennung.")
+            try require(records[type] == nil, L10n.text("Doppelte Metadaten-Kennung."))
             records[type] = try data.bytes(position + 8, count)
             position += 8 + count
         }
@@ -94,7 +97,7 @@ enum MetadataCodec {
         var data = Data()
         for type in records.keys.sorted() {
             let payload = records[type]!
-            try require(payload.count <= Int(UInt32.max), "Metadaten zu groß.")
+            try require(payload.count <= Int(UInt32.max), L10n.text("Metadaten zu groß."))
             data.appendLE(UInt64(type), width: 2)
             data.appendLE(0, width: 2)
             data.appendLE(UInt64(payload.count), width: 4)
@@ -109,9 +112,9 @@ enum MetadataCodec {
             let length = Int(data[position]); position += 1
             let tagData = try data.bytes(position, length); position += length
             guard let tag = String(data: tagData, encoding: .ascii)?.lowercased(), !tag.isEmpty else {
-                throw NUPError("Ungültiges Sprachkürzel.")
+                throw NUPError(L10n.text("Ungültiges Sprachkürzel."))
             }
-            try require(result[tag] == nil, "Doppeltes Sprachkürzel.")
+            try require(result[tag] == nil, L10n.text("Doppeltes Sprachkürzel."))
             let count = try integer(data.uint(position, 4)); position += 4
             result[tag] = try data.bytes(position, count); position += count
         }
@@ -123,11 +126,11 @@ enum MetadataCodec {
         for key in values.keys.sorted() {
             let tag = key.lowercased()
             guard let bytes = tag.data(using: .ascii), (1...255).contains(bytes.count), tags.insert(tag).inserted else {
-                throw NUPError("Ungültiges oder doppeltes Sprachkürzel: \(key)")
+                throw NUPError(L10n.text("Ungültiges oder doppeltes Sprachkürzel: \(String(describing: key))"))
             }
             result.append(UInt8(bytes.count)); result.append(bytes)
             let value = values[key]!
-            try require(value.count <= Int(UInt32.max), "Lokalisierte Metadaten zu groß.")
+            try require(value.count <= Int(UInt32.max), L10n.text("Lokalisierte Metadaten zu groß."))
             result.appendLE(UInt64(value.count), width: 4); result.append(value)
         }
         return result

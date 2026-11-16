@@ -31,14 +31,14 @@ struct ArchivePackageDraft: Sendable {
             localized = try Set(titles.keys).union(icons.keys).sorted().map { tag in
                 let title: String
                 if let data = titles[tag] {
-                    guard let text = String(data: data, encoding: .utf8) else { throw NUPError("Sprachtitel ist kein UTF-8.") }
+                    guard let text = String(data: data, encoding: .utf8) else { throw NUPError(L10n.text("Sprachtitel ist kein UTF-8.")) }
                     title = text
                 } else { title = "" }
                 return LocalizedEntry(language: tag, title: title, icon: icons[tag])
             }
             decodingNotice = nil
         } catch {
-            decodingNotice = "Vorhandene Sprachdaten sind nicht lesbar. Sie bleiben erhalten, solange du die Sprachliste nicht änderst."
+            decodingNotice = L10n.text("Vorhandene Sprachdaten sind nicht lesbar. Sie bleiben erhalten, solange du die Sprachliste nicht änderst.")
         }
         originalLocalized = localized
     }
@@ -75,13 +75,13 @@ struct ArchivePackageDraft: Sendable {
     var validationError: String? {
         if buildID != originalBuild && !buildID.isEmpty && (buildID.utf8.count != 64 || !buildID.utf8.allSatisfy({
             (48...57).contains($0) || (65...70).contains($0) || (97...102).contains($0)
-        })) { return "Build-ID: 64 Hex-Zeichen eingeben oder das Feld leeren." }
+        })) { return L10n.text("Build-ID: 64 Hex-Zeichen eingeben oder das Feld leeren.") }
         if localized != originalLocalized {
             var tags = Set<String>()
             for entry in localized {
                 let tag = entry.language.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                 guard let bytes = tag.data(using: .ascii), (1...255).contains(bytes.count), tags.insert(tag).inserted else {
-                    return "Sprachkürzel dürfen nicht leer, doppelt oder ungültig sein."
+                    return L10n.text("Sprachkürzel dürfen nicht leer, doppelt oder ungültig sein.")
                 }
             }
         }

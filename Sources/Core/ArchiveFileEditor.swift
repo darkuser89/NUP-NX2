@@ -12,20 +12,20 @@ final class ArchiveFileStage {
     init(archive: NUPArchive, urls: [URL], context: JobContext) throws {
         let path = archive.url.deletingLastPathComponent().appendingPathComponent(".nup-stage-\(UUID().uuidString)")
         let fd = Darwin.open(path.path, O_RDWR | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
-        try require(fd >= 0, "Temporärer Platz für neue Dateien ist nicht verfügbar.")
+        try require(fd >= 0, L10n.text("Temporärer Platz für neue Dateien ist nicht verfügbar."))
         handle = FileHandle(fileDescriptor: fd, closeOnDealloc: true)
         guard Darwin.unlink(path.path) == 0 else {
             try? handle.close(); try? FileManager.default.removeItem(at: path)
-            throw NUPError("Temporäre Datei kann nicht sicher vorbereitet werden.")
+            throw NUPError(L10n.text("Temporäre Datei kann nicht sicher vorbereitet werden."))
         }
         for (index, url) in urls.enumerated() {
-            try context.report(0.25 * Double(index) / Double(max(1, urls.count)), "Bereite neue Datei vor: \(url.lastPathComponent)")
+            try context.report(0.25 * Double(index) / Double(max(1, urls.count)), L10n.text("Bereite neue Datei vor: \(String(describing: url.lastPathComponent))"))
             let input = try regularFile(url)
             let revision: FileRevision
             do { revision = try FileRevision(handle: input); try input.close() }
             catch { try? input.close(); throw error }
             try require(revision.device != archive.revision.device || revision.inode != archive.revision.inode,
-                        "Die NUP kann nicht als Datei in sich selbst eingefügt werden.")
+                        L10n.text("Die NUP kann nicht als Datei in sich selbst eingefügt werden."))
             try revision.requireCurrent(at: url)
             let cursor = try handle.offset(), start = try aligned(cursor)
             try handle.write(contentsOf: Data(count: Int(start - cursor)))
@@ -62,12 +62,12 @@ extension ArchiveFilePlan {
             return Data(hash.finalize())
         }
         for (index, move) in moves.enumerated() {
-            try context.report(0.3 + 0.3 * Double(index) / Double(max(1, moves.count)), "Bewahre vorhandene Datenblöcke …")
+            try context.report(0.3 + 0.3 * Double(index) / Double(max(1, moves.count)), L10n.text("Bewahre vorhandene Datenblöcke …"))
             let hash = try copy(input, offset: move.source.offset, count: move.source.count, destination: move.destination)
             copied.append(ArchiveCopiedExtent(offset: move.destination, count: move.source.count, digest: hash))
         }
         if stageSize > 0 {
-            try context.report(0.65, "Füge neue Dateien hinzu …")
+            try context.report(0.65, L10n.text("Füge neue Dateien hinzu …"))
             _ = try copy(stage, offset: 0, count: stageSize, destination: stageOffset)
         }
         for block in metadataWrites {
@@ -94,8 +94,8 @@ extension NUPArchive {
     }
 
     func applyEdits(_ request: ArchiveEditRequest, context: JobContext = JobContext()) throws -> NUPArchive {
-        try require(permitsEditing, "Ein Diagnose-Snapshot darf nicht zur normalen Bearbeitung verwendet werden.")
-        try context.report(0, "Bereite Änderungen vor …")
+        try require(permitsEditing, L10n.text("Ein Diagnose-Snapshot darf nicht zur normalen Bearbeitung verwendet werden."))
+        try context.report(0, L10n.text("Bereite Änderungen vor …"))
         let output = try regularFile(url, writable: true)
         defer { try? output.close() }
         try MetadataTransaction.lock(output)
@@ -104,8 +104,8 @@ extension NUPArchive {
         for (url, revision) in request.sourceRevisions { try revision.requireCurrent(at: url) }
         try request.validateImages(in: self)
         let metadata = request.metadata.filter { packages.indices.contains($0.key) && $0.value != packages[$0.key].metadata }
-        try require(request.metadata.keys.allSatisfy { packages.indices.contains($0) }, "Metadaten-Paket existiert nicht.")
-        try require(request.files.flatMap(\.additions).allSatisfy(\.isFileURL), "Nur lokale Dateien können hinzugefügt werden.")
+        try require(request.metadata.keys.allSatisfy { packages.indices.contains($0) }, L10n.text("Metadaten-Paket existiert nicht."))
+        try require(request.files.flatMap(\.additions).allSatisfy(\.isFileURL), L10n.text("Nur lokale Dateien können hinzugefügt werden."))
         let mutations = request.files.filter { !$0.additions.isEmpty || !$0.removing.isEmpty }
         if mutations.isEmpty && metadata.isEmpty { return self }
         // Keep the existing small bounded metadata transaction for a single package.
@@ -145,12 +145,12 @@ extension NUPArchive {
             try context.check(); try revision.requireCurrent(at: url)
             mutated = true
             let copied = try plan.appendPayloads(input: input, output: output, stage: stage.handle, context: context)
-            try context.report(0.8, "Aktualisiere Dateiverzeichnis …", force: true)
+            try context.report(0.8, L10n.text("Aktualisiere Dateiverzeichnis …"), force: true)
             try context.check(); try plan.writeTOC(to: output)
             try context.check(); try plan.writeHeader(to: output)
-            try context.report(0.9, "Prüfe geänderten Container …", force: true)
+            try context.report(0.9, L10n.text("Prüfe geänderten Container …"), force: true)
             let updated = try NUPArchive(url: url, context: context, recoverPendingMetadata: false)
-            try require(updated.header == plan.header && updated.toc == plan.toc, "Gespeichertes Inhaltsverzeichnis stimmt nicht überein.")
+            try require(updated.header == plan.header && updated.toc == plan.toc, L10n.text("Gespeichertes Inhaltsverzeichnis stimmt nicht überein."))
             for extent in copied {
                 var hash = SHA256(), position: UInt64 = 0
                 while position < extent.count {
@@ -159,19 +159,19 @@ extension NUPArchive {
                         count: Int(min(UInt64(StreamCodec.chunkSize), extent.count - position)))
                     hash.update(data: data); position += UInt64(data.count)
                 }
-                try require(Data(hash.finalize()) == extent.digest, "Ein verschobener Datenblock stimmt nicht überein.")
+                try require(Data(hash.finalize()) == extent.digest, L10n.text("Ein verschobener Datenblock stimmt nicht überein."))
             }
             for index in plan.addedIndices { try StreamCodec.consume(updated.files[index], input: input, context: context) }
             for block in plan.metadataWrites {
-                try require(try readRange(input, offset: block.offset, count: block.data.count) == block.data, "Gespeicherte Metadaten stimmen nicht überein.")
+                try require(try readRange(input, offset: block.offset, count: block.data.count) == block.data, L10n.text("Gespeicherte Metadaten stimmen nicht überein."))
             }
-            for (index, values) in metadata { try require(updated.packages[index].metadata == values, "Paket-Metadaten stimmen nicht überein.") }
+            for (index, values) in metadata { try require(updated.packages[index].metadata == values, L10n.text("Paket-Metadaten stimmen nicht überein.")) }
             try FileRevision(handle: output).requireCurrent(at: url)
             try context.check(); try ArchiveContentJournal.markCommitted(url: url)
             committed = true
             try? FileManager.default.removeItem(at: paths.committed)
             MetadataTransaction.syncDirectory(url.deletingLastPathComponent())
-            try? context.report(1, "Dateien direkt aktualisiert.")
+            try? context.report(1, L10n.text("Dateien direkt aktualisiert."))
             return updated
         } catch {
             var recovered: NUPArchive?
@@ -183,7 +183,7 @@ extension NUPArchive {
                     }
                     else { try FileManager.default.removeItem(at: paths.pending) }
                 } catch {
-                    throw NUPError("Dateiänderung unterbrochen. Das Wiederherstellungsprotokoll bleibt neben der NUP. Bitte erneut öffnen: \(error.localizedDescription)")
+                    throw NUPError(L10n.text("Dateiänderung unterbrochen. Das Wiederherstellungsprotokoll bleibt neben der NUP. Bitte erneut öffnen: \(String(describing: error.localizedDescription))"))
                 }
             }
             if let recovered { throw ArchiveEditFailure(underlying: error, recovered: recovered) }

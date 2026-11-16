@@ -11,13 +11,13 @@ struct ContentView: View {
         NavigationSplitView {
             VStack(spacing: 0) {
                 List(selection: $store.section) {
-                    Section("Arbeitsbereich") {
+                    Section(L10n.text("Arbeitsbereich")) {
                         ForEach(WorkspaceSection.allCases) { section in
-                            Label(section.rawValue, systemImage: section.symbol).tag(section)
+                            Label(section.title, systemImage: section.symbol).tag(section)
                         }
                     }
                     if !store.recent.isEmpty {
-                        Section("Zuletzt geöffnet") {
+                        Section(L10n.text("Zuletzt geöffnet")) {
                             ForEach(store.recent, id: \.self) { path in
                                 Button { store.open(URL(fileURLWithPath: path)) } label: {
                                     Label(URL(fileURLWithPath: path).lastPathComponent, systemImage: "doc.zipper")
@@ -29,7 +29,7 @@ struct ContentView: View {
                 }.listStyle(.sidebar)
                 VStack(alignment: .leading, spacing: 5) {
                     Text("NUP Studio").font(.headline)
-                    Text("Native auf Apple Silicon").font(.caption).foregroundStyle(.secondary)
+                    Text(L10n.text("Native auf Apple Silicon")).font(.caption).foregroundStyle(.secondary)
                 }.frame(maxWidth: .infinity, alignment: .leading).padding(16)
             }.navigationSplitViewColumnWidth(min: 190, ideal: 220, max: 280)
         } detail: {
@@ -54,16 +54,16 @@ struct ContentView: View {
         .onChange(of: store.pendingNavigation == nil) { _, _ in store.drainPendingOpenIfPossible() }
         .toolbar {
             ToolbarItemGroup {
-                Button(action: store.openPanel) { Label("Öffnen", systemImage: "folder") }.disabled(store.busy)
-                Button(action: store.chooseLibrary) { Label("NUP-Ordner", systemImage: "folder.badge.plus") }.disabled(store.busy)
+                Button(action: store.openPanel) { Label(L10n.text("Öffnen"), systemImage: "folder") }.disabled(store.busy)
+                Button(action: store.chooseLibrary) { Label(L10n.text("NUP-Ordner"), systemImage: "folder.badge.plus") }.disabled(store.busy)
                 Button {
                     if let archive = store.archive, store.section == .archive { store.inspect(archive.url, deep: false) }
                     else { store.diagnosePanel() }
-                } label: { Label("Diagnose / Reparatur", systemImage: "wrench.and.screwdriver") }.disabled(store.busy)
+                } label: { Label(L10n.text("Diagnose / Reparatur"), systemImage: "wrench.and.screwdriver") }.disabled(store.busy)
                 if store.archive != nil && store.section == .archive {
-                    Button { store.verify(deep: true) } label: { Label("Prüfen", systemImage: "checkmark.shield") }
+                    Button { store.verify(deep: true) } label: { Label(L10n.text("Prüfen"), systemImage: "checkmark.shield") }
                         .disabled(store.busy)
-                    Button { store.extract() } label: { Label("Entpacken", systemImage: "square.and.arrow.down") }
+                    Button { store.extract() } label: { Label(L10n.text("Entpacken"), systemImage: "square.and.arrow.down") }
                         .disabled(store.busy)
                 }
             }
@@ -77,8 +77,8 @@ struct ContentView: View {
                         .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 3, dash: [10, 6]))
                     VStack(spacing: 12) {
                         Image(systemName: "arrow.down.doc.fill").font(.system(size: 40))
-                        Text("NUP-Datei hier öffnen").font(.title2.weight(.semibold))
-                        Text(store.section == .pack ? "Oder einen Dump-Quellordner ablegen" : "Oder einen Ordner als NUP-Bibliothek laden")
+                        Text(L10n.text("NUP-Datei hier öffnen")).font(.title2.weight(.semibold))
+                        Text(store.section == .pack ? L10n.text("Oder einen Dump-Quellordner ablegen") : L10n.text("Oder einen Ordner als NUP-Bibliothek laden"))
                             .foregroundStyle(.secondary)
                     }
                     .padding(28)
@@ -90,14 +90,14 @@ struct ContentView: View {
         }
         .background(WorkspaceWindowGuard(store: store))
         .onDrop(of: [UTType.fileURL], isTargeted: $targeted, perform: store.receiveDrop)
-        .alert("Vorgang fehlgeschlagen", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
-            Button("OK") { store.error = nil }
+        .alert(L10n.text("Vorgang fehlgeschlagen"), isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
+            Button(L10n.text("OK")) { store.error = nil }
         } message: { Text(store.error ?? "") }
-        .confirmationDialog("Nicht übernommene Änderungen", isPresented: Binding(get: { store.pendingNavigation != nil }, set: { if !$0 { store.pendingNavigation = nil } }), titleVisibility: .visible) {
-            Button("Übernehmen und fortfahren", action: store.applyAndContinue).disabled(!store.canApplyEdits)
-            Button("Verwerfen und fortfahren", role: .destructive, action: store.discardAndContinue)
-            Button("Abbrechen", role: .cancel) { store.pendingNavigation = nil }
-        } message: { Text("Metadaten und Dateiänderungen sind noch nicht gespeichert. Dein Entwurf bleibt bis zur Auswahl erhalten.") }
+        .confirmationDialog(L10n.text("Nicht übernommene Änderungen"), isPresented: Binding(get: { store.pendingNavigation != nil }, set: { if !$0 { store.pendingNavigation = nil } }), titleVisibility: .visible) {
+            Button(L10n.text("Übernehmen und fortfahren"), action: store.applyAndContinue).disabled(!store.canApplyEdits)
+            Button(L10n.text("Verwerfen und fortfahren"), role: .destructive, action: store.discardAndContinue)
+            Button(L10n.text("Abbrechen"), role: .cancel) { store.pendingNavigation = nil }
+        } message: { Text(L10n.text("Metadaten und Dateiänderungen sind noch nicht gespeichert. Dein Entwurf bleibt bis zur Auswahl erhalten.")) }
         .sheet(item: $store.libraryCoverDraft) { draft in
             LibraryCoverEditor(store: store, draft: draft)
         }
@@ -116,14 +116,14 @@ private struct StatusBar: View {
             else { Image(systemName: store.fraction == 1 ? "checkmark.circle.fill" : "circle.dotted").foregroundStyle(.secondary) }
             Text(store.status).font(.caption).lineLimit(2).textSelection(.enabled)
             Spacer(minLength: 8)
-            if store.busy { Button("Abbrechen", action: store.cancel).controlSize(.small) }
-            else if store.lastOutput != nil { Button("Im Finder", action: store.reveal).controlSize(.small) }
+            if store.busy { Button(L10n.text("Abbrechen"), action: store.cancel).controlSize(.small) }
+            else if store.lastOutput != nil { Button(L10n.text("Im Finder"), action: store.reveal).controlSize(.small) }
             Button { showActivity.toggle() } label: { Image(systemName: "list.bullet.rectangle") }
-                .buttonStyle(.borderless).help("Sitzungsprotokoll")
+                .buttonStyle(.borderless).help(L10n.text("Sitzungsprotokoll"))
                 .popover(isPresented: $showActivity) {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Diese Sitzung").font(.headline)
-                        if store.activity.isEmpty { Text("Noch keine Vorgänge.").foregroundStyle(.secondary) }
+                        Text(L10n.text("Diese Sitzung")).font(.headline)
+                        if store.activity.isEmpty { Text(L10n.text("Noch keine Vorgänge.")).foregroundStyle(.secondary) }
                         ForEach(Array(store.activity.enumerated()), id: \.offset) { _, text in
                             Text(text).font(.caption).textSelection(.enabled)
                         }
@@ -139,21 +139,21 @@ private struct WelcomeView: View {
         VStack(spacing: 24) {
             Image(systemName: "shippingbox.fill").font(.system(size: 68, weight: .light)).foregroundStyle(.tint)
             VStack(spacing: 10) {
-                Text("Deine Pakete. Ein Ort.").font(.system(size: 30, weight: .semibold))
-                Text("NUP-Container öffnen, prüfen und entpacken.\nOder einen neuen Container aus einem Dump-Ordner erstellen.")
+                Text(L10n.text("Deine Pakete. Ein Ort.")).font(.system(size: 30, weight: .semibold))
+                Text(L10n.text("NUP-Container öffnen, prüfen und entpacken.\nOder einen neuen Container aus einem Dump-Ordner erstellen."))
                     .foregroundStyle(.secondary).multilineTextAlignment(.center).lineSpacing(4)
             }
             HStack(spacing: 12) {
-                Button("NUP öffnen …", action: store.openPanel).buttonStyle(.borderedProminent)
-                Button("NUP-Ordner auswählen …", action: store.chooseLibrary).buttonStyle(.bordered)
-                Button("Container erstellen") { store.section = .pack }.buttonStyle(.bordered)
+                Button(L10n.text("NUP öffnen …"), action: store.openPanel).buttonStyle(.borderedProminent)
+                Button(L10n.text("NUP-Ordner auswählen …"), action: store.chooseLibrary).buttonStyle(.bordered)
+                Button(L10n.text("Container erstellen")) { store.section = .pack }.buttonStyle(.bordered)
             }.controlSize(.large).disabled(store.busy)
-            Text("NUP-Datei oder NUP-Ordner aus dem Finder ins Fenster ziehen")
+            Text(L10n.text("NUP-Datei oder NUP-Ordner aus dem Finder ins Fenster ziehen"))
                 .font(.caption).foregroundStyle(.secondary)
             HStack(spacing: 28) {
-                Label("Zstandard", systemImage: "arrow.down.right.and.arrow.up.left")
-                Label("SHA-256", systemImage: "checkmark.shield")
-                Label("Lokal", systemImage: "internaldrive")
+                Label(L10n.text("Zstandard"), systemImage: "arrow.down.right.and.arrow.up.left")
+                Label(L10n.text("SHA-256"), systemImage: "checkmark.shield")
+                Label(L10n.text("Lokal"), systemImage: "internaldrive")
             }.font(.caption).foregroundStyle(.secondary).padding(.top, 24)
         }.padding(40)
     }

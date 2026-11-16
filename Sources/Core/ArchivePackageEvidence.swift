@@ -18,7 +18,7 @@ struct ArchivePackageIdentity: Equatable, Sendable {
         titleID = package.titleID; version = package.version; kind = package.kind; flags = package.flags
     }
     var title: String { String(format: "%016llX", titleID) }
-    var kindName: String { ["Basis", "Update", "DLC", "DLC-Update", "System"][Int(kind)] }
+    var kindName: String { NUPPackage.kindName(kind) }
     var versionText: String { "\(version) (\(version >> 16).\((version >> 8) & 255).\(version & 255))" }
     func put(into toc: inout Data, package: Int) {
         let at = 48 + package * 64
@@ -36,40 +36,40 @@ enum ArchivePackageEvidence {
     }
 
     static func programID(_ data: Data) throws -> UInt64 {
-        try require(data.count >= 128 && data.prefix(4) == Data("META".utf8), "NPDM hat keinen gültigen META-Header.")
+        try require(data.count >= 128 && data.prefix(4) == Data("META".utf8), L10n.text("NPDM hat keinen gültigen META-Header."))
         let offset = try integer(data.uint(0x70, 4)), size = try integer(data.uint(0x74, 4))
         try require(offset >= 128 && size >= 0x40 && offset <= data.count && size <= data.count - offset,
-                    "ACI0-Bereich der NPDM ist ungültig.")
-        try require(try data.bytes(offset, 4) == Data("ACI0".utf8), "ACI0-Kennung fehlt am deklarierten NPDM-Offset.")
+                    L10n.text("ACI0-Bereich der NPDM ist ungültig."))
+        try require(try data.bytes(offset, 4) == Data("ACI0".utf8), L10n.text("ACI0-Kennung fehlt am deklarierten NPDM-Offset."))
         let id = try data.uint(offset + 16, 8)
-        try require(id != 0, "Die NPDM enthält keine Programm-ID.")
+        try require(id != 0, L10n.text("Die NPDM enthält keine Programm-ID."))
         return id
     }
 
     static func cnmt(_ data: Data) throws -> CNMT {
-        try require(data.count >= 32, "CNMT-Header ist abgeschnitten.")
+        try require(data.count >= 32, L10n.text("CNMT-Header ist abgeschnitten."))
         let id = try data.uint(0, 8), version = UInt32(try data.uint(8, 4)), type = try data.uint(12, 1)
         let extended = try integer(data.uint(14, 2)), contents = try integer(data.uint(16, 2)), metas = try integer(data.uint(18, 2))
-        try require(id != 0 && extended <= data.count - 32, "Ungültiger CNMT-Erweiterungsheader.")
+        try require(id != 0 && extended <= data.count - 32, L10n.text("Ungültiger CNMT-Erweiterungsheader."))
         let minimum = 32 + extended + contents * 56 + metas * 16
-        try require(minimum <= data.count, "CNMT-Inhaltstabelle ist abgeschnitten.")
+        try require(minimum <= data.count, L10n.text("CNMT-Inhaltstabelle ist abgeschnitten."))
         let kind: UInt8, application: UInt64?
         switch type {
         case 0x80:
-            try require(extended >= 16, "Application-CNMT-Erweiterung fehlt.")
+            try require(extended >= 16, L10n.text("Application-CNMT-Erweiterung fehlt."))
             kind = 0; application = id
         case 0x81:
-            try require(extended >= 24, "Patch-CNMT-Erweiterung fehlt.")
+            try require(extended >= 24, L10n.text("Patch-CNMT-Erweiterung fehlt."))
             kind = 1; application = try data.uint(32, 8)
             let extra = try integer(data.uint(44, 4))
-            try require(extra <= data.count - minimum, "CNMT-Patchdaten sind abgeschnitten.")
+            try require(extra <= data.count - minimum, L10n.text("CNMT-Patchdaten sind abgeschnitten."))
             let (patch, overflow) = application!.addingReportingOverflow(0x800)
-            try require(application != 0 && !overflow && id == patch, "Patch-ID und Anwendungs-ID widersprechen sich.")
+            try require(application != 0 && !overflow && id == patch, L10n.text("Patch-ID und Anwendungs-ID widersprechen sich."))
         case 0x82:
-            try require(extended >= 16, "DLC-CNMT-Erweiterung fehlt.")
+            try require(extended >= 16, L10n.text("DLC-CNMT-Erweiterung fehlt."))
             kind = 2; application = try data.uint(32, 8)
-            try require(application != 0, "DLC-Anwendungs-ID fehlt.")
-        default: throw NUPError("CNMT-Typ \(type) wird nicht automatisch umgedeutet.")
+            try require(application != 0, L10n.text("DLC-Anwendungs-ID fehlt."))
+        default: throw NUPError(L10n.text("CNMT-Typ \(String(describing: type)) wird nicht automatisch umgedeutet."))
         }
         return CNMT(id: id, version: version, kind: kind, application: application)
     }

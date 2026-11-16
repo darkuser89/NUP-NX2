@@ -30,11 +30,11 @@ struct ArchiveEditRequest: Sendable {
         for (index, records) in metadata where archive.packages.indices.contains(index) {
             let old = archive.packages[index].metadata
             if records[3] != old[3], let cover = records[3] {
-                try require(LibraryMetadataReader.makeThumbnail(cover) != nil, "Das neue Cover ist kein unterstütztes PNG-/JPEG-Bild.")
+                try require(LibraryMetadataReader.makeThumbnail(cover) != nil, L10n.text("Das neue Cover ist kein unterstütztes PNG-/JPEG-Bild."))
             }
             if records[10] != old[10], let block = records[10] {
                 for cover in try MetadataCodec.localized(block).values {
-                    try require(LibraryMetadataReader.makeThumbnail(cover) != nil, "Ein neues Sprach-Cover ist kein unterstütztes PNG-/JPEG-Bild.")
+                    try require(LibraryMetadataReader.makeThumbnail(cover) != nil, L10n.text("Ein neues Sprach-Cover ist kein unterstütztes PNG-/JPEG-Bild."))
                 }
             }
         }
@@ -43,11 +43,11 @@ struct ArchiveEditRequest: Sendable {
 
 extension NUPArchive {
     func saveEditsAs(_ request: ArchiveEditRequest, destination: URL, context: JobContext) throws -> NUPArchive {
-        try require(permitsEditing, "Diagnose-Snapshots können nicht als Bearbeitung gespeichert werden.")
-        try require(destination.standardizedFileURL != url.standardizedFileURL, "Für die Originaldatei bitte Übernehmen verwenden.")
+        try require(permitsEditing, L10n.text("Diagnose-Snapshots können nicht als Bearbeitung gespeichert werden."))
+        try require(destination.standardizedFileURL != url.standardizedFileURL, L10n.text("Für die Originaldatei bitte Übernehmen verwenden."))
         let temporary = destination.deletingLastPathComponent().appendingPathComponent(".nup-draft-\(UUID().uuidString).partial")
         let fd = Darwin.open(temporary.path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
-        try require(fd >= 0, "Temporäre Datei kann nicht angelegt werden.")
+        try require(fd >= 0, L10n.text("Temporäre Datei kann nicht angelegt werden."))
         defer {
             for paths in [MetadataTransaction.journals(for: temporary), ArchiveContentJournal.journals(for: temporary)] {
                 try? FileManager.default.removeItem(at: paths.pending); try? FileManager.default.removeItem(at: paths.committed)

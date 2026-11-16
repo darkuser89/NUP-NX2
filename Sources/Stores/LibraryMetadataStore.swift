@@ -51,7 +51,7 @@ final class LibraryMetadataStore: ObservableObject {
                 let result: LibraryMetadataResult
                 do { result = try await loader.read(entry, context: job) }
                 catch is CancellationError { break }
-                catch { result = LibraryMetadataResult(item: LibraryItemMetadata(notice: "Metadaten nicht lesbar: \(error.localizedDescription)")) }
+                catch { result = LibraryMetadataResult(item: LibraryItemMetadata(notice: L10n.text("Metadaten nicht lesbar: \(String(describing: error.localizedDescription))"))) }
                 guard !Task.isCancelled, let self, self.generation == identifier else { break }
                 if self.entryRevisions[entry.url] == entryRevision {
                     self.apply(result, to: entry.url, publish: false)

@@ -3,8 +3,8 @@ import Foundation
 enum ArchiveRepair {
     static func apply(_ report: ArchiveRepairReport, selection: Set<ArchiveRepairTarget>? = nil,
                       context: JobContext = JobContext()) throws -> NUPArchive {
-        try require(report.canRepair, "Dieser Befund ist nicht sicher automatisch reparierbar.")
-        guard let source = report.source, let complete = report.proposed else { throw NUPError("Reparaturvorschau fehlt.") }
+        try require(report.canRepair, L10n.text("Dieser Befund ist nicht sicher automatisch reparierbar."))
+        guard let source = report.source, let complete = report.proposed else { throw NUPError(L10n.text("Reparaturvorschau fehlt.")) }
         let selected = selection ?? report.repairTargets
         let file = try regularFile(report.url, writable: true); defer { try? file.close() }
         try MetadataTransaction.lock(file)
@@ -14,7 +14,7 @@ enum ArchiveRepair {
         let fresh = try ArchiveDiagnosis.inspect(report.url, context: context)
         try require(fresh.canRepair && fresh.source?.header == source.header && fresh.source?.toc == source.toc &&
                     fresh.proposed?.header == complete.header && fresh.proposed?.toc == complete.toc,
-                    "Die Belege haben sich seit der Vorschau geändert. Bitte erneut diagnostizieren.")
+                    L10n.text("Die Belege haben sich seit der Vorschau geändert. Bitte erneut diagnostizieren."))
         let proposed = try fresh.selectedLayout(selected, context: context)
         try context.check(); try source.revision.requireCurrent(at: report.url)
         let journal = try ArchiveRepairJournal(source: source, layout: proposed)
@@ -24,11 +24,11 @@ enum ArchiveRepair {
         do {
             try context.check(); try source.revision.requireCurrent(at: report.url)
             if !journal.entries.isEmpty { mutated = true; try journal.writeRecords(to: file) }
-            try context.report(0.8, "Reparaturdatensätze korrigiert …", force: true)
+            try context.report(0.8, L10n.text("Reparaturdatensätze korrigiert …"), force: true)
             try context.check(); mutated = true; try journal.writeHeader(to: file)
-            try context.report(0.9, "Prüfe reparierte NUP …", force: true)
+            try context.report(0.9, L10n.text("Prüfe reparierte NUP …"), force: true)
             let current = try NUPArchive(url: report.url, context: context, recoverPendingMetadata: false)
-            try require(current.header == proposed.header && current.toc == proposed.toc, "Reparatur wurde nicht korrekt zurückgelesen.")
+            try require(current.header == proposed.header && current.toc == proposed.toc, L10n.text("Reparatur wurde nicht korrekt zurückgelesen."))
             try FileRevision(handle: file).requireCurrent(at: report.url)
             try context.check(); try ArchiveRepairJournal.markCommitted(url: report.url)
             committed = true
@@ -41,7 +41,7 @@ enum ArchiveRepair {
                     if mutated { try ArchiveRepairJournal.rollback(url: report.url, file: file) }
                     else { try FileManager.default.removeItem(at: ArchiveRepairJournal.journals(for: report.url).pending) }
                 }
-                catch { throw NUPError("Reparatur unterbrochen. Protokoll neben der NUP belassen und erneut öffnen: \(error.localizedDescription)") }
+                catch { throw NUPError(L10n.text("Reparatur unterbrochen. Protokoll neben der NUP belassen und erneut öffnen: \(String(describing: error.localizedDescription))")) }
             }
             throw error
         }

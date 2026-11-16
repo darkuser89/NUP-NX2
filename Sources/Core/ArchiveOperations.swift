@@ -4,11 +4,11 @@ import Darwin
 extension NUPArchive {
     func extract(package index: Int, subtree: String?, destination: URL, context: JobContext) throws {
         try verify(deep: false, context: context)
-        try require(packages.indices.contains(index), "Paket existiert nicht.")
+        try require(packages.indices.contains(index), L10n.text("Paket existiert nicht."))
         var root = packages[index].root
         if let subtree {
             let content = subtree == "exefs" ? packages[index].exefs : (subtree == "romfs" ? packages[index].romfs : nil)
-            guard let selected = content else { throw NUPError("Teilbaum \(subtree) fehlt im ausgewählten Paket.") }
+            guard let selected = content else { throw NUPError(L10n.text("Teilbaum \(String(describing: subtree)) fehlt im ausgewählten Paket.")) }
             root = selected
         }
         var planned: [(Int, [String])] = []
@@ -19,7 +19,7 @@ extension NUPArchive {
             if !path.isEmpty {
                 // Conservative on all volumes: refuse case/Unicode collisions before writing.
                 let key = path.map { $0.precomposedStringWithCanonicalMapping.lowercased() }.joined(separator: "/")
-                try require(collisionKeys.insert(key).inserted, "Dateinamen kollidieren auf macOS: \(path.joined(separator: "/"))")
+                try require(collisionKeys.insert(key).inserted, L10n.text("Dateinamen kollidieren auf macOS: \(String(describing: path.joined(separator: "/")))"))
                 planned.append((node, path))
             }
             if node < directories.count {
@@ -38,12 +38,12 @@ extension NUPArchive {
         for (number, item) in planned.enumerated() {
             let (node, parts) = item
             let target = parts.reduce(temporary) { $0.appendingPathComponent($1) }
-            try context.report(Double(number) / Double(max(1, planned.count)), "Entpacke \(parts.last ?? "")")
+            try context.report(Double(number) / Double(max(1, planned.count)), L10n.text("Entpacke \(String(describing: parts.last ?? ""))"))
             if node < directories.count {
                 try FileManager.default.createDirectory(at: target, withIntermediateDirectories: false)
             } else {
                 try require(FileManager.default.createFile(atPath: target.path, contents: nil, attributes: [.posixPermissions: 0o600]),
-                            "Zieldatei kann nicht angelegt werden.")
+                            L10n.text("Zieldatei kann nicht angelegt werden."))
                 let output = try FileHandle(forWritingTo: target)
                 defer { try? output.close() }
                 try StreamCodec.consume(files[node - directories.count], input: input, context: context) {
@@ -54,23 +54,23 @@ extension NUPArchive {
         }
         try context.check()
         try publishDirectory(temporary, to: destination)
-        try? context.report(1, "Paket entpackt; alle geschriebenen Dateien per SHA-256 geprüft.")
+        try? context.report(1, L10n.text("Paket entpackt; alle geschriebenen Dateien per SHA-256 geprüft."))
     }
 
     func saveMetadata(package index: Int, changes: MetadataEdit, profile: MetadataProfile,
                       destination: URL, replacingOriginal: Bool = false, context: JobContext) throws {
-        try require(permitsEditing, "Ein Diagnose-Snapshot darf nicht zur normalen Metadatenbearbeitung verwendet werden.")
+        try require(permitsEditing, L10n.text("Ein Diagnose-Snapshot darf nicht zur normalen Metadatenbearbeitung verwendet werden."))
         let input = try regularFile(url)
         defer { try? input.close() }
         let sourceRevision = try FileRevision(handle: input)
         if replacingOriginal {
             try require(destination.standardizedFileURL == url.standardizedFileURL,
-                        "Nur die geöffnete Originaldatei darf mit dieser Aktion ersetzt werden.")
+                        L10n.text("Nur die geöffnete Originaldatei darf mit dieser Aktion ersetzt werden."))
             try require(sourceRevision == revision,
-                        "Die Originaldatei wurde seit dem Öffnen verändert. Bitte erneut öffnen.")
+                        L10n.text("Die Originaldatei wurde seit dem Öffnen verändert. Bitte erneut öffnen."))
         }
         try verify(deep: false, context: context)
-        try require(packages.indices.contains(index), "Paket existiert nicht.")
+        try require(packages.indices.contains(index), L10n.text("Paket existiert nicht."))
         var records = packages
         var meta = records[index].metadata
         for (type, text) in [(UInt16(5), changes.name), (6, changes.publisher), (4, changes.displayVersion)] {
@@ -89,13 +89,13 @@ extension NUPArchive {
         let dataEnd = files.reduce(blobOffset) { max($0, $1.offset + $1.storedSize) }
         let temporary = destination.deletingLastPathComponent().appendingPathComponent(".nup-edit-\(UUID().uuidString).partial")
         try require(FileManager.default.createFile(atPath: temporary.path, contents: nil, attributes: [.posixPermissions: 0o600]),
-                    "Temporäre Datei kann nicht angelegt werden.")
+                    L10n.text("Temporäre Datei kann nicht angelegt werden."))
         defer { try? FileManager.default.removeItem(at: temporary) }
         let output = try FileHandle(forWritingTo: temporary)
         defer { try? output.close() }
         var copied: UInt64 = 0
         while copied < dataEnd {
-            try context.report(Double(copied) / Double(max(1, dataEnd)), "Kopiere Containerinhalt …")
+            try context.report(Double(copied) / Double(max(1, dataEnd)), L10n.text("Kopiere Containerinhalt …"))
             try autoreleasepool {
                 let data = try readExactly(input, Int(min(UInt64(StreamCodec.chunkSize), dataEnd - copied)))
                 try output.write(contentsOf: data); copied += UInt64(data.count)
@@ -104,7 +104,7 @@ extension NUPArchive {
         var newTOC = toc
         for number in records.indices {
             let block = try MetadataCodec.serialize(records[number].metadata)
-            try require(block.count <= 64 * 1024 * 1024, "Metadaten überschreiten das Paketlimit.")
+            try require(block.count <= 64 * 1024 * 1024, L10n.text("Metadaten überschreiten das Paketlimit."))
             records[number].metaOffset = block.isEmpty ? 0 : try output.offset()
             records[number].metaSize = block.count
             try output.write(contentsOf: block)
@@ -122,6 +122,6 @@ extension NUPArchive {
         try sourceRevision.requireCurrent(at: url)
         try context.check()
         try publishFile(temporary, to: destination)
-        try? context.report(1, "Metadaten als neue NUP-Datei gespeichert.")
+        try? context.report(1, L10n.text("Metadaten als neue NUP-Datei gespeichert."))
     }
 }

@@ -37,7 +37,7 @@ enum DumpDiscovery {
                     let input = try regularFile(source)
                     defer { try? input.close() }
                     let size = try input.seekToEnd()
-                    try require(size <= 32 * 1024 * 1024, "NPDM ist größer als 32 MB.")
+                    try require(size <= 32 * 1024 * 1024, L10n.text("NPDM ist größer als 32 MB."))
                     try input.seek(toOffset: 0)
                     let data = try readExactly(input, integer(size))
                     record.metadata[profile.type(1)] = data
@@ -66,12 +66,12 @@ enum DumpDiscovery {
     }
 
     static func discover(_ source: URL, options: PackOptions, context: JobContext) throws -> [DumpPackage] {
-        try require(isDirectory(source), "Bitte einen regulären Dump-Ordner auswählen.")
+        try require(isDirectory(source), L10n.text("Bitte einen regulären Dump-Ordner auswählen."))
         let title = options.titleID.trimmingCharacters(in: .whitespacesAndNewlines)
         let override: UInt64?
         if title.isEmpty { override = nil }
         else {
-            try require(title.utf8.count == 16 && UInt64(title, radix: 16) != nil, "Titel-ID muss genau 16 Hex-Zeichen enthalten.")
+            try require(title.utf8.count == 16 && UInt64(title, radix: 16) != nil, L10n.text("Titel-ID muss genau 16 Hex-Zeichen enthalten."))
             override = UInt64(title, radix: 16)
         }
         let base = source.appendingPathComponent("base")
@@ -89,7 +89,7 @@ enum DumpDiscovery {
             for entry in try entries(updates) {
                 let name = entry.lastPathComponent
                 guard !name.isEmpty && name.utf8.allSatisfy({ (48...57).contains($0) }) && isDirectory(entry) else { continue }
-                try require(UInt32(name) != nil, "Update-Version liegt außerhalb des 32-Bit-Bereichs.")
+                try require(UInt32(name) != nil, L10n.text("Update-Version liegt außerhalb des 32-Bit-Bereichs."))
                 if try hasFiles(entry, context: context) {
                     var package = try resolve(entry, kind: 1, version: UInt32(name)!, titleID: baseID, profile: options.profile)
                     if !packages.contains(where: { $0.record.kind == 0 }) { package.record.flags = 1 }
@@ -109,7 +109,7 @@ enum DumpDiscovery {
                 }
             }
         }
-        try require(!packages.isEmpty, "Keine Pakete gefunden. Erwartet: base/, updates/<Version>/, dlc/<Titel-ID>/<Index>/ oder exefs/ und romfs/.")
+        try require(!packages.isEmpty, L10n.text("Keine Pakete gefunden. Erwartet: base/, updates/<Version>/, dlc/<Titel-ID>/<Index>/ oder exefs/ und romfs/."))
         for index in packages.indices {
             packages[index].record.id = index
             packages[index].record.metadata[options.profile.type(8)] = Data(source.lastPathComponent.utf8)

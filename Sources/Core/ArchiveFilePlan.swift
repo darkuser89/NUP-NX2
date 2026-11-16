@@ -27,7 +27,7 @@ struct ArchiveFilePlan {
 
     init(archive: NUPArchive, groups: [ArchiveFilePlanGroup], stageSize: UInt64,
          metadata: [Int: [UInt16: Data]] = [:]) throws {
-        try require(metadata.keys.allSatisfy { archive.packages.indices.contains($0) }, "Metadaten-Paket existiert nicht.")
+        try require(metadata.keys.allSatisfy { archive.packages.indices.contains($0) }, L10n.text("Metadaten-Paket existiert nicht."))
         try Self.validateTargets(archive: archive, groups: groups, stageSize: stageSize)
         let removing = groups.reduce(into: Set<Int>()) { $0.formUnion($1.removing) }
         var files: [NUPFile] = [], remap: [Int: Int] = [:]
@@ -55,16 +55,16 @@ struct ArchiveFilePlan {
             }
         }
         addedIndices = Array(retainedCount..<files.count)
-        try require(dc + files.count <= Int(UInt32.max), "Zu viele Dateiknoten.")
+        try require(dc + files.count <= Int(UInt32.max), L10n.text("Zu viele Dateiknoten."))
         var packages = archive.packages, blocks: [Int: Data] = [:], totalMetadata = 0
         for index in packages.indices {
             if let replacement = metadata[index] {
                 let block = try MetadataCodec.serialize(replacement)
-                try require(block.count <= MetadataTransaction.metadataLimit, "Metadaten überschreiten das Paketlimit.")
+                try require(block.count <= MetadataTransaction.metadataLimit, L10n.text("Metadaten überschreiten das Paketlimit."))
                 blocks[index] = block; packages[index].metaSize = block.count
             }
             totalMetadata += packages[index].metaSize
-            try require(totalMetadata <= 256 * 1024 * 1024, "Metadaten überschreiten das Speicherlimit.")
+            try require(totalMetadata <= 256 * 1024 * 1024, L10n.text("Metadaten überschreiten das Speicherlimit."))
         }
         let tocStart = try archive.header.uint(8, 8)
         let changesFiles = groups.contains { !$0.additions.isEmpty || !$0.removing.isEmpty }
@@ -111,15 +111,15 @@ struct ArchiveFilePlan {
 
     /// Staging needs ownership/name checks, not a full TOC rebuild on the UI thread.
     static func validateTargets(archive: NUPArchive, groups: [ArchiveFilePlanGroup], stageSize: UInt64) throws {
-        try require(Set(groups.map(\.directory)).count == groups.count, "Zielordner wurde mehrfach angegeben.")
+        try require(Set(groups.map(\.directory)).count == groups.count, L10n.text("Zielordner wurde mehrfach angegeben."))
         let removing = groups.reduce(into: Set<Int>()) { $0.formUnion($1.removing) }
         for group in groups {
-            try require(archive.packages.indices.contains(group.package), "Paket existiert nicht.")
+            try require(archive.packages.indices.contains(group.package), L10n.text("Paket existiert nicht."))
             try require(archive.directories.indices.contains(group.directory) && archive.owns(node: group.directory, package: group.package),
-                        "Zielordner gehört nicht zum ausgewählten Paket.")
+                        L10n.text("Zielordner gehört nicht zum ausgewählten Paket."))
             try require(group.removing.allSatisfy { archive.files.indices.contains($0) &&
                         archive.owns(node: archive.directories.count + $0, package: group.package) },
-                        "Die ausgewählte Datei gehört nicht zum Paket.")
+                        L10n.text("Die ausgewählte Datei gehört nicht zum Paket."))
             var names = Set(archive.directories[group.directory].children.compactMap { child -> String? in
                 if child >= archive.directories.count && removing.contains(child - archive.directories.count) { return nil }
                 return (child < archive.directories.count ? archive.directories[child].name : archive.files[child - archive.directories.count].name)
@@ -128,14 +128,14 @@ struct ArchiveFilePlan {
             for file in group.additions {
                 try safeName(file.name)
                 try require(names.insert(file.name.precomposedStringWithCanonicalMapping.lowercased()).inserted,
-                            "Der Name existiert im Zielordner bereits: \(file.name). Bitte zuerst entfernen oder die Quelldatei umbenennen.")
+                            L10n.text("Der Name existiert im Zielordner bereits: \(String(describing: file.name)). Bitte zuerst entfernen oder die Quelldatei umbenennen."))
                 if file.storedSize > 0 { try bounded(file.offset, file.storedSize, by: stageSize) }
             }
         }
     }
 
     private static func end(_ offset: UInt64, _ count: UInt64) throws -> UInt64 {
-        try require(count <= UInt64(Int64.max) && offset <= UInt64(Int64.max) - count, "Container wird zu groß.")
+        try require(count <= UInt64(Int64.max) && offset <= UInt64(Int64.max) - count, L10n.text("Container wird zu groß."))
         return offset + count
     }
 
@@ -146,7 +146,7 @@ struct ArchiveFilePlan {
         }
         let size = 48 + packages.count * 64 + directories.count * 24 + files.count * 80 +
             directories.reduce(0) { $0 + $1.children.count } * 4 + pool.count
-        try require(size <= 256 * 1024 * 1024, "Inhaltsverzeichnis überschreitet 256 MiB.")
+        try require(size <= 256 * 1024 * 1024, L10n.text("Inhaltsverzeichnis überschreitet 256 MiB."))
         var toc = Data(count: size)
         toc.put(Data([84,79,67,1]), at: 0)
         toc.put(UInt64(packages.count), at: 4, width: 4)

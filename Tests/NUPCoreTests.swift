@@ -216,7 +216,9 @@ final class NUPCoreTests: XCTestCase {
         let archive = try packed()
         var data = try Data(contentsOf: archive.url); data[140] ^= 1
         let url = try write("bad-hash.nup", data)
-        XCTAssertThrowsError(try NUPArchive(url: url)) { XCTAssertTrue($0.localizedDescription.contains("TOC-SHA-256")) }
+        XCTAssertThrowsError(try NUPArchive(url: url)) {
+            XCTAssertEqual($0.localizedDescription, L10n.text("TOC-SHA-256 stimmt nicht überein."))
+        }
     }
     func testAcceptsTOCPaddingAfterDeclaredStringPool() throws {
         try write("padding/romfs/a", Data("payload".utf8))

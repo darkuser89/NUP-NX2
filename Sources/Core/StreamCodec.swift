@@ -5,7 +5,7 @@ enum StreamCodec {
     static let chunkSize = 1 << 20
 
     static func checked(_ code: Int) throws -> Int {
-        if ZSTD_isError(code) != 0 { throw NUPError("Zstandard: \(String(cString: ZSTD_getErrorName(code)))") }
+        if ZSTD_isError(code) != 0 { throw NUPError(L10n.text("Zstandard: \(String(describing: String(cString: ZSTD_getErrorName(code))))")) }
         return code
     }
 
@@ -37,7 +37,7 @@ enum StreamCodec {
         let expected = try input.seekToEnd()
         try input.seek(toOffset: 0)
         let start = try output.offset()
-        guard let encoder = ZSTD_createCCtx() else { throw NUPError("Zstandard-Speicher konnte nicht reserviert werden.") }
+        guard let encoder = ZSTD_createCCtx() else { throw NUPError(L10n.text("Zstandard-Speicher konnte nicht reserviert werden.")) }
         defer { ZSTD_freeCCtx(encoder) }
         _ = try checked(ZSTD_CCtx_setParameter(encoder, ZSTD_c_compressionLevel, Int32(level)))
         _ = try checked(ZSTD_CCtx_setPledgedSrcSize(encoder, expected))
@@ -66,7 +66,7 @@ enum StreamCodec {
             }
             if end { break }
         }
-        try require(size == expected, "Quelldatei wurde beim Packen verändert: \(url.lastPathComponent)")
+        try require(size == expected, L10n.text("Quelldatei wurde beim Packen verändert: \(String(describing: url.lastPathComponent))"))
         let digest = Data(hash.finalize())
         let stored = try output.offset() - start
         if stored >= size {
@@ -74,7 +74,7 @@ enum StreamCodec {
             try output.seek(toOffset: start)
             try input.seek(toOffset: 0)
             let (rawSize, rawHash) = try raw(input, output: output, context: context)
-            try require(rawSize == size && rawHash == digest, "Quelldatei wurde beim Packen verändert.")
+            try require(rawSize == size && rawHash == digest, L10n.text("Quelldatei wurde beim Packen verändert."))
             return NUPFile(name: url.lastPathComponent, size: size, offset: size == 0 ? 0 : start,
                            storedSize: size, hash: digest, codec: 0)
         }
@@ -89,7 +89,7 @@ enum StreamCodec {
         var produced: UInt64 = 0
         var hash = SHA256()
         func accept(_ data: Data) throws {
-            try require(UInt64(data.count) <= file.size - produced, "Dekomprimierte Datei überschreitet ihre deklarierte Größe.")
+            try require(UInt64(data.count) <= file.size - produced, L10n.text("Dekomprimierte Datei überschreitet ihre deklarierte Größe."))
             produced += UInt64(data.count)
             hash.update(data: data)
             try sink(data)
@@ -102,7 +102,7 @@ enum StreamCodec {
                 try accept(data)
             }
         } else {
-            guard let decoder = ZSTD_createDCtx() else { throw NUPError("Zstandard-Speicher konnte nicht reserviert werden.") }
+            guard let decoder = ZSTD_createDCtx() else { throw NUPError(L10n.text("Zstandard-Speicher konnte nicht reserviert werden.")) }
             defer { ZSTD_freeDCtx(decoder) }
             _ = try checked(ZSTD_DCtx_setParameter(decoder, ZSTD_d_windowLogMax, 27))
             var buffer = [UInt8](repeating: 0, count: chunkSize)
@@ -126,16 +126,16 @@ enum StreamCodec {
                         try accept(Data(buffer.prefix(count)))
                         if result == 0 {
                             try require(inBuffer.pos == inBuffer.size && remaining == 0,
-                                        "Zusätzliche Daten hinter dem Zstandard-Frame.")
+                                        L10n.text("Zusätzliche Daten hinter dem Zstandard-Frame."))
                             break
                         }
-                        try require(count > 0 || inBuffer.pos > 0, "Zstandard-Decoder macht keinen Fortschritt.")
+                        try require(count > 0 || inBuffer.pos > 0, L10n.text("Zstandard-Decoder macht keinen Fortschritt."))
                     } while inBuffer.pos < inBuffer.size || outputFilled
                 }
             }
-            try require(result == 0, "Abgeschnittener Zstandard-Frame.")
+            try require(result == 0, L10n.text("Abgeschnittener Zstandard-Frame."))
         }
-        try require(produced == file.size, "Falsche Dateigröße: \(file.name)")
-        try require(Data(hash.finalize()) == file.hash, "SHA-256 stimmt nicht überein: \(file.name)")
+        try require(produced == file.size, L10n.text("Falsche Dateigröße: \(String(describing: file.name))"))
+        try require(Data(hash.finalize()) == file.hash, L10n.text("SHA-256 stimmt nicht überein: \(String(describing: file.name))"))
     }
 }

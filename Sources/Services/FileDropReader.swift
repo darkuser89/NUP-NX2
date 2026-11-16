@@ -19,19 +19,19 @@ enum FileDropReader {
         else if let value = item as? String { url = URL(string: value) }
         else { url = nil }
         guard let url, url.isFileURL, !url.path.contains("\0") else {
-            throw NUPError("Bitte eine lokale NUP-Datei oder einen Ordner aus dem Finder ablegen.")
+            throw NUPError(L10n.text("Bitte eine lokale NUP-Datei oder einen Ordner aus dem Finder ablegen."))
         }
         return url.standardizedFileURL
     }
 
     static func validate(_ urls: [URL]) throws -> URL {
-        try require(urls.count == 1, "Bitte eine NUP-Datei oder einen Ordner auf einmal ablegen.")
+        try require(urls.count == 1, L10n.text("Bitte eine NUP-Datei oder einen Ordner auf einmal ablegen."))
         let input = urls[0]
-        try require(input.isFileURL && !input.path.contains("\0"), "Bitte eine lokale Datei oder einen lokalen Ordner ablegen.")
+        try require(input.isFileURL && !input.path.contains("\0"), L10n.text("Bitte eine lokale Datei oder einen lokalen Ordner ablegen."))
         let url = input.standardizedFileURL.resolvingSymlinksInPath()
         let values = try url.resourceValues(forKeys: [.isDirectoryKey, .isRegularFileKey])
         try require(values.isDirectory == true || (values.isRegularFile == true && url.pathExtension.lowercased() == "nup"),
-                    "Hier können NUP-Dateien und Ordner abgelegt werden.")
+                    L10n.text("Hier können NUP-Dateien und Ordner abgelegt werden."))
         return url
     }
 }

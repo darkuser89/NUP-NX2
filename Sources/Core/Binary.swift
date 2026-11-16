@@ -8,19 +8,19 @@ struct NUPError: LocalizedError, Sendable {
     var errorDescription: String? { message }
 }
 
-func require(_ condition: Bool, _ message: String) throws {
-    if !condition { throw NUPError(message) }
+func require(_ condition: Bool, _ message: @autoclosure () -> String) throws {
+    if !condition { throw NUPError(message()) }
 }
 
 extension Data {
     func bytes(_ offset: Int, _ length: Int) throws -> Data {
         try require(offset >= 0 && length >= 0 && offset <= count && length <= count - offset,
-                    "Abgeschnittene oder ungültige Binärdaten.")
+                    L10n.text("Abgeschnittene oder ungültige Binärdaten."))
         return subdata(in: offset..<(offset + length))
     }
     func uint(_ offset: Int, _ width: Int) throws -> UInt64 {
         try require(offset >= 0 && width >= 1 && width <= 8 && offset <= count && width <= count - offset,
-                    "Abgeschnittene oder ungültige Binärdaten.")
+                    L10n.text("Abgeschnittene oder ungültige Binärdaten."))
         return withUnsafeBytes { raw in
             switch width {
             case 1: return UInt64(raw.load(fromByteOffset: offset, as: UInt8.self))
@@ -33,7 +33,7 @@ extension Data {
     }
     func isZero(_ offset: Int, _ length: Int) throws -> Bool {
         try require(offset >= 0 && length >= 0 && offset <= count && length <= count - offset,
-                    "Abgeschnittene oder ungültige Binärdaten.")
+                    L10n.text("Abgeschnittene oder ungültige Binärdaten."))
         return withUnsafeBytes { (raw: UnsafeRawBufferPointer) in raw[offset..<(offset + length)].allSatisfy { $0 == 0 } }
     }
     mutating func put(_ value: UInt64, at offset: Int, width: Int) {
@@ -53,24 +53,24 @@ extension Data {
 }
 
 func integer(_ value: UInt64) throws -> Int {
-    try require(value <= UInt64(Int.max), "Ganzzahl außerhalb des unterstützten Bereichs.")
+    try require(value <= UInt64(Int.max), L10n.text("Ganzzahl außerhalb des unterstützten Bereichs."))
     return Int(value)
 }
 
 func aligned(_ value: UInt64) throws -> UInt64 {
-    try require(value <= UInt64.max - 15, "Datei zu groß.")
+    try require(value <= UInt64.max - 15, L10n.text("Datei zu groß."))
     return (value + 15) & ~15
 }
 
 func bounded(_ offset: UInt64, _ size: UInt64, by limit: UInt64) throws {
-    try require(offset <= limit && size <= limit - offset, "Dateibereich außerhalb des Containers.")
+    try require(offset <= limit && size <= limit - offset, L10n.text("Dateibereich außerhalb des Containers."))
 }
 
 func readExactly(_ handle: FileHandle, _ count: Int) throws -> Data {
     var result = Data()
     while result.count < count {
         let chunk = try handle.read(upToCount: count - result.count) ?? Data()
-        try require(!chunk.isEmpty, "Unerwartetes Dateiende; Datei wurde möglicherweise verändert.")
+        try require(!chunk.isEmpty, L10n.text("Unerwartetes Dateiende; Datei wurde möglicherweise verändert."))
         result.append(chunk)
     }
     return result
@@ -86,17 +86,17 @@ func safeName(_ name: String, allowEmpty: Bool = false) throws {
     // inside a UTF-8 multibyte sequence.
     guard (allowEmpty || !name.isEmpty), name != ".", name != "..",
           !name.utf8.contains(where: { $0 == 0 || $0 == 0x2f || $0 == 0x5c }) else {
-        throw NUPError("Unsicherer Dateiname im Container: \(name)")
+        throw NUPError(L10n.text("Unsicherer Dateiname im Container: \(String(describing: name))"))
     }
 }
 
 func regularFile(_ url: URL, writable: Bool = false) throws -> FileHandle {
     let descriptor = Darwin.open(url.path, (writable ? O_RDWR : O_RDONLY) | O_NOFOLLOW | O_NONBLOCK)
-    guard descriptor >= 0 else { throw NUPError("Datei kann nicht sicher geöffnet werden: \(url.lastPathComponent)") }
+    guard descriptor >= 0 else { throw NUPError(L10n.text("Datei kann nicht sicher geöffnet werden: \(String(describing: url.lastPathComponent))")) }
     var info = stat()
     guard fstat(descriptor, &info) == 0, (info.st_mode & S_IFMT) == S_IFREG else {
         Darwin.close(descriptor)
-        throw NUPError("Nur reguläre Dateien werden unterstützt: \(url.lastPathComponent)")
+        throw NUPError(L10n.text("Nur reguläre Dateien werden unterstützt: \(String(describing: url.lastPathComponent))"))
     }
     return FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
 }
@@ -121,29 +121,29 @@ struct FileRevision: Equatable, Sendable {
     }
     init(handle: FileHandle) throws {
         var info = stat()
-        try require(fstat(handle.fileDescriptor, &info) == 0, "Dateistand konnte nicht gelesen werden.")
+        try require(fstat(handle.fileDescriptor, &info) == 0, L10n.text("Dateistand konnte nicht gelesen werden."))
         self.init(info)
     }
     func requireCurrent(at url: URL) throws {
         var info = stat()
         try require(lstat(url.path, &info) == 0 && (info.st_mode & S_IFMT) == S_IFREG,
-                    "Die Originaldatei ist nicht mehr verfügbar oder wurde ersetzt. Bitte erneut öffnen.")
+                    L10n.text("Die Originaldatei ist nicht mehr verfügbar oder wurde ersetzt. Bitte erneut öffnen."))
         try require(FileRevision(info) == self,
-                    "Die Originaldatei wurde inzwischen verändert. Bitte erneut öffnen, bevor du speicherst.")
+                    L10n.text("Die Originaldatei wurde inzwischen verändert. Bitte erneut öffnen, bevor du speicherst."))
     }
 }
 
 func publishFile(_ temporary: URL, to destination: URL) throws {
     // Hard-link publication is atomic and refuses to replace an existing destination.
     guard Darwin.link(temporary.path, destination.path) == 0 else {
-        throw NUPError("Ziel konnte nicht angelegt werden (existiert es bereits?): \(destination.lastPathComponent)")
+        throw NUPError(L10n.text("Ziel konnte nicht angelegt werden (existiert es bereits?): \(String(describing: destination.lastPathComponent))"))
     }
     try? FileManager.default.removeItem(at: temporary)
 }
 
 func publishDirectory(_ temporary: URL, to destination: URL) throws {
     guard renamex_np(temporary.path, destination.path, UInt32(RENAME_EXCL)) == 0 else {
-        throw NUPError("Zielordner konnte nicht angelegt werden; vorhandene Ordner werden nicht ersetzt.")
+        throw NUPError(L10n.text("Zielordner konnte nicht angelegt werden; vorhandene Ordner werden nicht ersetzt."))
     }
 }
 
@@ -159,13 +159,13 @@ final class JobContext: @unchecked Sendable {
         lock.lock(); let value = cancelled; lock.unlock()
         if value { throw CancellationError() }
     }
-    func report(_ fraction: Double, _ message: String, force: Bool = false) throws {
+    func report(_ fraction: Double, _ message: @autoclosure () -> String, force: Bool = false) throws {
         try check()
         lock.lock()
         let now = Date()
         let emit = force || now.timeIntervalSince(lastUpdate) > 0.08 || fraction >= 1
         if emit { lastUpdate = now }
         lock.unlock()
-        if emit { callback(min(1, max(0, fraction)), message) }
+        if emit { callback(min(1, max(0, fraction)), message()) }
     }
 }

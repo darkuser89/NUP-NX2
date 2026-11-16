@@ -6,6 +6,13 @@ enum WorkspaceSection: String, CaseIterable, Identifiable {
     case library = "Bibliothek"
     case pack = "Erstellen"
     var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .archive: L10n.text("Container")
+        case .library: L10n.text("Bibliothek")
+        case .pack: L10n.text("Erstellen")
+        }
+    }
     var symbol: String {
         switch self {
         case .archive: return "shippingbox"
@@ -48,7 +55,7 @@ final class WorkspaceStore: ObservableObject {
     let profile = MetadataProfile.specification
     @Published var busy = false
     @Published var fraction = 0.0
-    @Published var status = "Bereit"
+    @Published var status = L10n.text("Bereit")
     @Published var error: String?
     @Published var lastOutput: URL?
     @Published var recent: [String]
@@ -92,7 +99,7 @@ final class WorkspaceStore: ObservableObject {
             let url = try FileDropReader.validate(urls)
             if !busy && section == .pack && DumpDiscovery.isDirectory(url) {
                 sourceFolder = url
-                status = "Dump-Quellordner ausgewählt: \(url.lastPathComponent)"
+                status = L10n.text("Dump-Quellordner ausgewählt: \(String(describing: url.lastPathComponent))")
             } else {
                 open(url)
             }
@@ -125,7 +132,7 @@ final class WorkspaceStore: ObservableObject {
     func receiveDrop(_ providers: [NSItemProvider]) -> Bool {
         guard canReceiveFiles, libraryCoverDraft == nil else { return false }
         guard providers.count == 1 else {
-            error = "Bitte eine NUP-Datei oder einen Ordner auf einmal ablegen."
+            error = L10n.text("Bitte eine NUP-Datei oder einen Ordner auf einmal ablegen.")
             return false
         }
         Task {
@@ -145,14 +152,14 @@ final class WorkspaceStore: ObservableObject {
         if DumpDiscovery.isDirectory(url) { scanLibrary(url); return }
         if deferNavigation(.open(url)) { return }
         section = .archive
-        perform("Container öffnen") { context in
+        perform(L10n.text("Container öffnen")) { context in
             do {
                 let archive = try NUPArchive(url: url, context: context)
-                return JobResult(message: "\(archive.packages.count) Pakete · Struktur und TOC-Hash geprüft", archive: archive)
+                return JobResult(message: L10n.text("\(String(describing: archive.packages.count)) Pakete · Struktur und TOC-Hash geprüft"), archive: archive)
             } catch is CancellationError { throw CancellationError() }
             catch {
                 let report = try ArchiveDiagnosis.inspect(url, originalError: error.localizedDescription, context: context)
-                return JobResult(message: "Öffnen fehlgeschlagen · Diagnose liegt vor · Datei unverändert.", repairReport: report)
+                return JobResult(message: L10n.text("Öffnen fehlgeschlagen · Diagnose liegt vor · Datei unverändert."), repairReport: report)
             }
         }
     }
@@ -164,28 +171,28 @@ final class WorkspaceStore: ObservableObject {
         guard !busy else { return }
         if deferNavigation(.diagnose(url)) { return }
         repairError = nil
-        perform("NUP diagnostizieren") { context in
+        perform(L10n.text("NUP diagnostizieren")) { context in
             let report = try ArchiveDiagnosis.inspect(url, context: context)
-            return JobResult(message: "Diagnose abgeschlossen · Datei unverändert.", repairReport: report)
+            return JobResult(message: L10n.text("Diagnose abgeschlossen · Datei unverändert."), repairReport: report)
         }
     }
     func repair(_ report: ArchiveRepairReport, selection: Set<ArchiveRepairTarget>? = nil) {
         guard !busy, repairReport?.id == report.id, report.canRepair else { return }
         guard !hasPendingEdits else {
-            repairError = "Bitte den Entwurf zuerst übernehmen oder verwerfen und danach erneut prüfen."
+            repairError = L10n.text("Bitte den Entwurf zuerst übernehmen oder verwerfen und danach erneut prüfen.")
             return
         }
         repairError = nil
-        perform("NUP direkt reparieren", reportFailure: { [weak self] in self?.repairError = $0 }) { context in
+        perform(L10n.text("NUP direkt reparieren"), reportFailure: { [weak self] in self?.repairError = $0 }) { context in
             let archive = try ArchiveRepair.apply(report, selection: selection, context: context)
-            return JobResult(message: "Ausgewählte Korrekturen gespeichert · Struktur, TOC-Hash und UUID geprüft. Dateiinhalte unverändert; gemeldete Inhaltsfehler bleiben bestehen.",
+            return JobResult(message: L10n.text("Ausgewählte Korrekturen gespeichert · Struktur, TOC-Hash und UUID geprüft. Dateiinhalte unverändert; gemeldete Inhaltsfehler bleiben bestehen."),
                              archive: archive, reveal: archive.url, repaired: true)
         }
     }
     func chooseLibrary() {
         guard !busy else { return }
         Task {
-            guard let url = await FilePanels.folder(title: "Ordner mit NUP-Dateien auswählen") else { return }
+            guard let url = await FilePanels.folder(title: L10n.text("Ordner mit NUP-Dateien auswählen")) else { return }
             scanLibrary(url)
         }
     }
@@ -200,31 +207,31 @@ final class WorkspaceStore: ObservableObject {
         libraryUnavailableMessage = nil
         section = .library
         let reportFailure: ((String) -> Void)? = restoring ? { [weak self] _ in
-            self?.libraryUnavailableMessage = "Der gespeicherte Ordner ist momentan nicht verfügbar. Datenträger verbinden und erneut versuchen oder einen anderen Ordner auswählen."
+            self?.libraryUnavailableMessage = L10n.text("Der gespeicherte Ordner ist momentan nicht verfügbar. Datenträger verbinden und erneut versuchen oder einen anderen Ordner auswählen.")
         } : nil
-        perform("NUP-Ordner durchsuchen", reportFailure: reportFailure) { context in
+        perform(L10n.text("NUP-Ordner durchsuchen"), reportFailure: reportFailure) { context in
             let snapshot = try LibraryScanner.scan(url, context: context)
-            let message = "\(snapshot.entries.count) NUP-Dateien gefunden" +
-                (snapshot.warnings.isEmpty ? "" : " · \(snapshot.warnings.count) Hinweise")
+            let message = L10n.text("\(String(describing: snapshot.entries.count)) NUP-Dateien gefunden") +
+                (snapshot.warnings.isEmpty ? "" : L10n.text(" · \(String(describing: snapshot.warnings.count)) Hinweise"))
             return JobResult(message: message, library: snapshot)
         }
     }
     func chooseSource() {
         Task {
-            if let url = await FilePanels.folder(title: "Dump-Quellordner auswählen") { sourceFolder = url }
+            if let url = await FilePanels.folder(title: L10n.text("Dump-Quellordner auswählen")) { sourceFolder = url }
         }
     }
     func pack() {
         guard !busy else { return }
         if deferNavigation(.create) { return }
         guard let source = sourceFolder,
-              let target = FilePanels.save(name: source.lastPathComponent + ".nup", title: "NUP-Container erstellen") else { return }
+              let target = FilePanels.save(name: source.lastPathComponent + ".nup", title: L10n.text("NUP-Container erstellen")) else { return }
         var settings = options
         settings.profile = .specification
         let capturedSettings = settings
-        perform("Container erstellen") { context in
+        perform(L10n.text("Container erstellen")) { context in
             try NUPWriter.pack(source: source, destination: target, options: capturedSettings, context: context)
-            return JobResult(message: "Container erstellt; Struktur geprüft.", archive: try NUPArchive(url: target), reveal: target)
+            return JobResult(message: L10n.text("Container erstellt; Struktur geprüft."), archive: try NUPArchive(url: target), reveal: target)
         }
     }
     func verify(deep: Bool) {
@@ -234,10 +241,10 @@ final class WorkspaceStore: ObservableObject {
     func inspect(_ url: URL, deep: Bool) {
         guard !busy else { return }
         repairError = nil
-        perform(deep ? "Dateien per SHA-256 prüfen" : "Struktur prüfen") { context in
+        perform(deep ? L10n.text("Dateien per SHA-256 prüfen") : L10n.text("Struktur prüfen")) { context in
             let report = try ArchiveInspection.inspect(url, deep: deep, context: context)
-            let message = report.fileCheck.map { "\($0.checked) Dateien geprüft · \($0.failed) Dateifehler · Ergebnis liegt vor." }
-                ?? "Strukturdiagnose abgeschlossen · Ergebnis liegt vor. Dateiinhalte nicht vollständig geprüft."
+            let message = report.fileCheck.map { L10n.text("\(String(describing: $0.checked)) Dateien geprüft · \(String(describing: $0.failed)) Dateifehler · Ergebnis liegt vor.") }
+                ?? L10n.text("Strukturdiagnose abgeschlossen · Ergebnis liegt vor. Dateiinhalte nicht vollständig geprüft.")
             return JobResult(message: message, repairReport: report)
         }
     }
@@ -277,10 +284,10 @@ final class WorkspaceStore: ObservableObject {
         guard !busy, let archive, archive.packages.indices.contains(packageIndex) else { return }
         let index = packageIndex
         let name = archive.url.deletingPathExtension().lastPathComponent + "-" + archive.packages[index].kindName + (subtree.map { "-" + $0 } ?? "")
-        guard let target = FilePanels.save(name: name, title: "Paket entpacken", folder: true) else { return }
-        perform("Paket entpacken") { context in
+        guard let target = FilePanels.save(name: name, title: L10n.text("Paket entpacken"), folder: true) else { return }
+        perform(L10n.text("Paket entpacken")) { context in
             try archive.extract(package: index, subtree: subtree, destination: target, context: context)
-            return JobResult(message: "Paket entpackt und alle geschriebenen Dateien per SHA-256 geprüft.", reveal: target)
+            return JobResult(message: L10n.text("Paket entpackt und alle geschriebenen Dateien per SHA-256 geprüft."), reveal: target)
         }
     }
     // Kept as a form API: replacingOriginal now stages changes for the shared Apply action.
@@ -304,10 +311,10 @@ final class WorkspaceStore: ObservableObject {
             return
         }
         let stayInLibrary = section == .library
-        perform("Cover-Metadaten laden") { context in
+        perform(L10n.text("Cover-Metadaten laden")) { context in
             let current = try NUPArchive(url: url, context: context)
             let index = current.packages.first(where: { $0.kind == 0 })?.id ?? 0
-            return JobResult(message: "Cover auswählen und vormerken; Übernehmen speichert den gesamten Entwurf.",
+            return JobResult(message: L10n.text("Cover auswählen und vormerken; Übernehmen speichert den gesamten Entwurf."),
                 archive: current, coverDraft: LibraryCoverDraft(archive: current, packageIndex: index), preferLibrary: stayInLibrary)
         }
     }
@@ -316,10 +323,10 @@ final class WorkspaceStore: ObservableObject {
               draft.packages.indices.contains(package) else { return }
         draft.packages[package].icon = cover
         editDraft = draft; libraryCoverDraft = nil; libraryCoverError = nil
-        status = "Cover vorgemerkt · Mit Übernehmen gemeinsam speichern."
+        status = L10n.text("Cover vorgemerkt · Mit Übernehmen gemeinsam speichern.")
     }
 
-    func cancel() { context?.cancel(); status = "Wird abgebrochen …" }
+    func cancel() { context?.cancel(); status = L10n.text("Wird abgebrochen …") }
     func reveal() { if let lastOutput { NSWorkspace.shared.activateFileViewerSelecting([lastOutput]) } }
 
     func perform(_ title: String, reportFailure: ((String) -> Void)? = nil,
@@ -384,22 +391,22 @@ final class WorkspaceStore: ObservableObject {
                 if var draft = editDraft, (try? draft.rebase(on: failure.recovered)) != nil {
                     archive = failure.recovered; editDraft = draft
                 }
-                if failure.underlying is CancellationError { status = "Abgebrochen · Entwurf bleibt zum Bearbeiten erhalten." }
+                if failure.underlying is CancellationError { status = L10n.text("Abgebrochen · Entwurf bleibt zum Bearbeiten erhalten.") }
                 else {
                     if let reportFailure { reportFailure(failure.localizedDescription) }
                     else { self.error = failure.localizedDescription }
-                    status = "Speichern fehlgeschlagen · Entwurf bleibt erhalten."
+                    status = L10n.text("Speichern fehlgeschlagen · Entwurf bleibt erhalten.")
                 }
                 activity.insert(status, at: 0)
             } catch is CancellationError {
                 afterApply = nil
-                status = "Abgebrochen. Temporäre Ausgaben wurden entfernt."
+                status = L10n.text("Abgebrochen. Temporäre Ausgaben wurden entfernt.")
                 activity.insert(status, at: 0)
             } catch {
                 afterApply = nil
                 if let reportFailure { reportFailure(error.localizedDescription) }
                 else { self.error = error.localizedDescription }
-                status = "Vorgang fehlgeschlagen"
+                status = L10n.text("Vorgang fehlgeschlagen")
                 activity.insert(error.localizedDescription, at: 0)
             }
             activity = Array(activity.prefix(20))

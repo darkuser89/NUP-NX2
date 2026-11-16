@@ -34,7 +34,7 @@ struct WorkspaceWindowGuard: NSViewRepresentable {
             window = nil; previous = nil
         }
         func windowShouldClose(_ sender: NSWindow) -> Bool {
-            if store.busy { store.status = "Bitte den laufenden Vorgang abschließen oder abbrechen."; return false }
+            if store.busy { store.status = L10n.text("Bitte den laufenden Vorgang abschließen oder abbrechen."); return false }
             if store.deferNavigation(.close(sender.windowNumber)) { return false }
             return previous?.windowShouldClose?(sender) ?? true
         }

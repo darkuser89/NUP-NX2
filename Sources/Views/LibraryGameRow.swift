@@ -20,8 +20,8 @@ struct LibraryGameRow: View {
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             }.buttonStyle(.plain)
-                .accessibilityLabel(item?.hasCover == true ? "Cover ändern" : "Cover hinzufügen")
-                .help("Cover auswählen und direkt in dieser NUP speichern")
+                .accessibilityLabel(item?.hasCover == true ? L10n.text("Cover ändern") : L10n.text("Cover hinzufügen"))
+                .help(L10n.text("Cover auswählen und direkt in dieser NUP speichern"))
             VStack(alignment: .leading, spacing: 3) {
                 Text(item?.title ?? entry.url.deletingPathExtension().lastPathComponent)
                     .fontWeight(.medium).lineLimit(1)

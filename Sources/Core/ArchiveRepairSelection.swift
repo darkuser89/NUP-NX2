@@ -17,8 +17,8 @@ extension ArchiveRepairReport {
     }
 
     func selectedLayout(_ selection: Set<ArchiveRepairTarget>, context: JobContext = JobContext()) throws -> ArchiveRepairLayout {
-        try require(canRepair && !selection.isEmpty && selection.isSubset(of: repairTargets), "Bitte sicher reparierbare Befunde auswählen.")
-        guard let source else { throw NUPError("Reparaturvorschau fehlt.") }
+        try require(canRepair && !selection.isEmpty && selection.isSubset(of: repairTargets), L10n.text("Bitte sicher reparierbare Befunde auswählen."))
+        guard let source else { throw NUPError(L10n.text("Reparaturvorschau fehlt.")) }
         var toc = source.toc
         for finding in packages where selection.contains(.package(finding.id)) {
             finding.proposed.put(into: &toc, package: finding.id)
@@ -32,7 +32,7 @@ extension ArchiveRepairReport {
         do {
             _ = try NUPArchive(url: url, context: context, recoverPendingMetadata: false, repairLayout: layout)
         } catch is CancellationError { throw CancellationError() }
-        catch { throw NUPError("Diese Befunde müssen zusammen repariert werden. Auswahl ergänzen: \(error.localizedDescription)") }
+        catch { throw NUPError(L10n.text("Diese Befunde müssen zusammen repariert werden. Auswahl ergänzen: \(String(describing: error.localizedDescription))")) }
         try source.revision.requireCurrent(at: url)
         return layout
     }

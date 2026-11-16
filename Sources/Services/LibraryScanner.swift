@@ -6,21 +6,21 @@ enum LibraryScanner {
         let root = folder.standardizedFileURL.resolvingSymlinksInPath()
         let rootValues = try root.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
         try require(rootValues.isDirectory == true && rootValues.isSymbolicLink != true,
-                    "Bitte einen regulären Ordner auswählen.")
+                    L10n.text("Bitte einen regulären Ordner auswählen."))
         var warnings: [String] = []
         let keys: [URLResourceKey] = [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey, .contentModificationDateKey]
         guard let enumerator = FileManager.default.enumerator(at: root, includingPropertiesForKeys: keys,
             options: [], errorHandler: { url, error in
                 warnings.append("\(url.lastPathComponent): \(error.localizedDescription)")
                 return true
-            }) else { throw NUPError("Der Ordner konnte nicht gelesen werden.") }
+            }) else { throw NUPError(L10n.text("Der Ordner konnte nicht gelesen werden.")) }
         var entries: [LibraryEntry] = []
         var checked = 0
         for case let url as URL in enumerator {
             try context.check()
             checked += 1
             if checked % 128 == 0 {
-                try context.report(0, "\(entries.count) NUPs gefunden · \(checked) Einträge durchsucht")
+                try context.report(0, L10n.text("\(String(describing: entries.count)) NUPs gefunden · \(String(describing: checked)) Einträge durchsucht"))
             }
             // FileManager does not follow symlink directories; skip symlink files too.
             guard url.pathExtension.lowercased() == "nup" else { continue }

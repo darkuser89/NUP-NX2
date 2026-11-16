@@ -98,8 +98,8 @@ extension NUPCoreTests {
         final class Box: @unchecked Sendable { var context: JobContext? }
         let archive = try packed(), original = try Data(contentsOf: archive.url)
         var draft = try combinedDraft(archive)
-        for phase in ["Aktualisiere Dateiverzeichnis", "Prüfe geänderten Container"] {
-            let box = Box(); box.context = JobContext { _, message in if message.hasPrefix(phase) { box.context?.cancel() } }
+        for phase in [L10n.text("Aktualisiere Dateiverzeichnis …"), L10n.text("Prüfe geänderten Container …")] {
+            let box = Box(); box.context = JobContext { _, message in if message == phase { box.context?.cancel() } }
             do { _ = try draft.archive.applyEdits(draft.request(), context: box.context!); XCTFail("Expected cancellation") }
             catch let failure as ArchiveEditFailure {
                 XCTAssertTrue(failure.underlying is CancellationError)
@@ -116,7 +116,7 @@ extension NUPCoreTests {
         final class Box: @unchecked Sendable { var context: JobContext? }
         let archive = try packed(), original = try Data(contentsOf: archive.url)
         var draft = ArchiveEditDraft(archive: archive); draft.packages[0].name = "Retry title"
-        let box = Box(); box.context = JobContext { _, message in if message.hasPrefix("Prüfe Metadatenänderung") { box.context?.cancel() } }
+        let box = Box(); box.context = JobContext { _, message in if message == L10n.text("Prüfe Metadatenänderung …") { box.context?.cancel() } }
         do { _ = try archive.applyEdits(draft.request(), context: box.context!); XCTFail("Expected cancellation") }
         catch let failure as ArchiveEditFailure { XCTAssertTrue(failure.underlying is CancellationError); try draft.rebase(on: failure.recovered) }
         XCTAssertEqual(try Data(contentsOf: archive.url), original)
@@ -325,7 +325,7 @@ extension NUPCoreTests {
         store.open(archive.url); try await finish()
         store.editDraft = try combinedDraft(XCTUnwrap(store.archive))
         let draft = try XCTUnwrap(store.editDraft), box = Box()
-        box.context = JobContext { _, message in if message.hasPrefix("Prüfe geänderten Container") { box.context?.cancel() } }
+        box.context = JobContext { _, message in if message == L10n.text("Prüfe geänderten Container …") { box.context?.cancel() } }
         let context = box.context!
         store.perform("Cancel batch") { _ in
             let updated = try draft.archive.applyEdits(draft.request(), context: context)

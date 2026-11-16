@@ -161,7 +161,8 @@ extension NUPCoreTests {
             toc.put(try toc.uint(a - 4, 4), at: b - 4, width: 4)
         }
         let report = try ArchiveDiagnosis.inspect(healthy.url)
-        XCTAssertFalse(report.canRepair); XCTAssertTrue(report.blockers.joined().contains("eindeutig"))
+        XCTAssertFalse(report.canRepair)
+        XCTAssertTrue(report.blockers.contains(L10n.text("Unbenutzte Kindknotenplätze lassen sich keinem leeren /romfs eindeutig zuordnen.")))
     }
 
     func testROMFSRecoveryStillRejectsCyclesDuplicateNodesAndUnsortedNames() throws {
@@ -211,9 +212,9 @@ extension NUPCoreTests {
     func testROMFSRepairCancellationRollsBackCountAndHeaderExactly() throws {
         final class Box: @unchecked Sendable { var context: JobContext? }
         let healthy = try brokenROMFS(), original = try Data(contentsOf: healthy.url)
-        for phase in ["Reparaturdatensätze korrigiert", "Prüfe reparierte NUP"] {
+        for phase in [L10n.text("Reparaturdatensätze korrigiert …"), L10n.text("Prüfe reparierte NUP …")] {
             let report = try ArchiveDiagnosis.inspect(healthy.url), box = Box()
-            box.context = JobContext { _, message in if message.hasPrefix(phase) { box.context?.cancel() } }
+            box.context = JobContext { _, message in if message == phase { box.context?.cancel() } }
             XCTAssertThrowsError(try ArchiveRepair.apply(report, context: box.context!)) { XCTAssertTrue($0 is CancellationError) }
             XCTAssertEqual(try Data(contentsOf: healthy.url), original); absentROMFSJournal(healthy.url)
         }

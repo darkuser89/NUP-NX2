@@ -23,10 +23,10 @@ enum ArchiveInspection {
         guard deep, let source = report.source else { return report }
         let input = try regularFile(url)
         defer { try? input.close() }
-        try require(FileRevision(handle: input) == source.revision, "Die NUP wurde während der Prüfung verändert. Bitte erneut prüfen.")
+        try require(FileRevision(handle: input) == source.revision, L10n.text("Die NUP wurde während der Prüfung verändert. Bitte erneut prüfen."))
         var check = ArchiveFileCheck()
         for (index, file) in source.files.enumerated() {
-            try context.report(Double(index) / Double(max(1, source.files.count)), "Datei \(index + 1)/\(source.files.count): \(file.name)", force: index == 0)
+            try context.report(Double(index) / Double(max(1, source.files.count)), L10n.text("Datei \(String(describing: index + 1))/\(String(describing: source.files.count)): \(String(describing: file.name))"), force: index == 0)
             do { try StreamCodec.consume(file, input: input, context: context) }
             catch is CancellationError { throw CancellationError() }
             catch {
@@ -43,9 +43,9 @@ enum ArchiveInspection {
             check.checked += 1
         }
         try source.revision.requireCurrent(at: url)
-        try require(FileRevision(handle: input) == source.revision, "Die NUP wurde während der Prüfung verändert. Bitte erneut prüfen.")
+        try require(FileRevision(handle: input) == source.revision, L10n.text("Die NUP wurde während der Prüfung verändert. Bitte erneut prüfen."))
         report.fileCheck = check
-        try context.report(1, "\(check.checked) Dateien geprüft · \(check.failed) Dateifehler.")
+        try context.report(1, L10n.text("\(String(describing: check.checked)) Dateien geprüft · \(String(describing: check.failed)) Dateifehler."))
         return report
     }
 }

@@ -52,8 +52,9 @@ extension NUPCoreTests {
         let archive = try inspectionFixture(), context = JobContext(); context.cancel()
         XCTAssertThrowsError(try ArchiveInspection.inspect(archive.url, deep: true, context: context)) { XCTAssertTrue($0 is CancellationError) }
         let url = archive.url
+        let firstFileMessage = L10n.text("Datei \(String(describing: 1))/\(String(describing: archive.files.count)): \(archive.files[0].name)")
         let changing = JobContext { _, message in
-            guard message.hasPrefix("Datei 1/") else { return }
+            guard message == firstFileMessage else { return }
             let handle = try! regularFile(url, writable: true)
             try! handle.seek(toOffset: archive.files[0].offset)
             try! handle.write(contentsOf: Data([255])); try! handle.close()

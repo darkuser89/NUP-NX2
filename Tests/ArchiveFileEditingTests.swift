@@ -117,9 +117,9 @@ extension NUPCoreTests {
         final class Box: @unchecked Sendable { var context: JobContext? }
         var archive = try packed()
         let original = try Data(contentsOf: archive.url), source = try write("incoming/add.txt", Data(repeating: 90, count: 1048576))
-        for message in ["Aktualisiere Dateiverzeichnis", "Prüfe geänderten Container"] {
+        for message in [L10n.text("Aktualisiere Dateiverzeichnis …"), L10n.text("Prüfe geänderten Container …")] {
             let box = Box()
-            box.context = JobContext { _, phase in if phase.hasPrefix(message) { box.context?.cancel() } }
+            box.context = JobContext { _, phase in if phase == message { box.context?.cancel() } }
             XCTAssertThrowsError(try archive.editFiles(package: 0, directory: archive.packages[0].root, adding: [source], context: box.context!)) { error in
                 XCTAssertTrue(error is CancellationError, "\(error)")
             }

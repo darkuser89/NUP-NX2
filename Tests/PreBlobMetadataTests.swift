@@ -83,7 +83,7 @@ extension NUPCoreTests {
         let archive = try preBlobFixture(), original = try Data(contentsOf: archive.url)
         let additions = try (0..<12).map { try write(String(repeating: "x", count: 180) + String($0) + ".bin", Data([UInt8($0)])) }
         let directory = try XCTUnwrap(archive.packages[0].romfs), box = Box()
-        box.context = JobContext { _, message in if message.hasPrefix("Prüfe geänderten Container") { box.context?.cancel() } }
+        box.context = JobContext { _, message in if message == L10n.text("Prüfe geänderten Container …") { box.context?.cancel() } }
         XCTAssertThrowsError(try archive.editFiles(package: 0, directory: directory, adding: additions, context: box.context!))
         XCTAssertEqual(try Data(contentsOf: archive.url), original)
         let reopened = try NUPArchive(url: archive.url)
