@@ -15,5 +15,26 @@ struct AppSettingsView: View {
         }
         .formStyle(.grouped)
         .frame(width: 450, height: 135)
+        .background(SettingsWindowTitle(title: language.text("NUP Studio-Einstellungen")))
+    }
+}
+
+private struct SettingsWindowTitle: NSViewRepresentable {
+    let title: String
+
+    func makeNSView(context: Context) -> TitleView { TitleView() }
+    func updateNSView(_ view: TitleView, context: Context) { view.title = title }
+
+    final class TitleView: NSView {
+        var title: String? { didSet { updateTitle() } }
+
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            updateTitle()
+        }
+
+        private func updateTitle() {
+            if let title, window?.title != title { window?.title = title }
+        }
     }
 }

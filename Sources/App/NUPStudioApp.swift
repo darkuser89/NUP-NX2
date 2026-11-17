@@ -30,10 +30,8 @@ struct NUPStudioApp: App {
                 .onOpenURL { appDelegate.receive([$0]) }
         }
         .defaultSize(width: 1180, height: 780)
+        .onChange(of: language) { appDelegate.menuLocalization.update(language) }
         .commands {
-            CommandGroup(replacing: .appSettings) {
-                SettingsLink { Text(language.text("Einstellungen …")) }.keyboardShortcut(",")
-            }
             CommandGroup(replacing: .newItem) {
                 Button(language.text("NUP öffnen …"), action: store.openPanel)
                     .keyboardShortcut("o").disabled(store.busy)
@@ -71,5 +69,6 @@ struct NUPStudioApp: App {
                 .environment(\.appLanguage, language)
                 .environment(\.locale, language.locale)
         }
+        .onChange(of: language) { appDelegate.menuLocalization.update(language) }
     }
 }

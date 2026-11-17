@@ -2,8 +2,13 @@ import AppKit
 
 @MainActor final class WorkspaceApplicationDelegate: NSObject, NSApplicationDelegate {
     weak var store: WorkspaceStore?
+    lazy var menuLocalization = NativeMenuLocalization()
     private var showMainWindow: (() -> Void)?
     private var pendingURLs: [URL]?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        menuLocalization.update(L10n.language)
+    }
 
     func attach(store: WorkspaceStore, showMainWindow: @escaping () -> Void) {
         self.showMainWindow = showMainWindow

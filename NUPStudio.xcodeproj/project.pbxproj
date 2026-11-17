@@ -96,6 +96,7 @@
 		A35888F2A87DA8494AF590DB /* clevels.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF481D4FF94277610913762C /* clevels.h */; };
 		A3A223F814EE6FAF7463168C /* ArchiveEditDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EED01D22BC48C3352868508 /* ArchiveEditDraftTests.swift */; };
 		A6C1CEBCBFC9028E29A1C124 /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D0D9673C7272941149F127A /* pool.c */; };
+		A8216604DF0B127332AAAE5F /* NativeMenuLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8E032D5686A88CFE308904 /* NativeMenuLocalization.swift */; };
 		A8598F20EB5BCC46D7126E63 /* zstd_ldm.c in Sources */ = {isa = PBXBuildFile; fileRef = 90768CB734279CD495BFB6B4 /* zstd_ldm.c */; };
 		A85A0953BA82B991906EB259 /* error_private.c in Sources */ = {isa = PBXBuildFile; fileRef = 23978259D308D9BBF73F3A81 /* error_private.c */; };
 		ADDD3D4B9957D3764A078E02 /* FilePanels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D1228FA44B8895E551447 /* FilePanels.swift */; };
@@ -345,6 +346,7 @@
 		D8DA381802FA03E833371C7F /* zstd_errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_errors.h; sourceTree = "<group>"; };
 		D9831F77A955E456F1A11FCB /* ArchiveFileEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveFileEditingTests.swift; sourceTree = "<group>"; };
 		DB18608AA7694264FA62C648 /* FinderOpenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinderOpenTests.swift; sourceTree = "<group>"; };
+		DE8E032D5686A88CFE308904 /* NativeMenuLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeMenuLocalization.swift; sourceTree = "<group>"; };
 		E2F829189BCF633DD629664D /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		E3FAC2FBA7449BFEEFDF90D8 /* zstd_deps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_deps.h; sourceTree = "<group>"; };
 		E69AB300F182660B58ADDDEB /* fse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fse.h; sourceTree = "<group>"; };
@@ -631,6 +633,7 @@
 		C8066FAD75A26A421C90A946 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				DE8E032D5686A88CFE308904 /* NativeMenuLocalization.swift */,
 				743DD097DEBC4816A1C9C1A9 /* NUPStudioApp.swift */,
 				0294CB7385FCF3960A7C97ED /* WorkspaceApplicationDelegate.swift */,
 			);
@@ -874,6 +877,7 @@
 				1F0EABFC112595A193A89BDD /* NUPModels.swift in Sources */,
 				64A8E575089B3728A87E350D /* NUPStudioApp.swift in Sources */,
 				31B0046FB3EAD5F3723C2F0B /* NUPWriter.swift in Sources */,
+				A8216604DF0B127332AAAE5F /* NativeMenuLocalization.swift in Sources */,
 				3A65EC85DFBCBF6766710FD6 /* PackView.swift in Sources */,
 				FE8CFE681267742408CCA113 /* StreamCodec.swift in Sources */,
 				E1772ED209C27197741CFCBF /* WorkspaceApplicationData.swift in Sources */,
@@ -905,7 +909,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -920,7 +924,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1016,7 +1020,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				ENABLE_APP_SANDBOX = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1031,7 +1035,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

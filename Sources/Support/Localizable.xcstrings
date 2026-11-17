@@ -714,6 +714,29 @@
         }
       }
     },
+    "Ablage": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ablage"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fișier"
+          }
+        }
+      }
+    },
     "Abweichende Container-UUID korrigieren": {
       "extractionState": "manual",
       "localizations": {
@@ -898,6 +921,52 @@
         }
       }
     },
+    "Alle einblenden": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle einblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show All"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afișează toate aplicațiile"
+          }
+        }
+      }
+    },
+    "Alle nach vorne bringen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle nach vorne bringen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring All to Front"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adu toate ferestrele în față"
+          }
+        }
+      }
+    },
     "Alle vorgemerkten Änderungen übernommen · Struktur geprüft.": {
       "extractionState": "manual",
       "localizations": {
@@ -917,6 +986,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Toate modificările pregătite au fost aplicate. Structura a fost verificată."
+          }
+        }
+      }
+    },
+    "Alles auswählen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles auswählen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select All"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selectează tot"
           }
         }
       }
@@ -963,6 +1055,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copiază în toate pachetele fără copertă"
+          }
+        }
+      }
+    },
+    "Andere ausblenden": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Andere ausblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide Others"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ascunde celelalte aplicații"
           }
         }
       }
@@ -1243,6 +1358,29 @@
         }
       }
     },
+    "Ausschneiden": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausschneiden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cut"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Decupează"
+          }
+        }
+      }
+    },
     "Auswahl reparieren (%@)": {
       "extractionState": "manual",
       "localizations": {
@@ -1331,6 +1469,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Adună pachetul de bază, actualizările și DLC-urile într-un fișier NUP."
+          }
+        }
+      }
+    },
+    "Bearbeiten": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeiten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Editare"
           }
         }
       }
@@ -2642,6 +2803,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Actualizare DLC"
+          }
+        }
+      }
+    },
+    "Darstellung": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Darstellung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vizualizare"
           }
         }
       }
@@ -4417,6 +4601,29 @@
         }
       }
     },
+    "Dienste": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dienste"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Servicii"
+          }
+        }
+      }
+    },
     "Diese Befunde müssen zusammen repariert werden. Auswahl ergänzen: %@": {
       "extractionState": "manual",
       "localizations": {
@@ -4574,6 +4781,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Acest pachet este gol."
+          }
+        }
+      }
+    },
+    "Diktat starten …": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diktat starten …"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start Dictation…"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pornește dictarea…"
           }
         }
       }
@@ -5130,6 +5360,29 @@
         }
       }
     },
+    "Einsetzen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einsetzen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lipește"
+          }
+        }
+      }
+    },
     "Einstellungen …": {
       "extractionState": "manual",
       "localizations": {
@@ -5149,6 +5402,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Configurări…"
+          }
+        }
+      }
+    },
+    "Emoji & Symbole": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emoji & Symbole"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emoji & Symbols"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emoji și simboluri"
           }
         }
       }
@@ -5567,6 +5843,29 @@
         }
       }
     },
+    "Fenster": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fenster"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Window"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fereastră"
+          }
+        }
+      }
+    },
     "Fenster schließen": {
       "extractionState": "manual",
       "localizations": {
@@ -5843,6 +6142,29 @@
         }
       }
     },
+    "Hilfe": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hilfe"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajutor"
+          }
+        }
+      }
+    },
     "Hinzufügen vorgemerkt": {
       "extractionState": "manual",
       "localizations": {
@@ -5908,6 +6230,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pictogramele pot avea cel mult 16 MB."
+          }
+        }
+      }
+    },
+    "Im Dock ablegen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Dock ablegen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimize"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimizează"
           }
         }
       }
@@ -6464,6 +6809,29 @@
         }
       }
     },
+    "Kopieren": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiază"
+          }
+        }
+      }
+    },
     "Leere Metadaten mit ungültigem Offset.": {
       "extractionState": "manual",
       "localizations": {
@@ -6598,6 +6966,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Numele localizat al jocului"
+          }
+        }
+      }
+    },
+    "Löschen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löschen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Șterge"
           }
         }
       }
@@ -7499,6 +7890,29 @@
         }
       }
     },
+    "NUP Studio ausblenden": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NUP Studio ausblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide NUP Studio"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ascunde NUP Studio"
+          }
+        }
+      }
+    },
     "NUP Studio beenden": {
       "extractionState": "manual",
       "localizations": {
@@ -7518,6 +7932,52 @@
           "stringUnit": {
             "state": "translated",
             "value": "Închide NUP Studio"
+          }
+        }
+      }
+    },
+    "NUP Studio-Einstellungen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NUP Studio-Einstellungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NUP Studio Settings"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurări NUP Studio"
+          }
+        }
+      }
+    },
+    "NUP Studio-Hilfe": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NUP Studio-Hilfe"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NUP Studio Help"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajutor NUP Studio"
           }
         }
       }
@@ -9868,6 +10328,29 @@
         }
       }
     },
+    "Seitenleiste ein-/ausblenden": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seitenleiste ein-/ausblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toggle Sidebar"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afișează sau ascunde bara laterală"
+          }
+        }
+      }
+    },
     "Sitzungsprotokoll": {
       "extractionState": "manual",
       "localizations": {
@@ -12214,6 +12697,29 @@
         }
       }
     },
+    "Widerrufen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widerrufen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anulează"
+          }
+        }
+      }
+    },
     "Widersprüchliche Dateigröße im Protokoll.": {
       "extractionState": "manual",
       "localizations": {
@@ -12371,6 +12877,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jurnalul de recuperare nu a putut fi publicat."
+          }
+        }
+      }
+    },
+    "Wiederholen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redo"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refă"
           }
         }
       }
@@ -12601,6 +13130,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dosarul de destinație a fost specificat de mai multe ori."
+          }
+        }
+      }
+    },
+    "Zoomen": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoomen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom"
           }
         }
       }
@@ -13084,6 +13636,29 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fișierul NUP nu a putut fi deschis. Raportul de diagnosticare este disponibil. Fișierul a rămas nemodificat."
+          }
+        }
+      }
+    },
+    "Über NUP Studio": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über NUP Studio"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About NUP Studio"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Despre NUP Studio"
           }
         }
       }
